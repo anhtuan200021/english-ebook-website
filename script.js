@@ -20,17 +20,38 @@ if (qrImage.complete) {
   else hideQr();
 }
 
-// Chỉ sao chép ví dụ, không tạo đơn hay xác nhận thanh toán.
+// Mã ngẫu nhiên chỉ hỗ trợ đối chiếu thủ công, không phải mã giao dịch duy nhất.
+const referenceKey = "ebook-transfer-reference";
+const referencePattern = /^EBOOK [0-9]{6}$/;
+const transferCode = document.querySelector("#transfer-code");
+let reference = null;
+try {
+  reference = sessionStorage.getItem(referenceKey);
+} catch {
+  // Vẫn tạo mã khi trình duyệt chặn sessionStorage.
+}
+if (!referencePattern.test(reference)) {
+  reference = `EBOOK ${Math.floor(100000 + Math.random() * 900000)}`;
+  try {
+    sessionStorage.setItem(referenceKey, reference);
+  } catch {
+    // Mã vẫn dùng được trong lần mở trang hiện tại nếu không lưu được.
+  }
+}
+transferCode.textContent = reference;
+
+// Chỉ sao chép mã đang hiển thị, không tạo đơn hay xác nhận thanh toán.
 const copyButton = document.querySelector("#copy-reference");
 const copyStatus = document.querySelector("#copy-status");
+copyButton.disabled = false;
 copyButton.addEventListener("click", async () => {
   copyStatus.textContent = "";
   try {
     await navigator.clipboard.writeText(
-      document.querySelector("#transfer-example").textContent,
+      transferCode.textContent,
     );
-    copyStatus.textContent = "Đã sao chép ví dụ EBOOK 1234. Hãy thay 1234 bằng 4 chữ số riêng trước khi chuyển khoản.";
+    copyStatus.textContent = `Đã sao chép ${transferCode.textContent}. Giữ nguyên mã khi chuyển khoản và điền Google Forms.`;
   } catch {
-    copyStatus.textContent = "Không thể sao chép tự động. Hãy chọn và sao chép EBOOK 1234 hoặc nhập thủ công, rồi thay 1234 bằng 4 chữ số riêng.";
+    copyStatus.textContent = `Không thể sao chép tự động. Hãy chọn và sao chép hoặc nhập thủ công đúng mã ${transferCode.textContent}, không sửa mã.`;
   }
 });
