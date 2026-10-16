@@ -1,71 +1,71 @@
-# Hành trình tự học tiếng Anh
+# TuanBong
 
-Website giới thiệu ebook bằng tiếng Việt, dùng HTML, CSS và JavaScript thuần. Không cần cài thư viện, không backend, không cơ sở dữ liệu. Hình minh họa nằm trong repository, không phụ thuộc dịch vụ bên ngoài.
+Website tiếng Việt gồm **đúng bốn trang chính**, dùng HTML, CSS và JavaScript thuần. Giữ phong cách xanh lá, nền kem; không có backend, bước build hay thư viện ứng dụng phải cài.
 
-## 1. Xem trước website
+| Địa chỉ       | Tệp                    | Nội dung                                                          |
+| ------------- | ---------------------- | ----------------------------------------------------------------- |
+| `/`           | `index.html`           | Thông điệp TuanBong, câu chuyện tác giả và liên kết đến các trang |
+| `/ebook/`     | `ebook/index.html`     | Giới thiệu ebook và toàn bộ quy trình mua hàng                    |
+| `/courses/`   | `courses/index.html`   | Định hướng coaching 1:1 và khóa học video                         |
+| `/community/` | `community/index.html` | YouTube và Facebook cá nhân chính thức được cung cấp              |
 
-**Dễ nhất:** tải repository về máy và giải nén, sau đó nhấp đúp vào `index.html`. Website mở trong trình duyệt, không cần cài công cụ lập trình.
+## Xem trước
 
-**Nếu đã có Python:** mở terminal tại thư mục repository rồi chạy:
+Mở terminal tại thư mục repository rồi chạy:
 
 ```sh
 python3 -m http.server 8000 --bind 127.0.0.1
 ```
 
-Trên Windows có thể dùng `py -m http.server 8000 --bind 127.0.0.1`. Mở trình duyệt trên chính máy đang chạy lệnh, nhập `http://127.0.0.1:8000`. Nhấn `Ctrl+C` trong terminal để dừng. Trong môi trường cloud, lệnh này chỉ phục vụ kiểm tra nội bộ, không tạo địa chỉ website công khai.
+Trên Windows có thể dùng `py` thay cho `python3`. Mở trình duyệt trên máy chạy lệnh, nhập `http://127.0.0.1:8000`, sau đó dùng menu để đi giữa các trang. Nhấn `Ctrl+C` để dừng. Trong môi trường cloud, đây là máy chủ kiểm tra nội bộ, không phải địa chỉ công khai.
 
-## 2. Các tệp và cách sửa
+Nên dùng máy chủ tĩnh để xem trước cấu trúc thư mục `/ebook/`, `/courses/`, `/community/` giống khi triển khai. Không cần chạy npm hoặc cài dependency.
 
-| Tệp                      | Nội dung                                                 |
-| ------------------------ | -------------------------------------------------------- |
-| `index.html`             | Văn bản, mục lục, giá, tác giả và hướng dẫn chuyển khoản |
-| `styles.css`             | Màu sắc, phông chữ, bố cục máy tính và điện thoại        |
-| `script.js`              | Năm hiện tại và hiển thị ảnh QR khi tải được             |
-| `assets/ebook-cover.svg` | Bìa ebook minh họa có thể thay thế                       |
+## Chỉnh sửa
 
-Mở tệp bằng trình soạn thảo văn bản (ví dụ VS Code miễn phí), sửa rồi lưu. Tải lại trang để xem thay đổi. Nên sao lưu trước khi sửa, chỉ thay từng phần nhỏ.
+- **Văn bản:** mở tệp HTML tương ứng và sửa phần chữ giữa các thẻ, giữ nguyên các thẻ HTML.
+- **Giao diện:** `styles.css` dùng chung cho bốn trang. Các biến màu nằm ở `:root` đầu tệp.
+- **Menu/footer:** nội dung giống nhau ở bốn tệp HTML; nếu thêm/sửa mục chung, cập nhật cả bốn tệp. Mỗi trang có đúng một mục menu dùng `aria-current="page"`.
+- **JavaScript:** `script.js` dùng chung, chỉ chạy chức năng QR và mã chuyển khoản nếu có thành phần tương ứng trên trang Ebook.
+- **Tài nguyên:** giữ ảnh trong `assets`. Trang con dùng `../assets/...`, `../styles.css`, `../script.js`; trang chủ dùng `./...`. Liên kết tương đối hoạt động cả khi triển khai dưới một thư mục con.
 
-- **Tên sách, giới thiệu, mục lục:** tìm đoạn chữ tương ứng trong `index.html`, sửa văn bản giữa các thẻ. Giữ nguyên các thẻ như `<p>` và `</p>`.
-- **Giá:** giá hiện tại là `59.000đ`. Nếu thay giá, sửa đồng thời giá bán và các hướng dẫn chuyển khoản trong `index.html`.
-- **Tác giả:** thay tên “Anh Minh” và câu chuyện minh họa bằng thông tin thật.
-- **Bìa:** đặt ảnh mới, ví dụ `bia-ebook.jpg`, trong thư mục `assets`. Ở ảnh có `class="book-cover"` trong `index.html`, đổi `src="assets/ebook-cover.svg"` thành `src="assets/bia-ebook.jpg"`. Cập nhật `alt` theo ảnh thật. Ảnh dọc tỉ lệ 3:4 phù hợp nhất. Biểu tượng tab vẫn dùng SVG cũ; có thể đổi riêng dòng `rel="icon"` nếu muốn.
-- **Màu:** sửa các mã màu trong `:root` ở đầu `styles.css`. `--green` là màu xanh chính, `--cream` là màu nền.
+### Logo và nội dung còn chờ
 
-## 3. Thanh toán MB Bank và nhận ebook
+**Chưa có tệp logo TuanBong trong repository.** Hình chú chó ôm bông hoa trong chat chưa có tệp tải được trong môi trường. Header/footer hiện dùng tên thương hiệu dạng chữ, không có logo tự tạo thay thế. Hãy tải file logo gốc (PNG/SVG/WebP) lên `assets` và cung cấp tên tệp để bổ sung; không vẽ lại hoặc thay đổi hình.
 
-Khách chuyển **59.000đ** đến MB Bank, tài khoản **0332441322**, chủ tài khoản **ALANG MINH TUAN**. Khách cần kiểm tra thông tin người nhận trong ứng dụng ngân hàng trước khi xác nhận.
+Bìa ebook hiện vẫn là hình minh họa `assets/ebook-cover.svg`, có ghi rõ. Mục lục chi tiết và tác giả giả trong bản minh họa cũ đã được bỏ; chờ nội dung chính thức nếu muốn bổ sung. Trang khóa học chỉ dùng thông tin định hướng đã cung cấp, không đặt học phí, lịch hoặc chức năng thanh toán giả.
 
-Sau đó khách bấm “Tôi đã chuyển khoản – Điền thông tin nhận ebook” để mở Google Forms ở tab mới. Người bán tự kiểm tra giao dịch, đối chiếu đơn hàng và gửi ebook qua email. Website không kiểm tra thanh toán tự động, không báo thành công và không lưu dữ liệu đơn hàng; dữ liệu biểu mẫu được xử lý trên Google Forms.
+## Quy trình mua ebook được giữ nguyên
 
-**Ảnh QR còn chờ tệp gốc:** ảnh trong tin nhắn chưa được cung cấp dưới dạng tệp có thể lưu trong môi trường. Cần thêm đúng ảnh gốc vào `assets/mb-bank-qr.jpg` (nếu dùng PNG, sửa cả đuôi trong `src` ở `index.html`). Hiện website hiển thị hướng dẫn nhập tài khoản thay vì ảnh lỗi. Không tự tạo QR thay thế. Sau khi thêm ảnh, kiểm tra ảnh hiển thị và quét thử để đối chiếu tài khoản trước khi xuất bản; không cần thực hiện giao dịch kiểm tra.
+1. Khách mua **Hành trình tự học tiếng Anh — 59.000đ** trên `/ebook/`.
+2. Quét ảnh QR gốc `assets/mb-bank-qr.jpg` hoặc nhập tài khoản **0332441322**, **MB Bank**, người nhận **ALANG MINH TUAN**. Kiểm tra người nhận và số tiền trước khi xác nhận.
+3. Dùng đúng mã **EBOOK + 6 chữ số** hiển thị trên trang làm nội dung chuyển khoản. Nút **Sao chép** lấy mã đang hiển thị.
+4. Mã lưu trong `sessionStorage` với khóa `ebook-transfer-reference` để giữ khi tải lại hoặc đi giữa các trang trong cùng phiên. Nếu lưu trữ bị chặn, trang vẫn tạo mã cho lần mở hiện tại; khách cần ghi lại mã đã chuyển. Mã hỗ trợ đối chiếu, không bảo đảm duy nhất.
+5. Khách mở Google Forms ở tab mới, nhập đúng email và nội dung giao dịch đã dùng. Người bán **tự kiểm tra thanh toán rồi gửi ebook qua email**. Website không xác nhận giao dịch hoặc gửi ebook tự động.
 
-Đường dẫn QR là đường dẫn tương đối `assets/mb-bank-qr.jpg`, dùng được trên hosting tĩnh. Không thêm PDF trả phí hoặc liên kết tải ebook công khai vào repository. Người bán gửi riêng qua email sau khi xác minh thanh toán.
+Clipboard cần trình duyệt cho phép (thường qua HTTPS hoặc localhost). Nếu không sao chép được, trang hướng dẫn khách chọn/nhập mã thủ công. Không đưa PDF trả phí hoặc đường dẫn tải ebook công khai vào repository. Dữ liệu đơn hàng nằm trong Google Forms, không được website này lưu trữ.
 
-### Cloudflare Pages
+Link Google Forms giữ nguyên:
+https://docs.google.com/forms/d/e/1FAIpQLSfZYGLdzJygxy6Sw9VP6gt-YRSRBJHTgCriQAezOfFXbFeNBg/viewform?usp=dialog
 
-Website không cần build. Với dự án Pages liên kết Git, chọn đúng repository và nhánh muốn triển khai, framework **None**, bỏ trống lệnh build và chọn thư mục đầu ra gốc chứa `index.html` (thường là `.`). Nếu giao diện yêu cầu lệnh build, có thể dùng `exit 0`. Không cần biến môi trường hoặc backend. Có thể giữ repository ở chế độ riêng tư nếu đã cấp quyền phù hợp cho Cloudflare.
+Liên kết mua cũ ở trang chủ `/#mua-ebook` và `/#thanh-toan` được chuyển sang phần tương ứng trên `/ebook/` khi JavaScript hoạt động.
 
-Chỉ xuất bản bản có QR sau khi đã thêm ảnh thật vào `assets` và kiểm tra trên địa chỉ triển khai. Đổi nhánh triển khai trên Cloudflare nếu mã mới vẫn ở nhánh `work`; cập nhật nhánh khác không tự cập nhật bản đang triển khai từ `main`.
+## Triển khai Cloudflare Pages
 
-## 4. Đưa lên mạng miễn phí với GitHub Pages
+1. Kết nối đúng repository và chọn nhánh cần xem trước. Không cần chuyển repository sang Public.
+2. Chọn framework **None**, bỏ trống lệnh build (nếu giao diện yêu cầu, dùng `exit 0`).
+3. Chọn thư mục đầu ra gốc chứa `index.html`, thường là **`.`**. Không chọn riêng thư mục `ebook`.
+4. Triển khai, rồi mở trực tiếp cả `/`, `/ebook/`, `/courses/`, `/community/` và tải lại từng trang. Mỗi thư mục có `index.html`, không cần quy tắc SPA hay chuyển mọi đường dẫn về trang chủ.
+5. Kiểm tra QR, sao chép và Google Forms trên địa chỉ triển khai. Link Forms, YouTube và Facebook mở ở tab mới.
 
-1. Lưu các tệp lên nhánh `main` trên GitHub của repository `anhtuan200021/english-ebook-website`. Nếu chỉnh trên máy, có thể chọn **Add file → Upload files**, kéo các tệp và thư mục `assets` vào, sau đó **Commit changes**. Giữ `index.html` ở thư mục gốc repository.
-2. Với GitHub Free, repository cần ở chế độ **Public** để dùng Pages miễn phí. Chỉ chuyển sang Public khi bạn đồng ý công khai các tệp trong đó.
-3. Vào repository → **Settings → Pages**.
-4. Trong **Build and deployment**, chọn **Deploy from a branch**.
-5. Chọn nhánh **main**, thư mục **/ (root)** rồi **Save**.
-6. Đợi triển khai hoàn tất (có thể vài phút). GitHub sẽ hiển thị địa chỉ website tại trang Pages. Địa chỉ dự kiến sau khi triển khai thành công: `https://anhtuan200021.github.io/english-ebook-website/`.
-7. Sau này chỉ cần cập nhật tệp trên `main`, Pages sẽ tự triển khai lại. Nếu chưa thấy thay đổi, xem trạng thái ở tab **Actions** rồi tải lại trình duyệt.
+Không cần biến môi trường, dịch vụ trả phí hay thêm script build. Nếu đang dùng Pages preview theo nhánh, nhánh mới chỉ phục vụ kiểm tra; không tự cập nhật bản triển khai từ `main` cho đến khi PR được merge. Không đổi cài đặt production hoặc merge nếu chưa được chủ repository duyệt.
 
-Không cần mua tên miền, hosting hay khai báo khóa API. Việc tạo tệp trong repository chưa tự xuất bản website.
+## Kiểm tra sau khi chỉnh sửa
 
-## 5. Kiểm tra sau khi chỉnh sửa
-
-- Mở trang trên máy tính và điện thoại; kiểm tra chữ không tràn ngang.
-- Thử các liên kết điều hướng, mở từng chương và câu hỏi.
-- Bấm “Mua ebook” để đến phần chuyển khoản; kiểm tra QR thật hiển thị và quét đúng tài khoản.
-- Thử nút nhận ebook: mở đúng Google Forms ở tab mới, không hiển thị xác nhận thanh toán.
-- Dùng phím Tab để kiểm tra liên kết/nút và viền focus.
-- Kiểm tra ảnh, giá, thông tin liên hệ trước khi công khai.
-
-Không có bước build hoặc cài dependency. Nếu có Node.js, kiểm tra cú pháp JavaScript bằng `node --check script.js`.
+- Mở trực tiếp và tải lại cả bốn trang; kiểm tra menu và footer dẫn đúng, mục đang mở được đánh dấu.
+- Thử trên điện thoại và máy tính, kiểm tra không tràn ngang, ảnh giữ tỉ lệ.
+- Trên Ebook: nút Mua đến phần chuyển khoản, QR tải được, giá 59.000đ, mã có sáu chữ số, tải lại vẫn giữ mã và Sao chép lấy đúng mã.
+- Đi từ Ebook sang trang khác rồi quay lại; thử trong trình duyệt chặn lưu trữ/clipboard để kiểm tra hướng dẫn dự phòng.
+- Google Forms phải mở đúng URL trong tab mới; không gửi đơn hoặc chuyển tiền chỉ để kiểm tra giao diện.
+- Các liên kết YouTube/Facebook phải đúng địa chỉ được cung cấp; Facebook được ghi là tài khoản cá nhân.
+- Nếu có Node.js, chạy `node --check script.js`; chạy `git diff --check` để phát hiện lỗi khoảng trắng.
