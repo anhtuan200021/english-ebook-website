@@ -16,39 +16,36 @@ Trên Windows có thể dùng `py -m http.server 8000 --bind 127.0.0.1`. Mở tr
 
 ## 2. Các tệp và cách sửa
 
-| Tệp                      | Nội dung                                             |
-| ------------------------ | ---------------------------------------------------- |
-| `index.html`             | Văn bản, mục lục, giá, tác giả và thông báo mua hàng |
-| `styles.css`             | Màu sắc, phông chữ, bố cục máy tính và điện thoại    |
-| `script.js`              | Năm hiện tại và thao tác mở/đóng thông báo mua ebook |
-| `assets/ebook-cover.svg` | Bìa ebook minh họa có thể thay thế                   |
+| Tệp                      | Nội dung                                                 |
+| ------------------------ | -------------------------------------------------------- |
+| `index.html`             | Văn bản, mục lục, giá, tác giả và hướng dẫn chuyển khoản |
+| `styles.css`             | Màu sắc, phông chữ, bố cục máy tính và điện thoại        |
+| `script.js`              | Năm hiện tại và hiển thị ảnh QR khi tải được             |
+| `assets/ebook-cover.svg` | Bìa ebook minh họa có thể thay thế                       |
 
 Mở tệp bằng trình soạn thảo văn bản (ví dụ VS Code miễn phí), sửa rồi lưu. Tải lại trang để xem thay đổi. Nên sao lưu trước khi sửa, chỉ thay từng phần nhỏ.
 
 - **Tên sách, giới thiệu, mục lục:** tìm đoạn chữ tương ứng trong `index.html`, sửa văn bản giữa các thẻ. Giữ nguyên các thẻ như `<p>` và `</p>`.
-- **Giá:** tìm `149.000`, thay bằng giá thực tế. Xóa chữ “GIÁ MINH HỌA” khi sẵn sàng mở bán.
+- **Giá:** giá hiện tại là `59.000đ`. Nếu thay giá, sửa đồng thời giá bán và các hướng dẫn chuyển khoản trong `index.html`.
 - **Tác giả:** thay tên “Anh Minh” và câu chuyện minh họa bằng thông tin thật.
 - **Bìa:** đặt ảnh mới, ví dụ `bia-ebook.jpg`, trong thư mục `assets`. Ở ảnh có `class="book-cover"` trong `index.html`, đổi `src="assets/ebook-cover.svg"` thành `src="assets/bia-ebook.jpg"`. Cập nhật `alt` theo ảnh thật. Ảnh dọc tỉ lệ 3:4 phù hợp nhất. Biểu tượng tab vẫn dùng SVG cũ; có thể đổi riêng dòng `rel="icon"` nếu muốn.
 - **Màu:** sửa các mã màu trong `:root` ở đầu `styles.css`. `--green` là màu xanh chính, `--cream` là màu nền.
 
-## 3. Nút mua và việc bán ebook thực tế
+## 3. Thanh toán MB Bank và nhận ebook
 
-Hiện nút “Mua ebook” mở thông báo minh họa. Trang **không thu tiền, không gửi đơn và không gửi ebook tự động**. Không có dữ liệu khách hàng được lưu hay gửi đi.
+Khách chuyển **59.000đ** đến MB Bank, tài khoản **0332441322**, chủ tài khoản **ALANG MINH TUAN**. Khách cần kiểm tra thông tin người nhận trong ứng dụng ngân hàng trước khi xác nhận.
 
-Cách mở bán đơn giản không cần backend: dùng email/kênh liên hệ để nhận yêu cầu, tự xác nhận thanh toán và gửi PDF. Trong `index.html`, thay toàn bộ nút có `id="buy-button"` (từ `<button` đến `</button>`) bằng liên kết sau, nhớ thay email thật:
+Sau đó khách bấm “Tôi đã chuyển khoản – Điền thông tin nhận ebook” để mở Google Forms ở tab mới. Người bán tự kiểm tra giao dịch, đối chiếu đơn hàng và gửi ebook qua email. Website không kiểm tra thanh toán tự động, không báo thành công và không lưu dữ liệu đơn hàng; dữ liệu biểu mẫu được xử lý trên Google Forms.
 
-```html
-<a
-  class="button button-light"
-  href="mailto:ban@example.com?subject=Dat%20mua%20ebook"
->
-  Liên hệ mua ebook ↗
-</a>
-```
+**Ảnh QR còn chờ tệp gốc:** ảnh trong tin nhắn chưa được cung cấp dưới dạng tệp có thể lưu trong môi trường. Cần thêm đúng ảnh gốc vào `assets/mb-bank-qr.jpg` (nếu dùng PNG, sửa cả đuôi trong `src` ở `index.html`). Hiện website hiển thị hướng dẫn nhập tài khoản thay vì ảnh lỗi. Không tự tạo QR thay thế. Sau khi thêm ảnh, kiểm tra ảnh hiển thị và quét thử để đối chiếu tài khoản trước khi xuất bản; không cần thực hiện giao dịch kiểm tra.
 
-Sau đó xóa phần JavaScript từ dòng `const purchaseDialog` đến hết `script.js`, giữ phần cập nhật năm. Có thể xóa cả khối `<dialog>...</dialog>` trong `index.html`. Liên kết email cần ứng dụng email đã cấu hình; nên hiển thị thêm địa chỉ email dạng chữ để người đọc sao chép.
+Đường dẫn QR là đường dẫn tương đối `assets/mb-bank-qr.jpg`, dùng được trên hosting tĩnh. Không thêm PDF trả phí hoặc liên kết tải ebook công khai vào repository. Người bán gửi riêng qua email sau khi xác minh thanh toán.
 
-Trước khi mở bán, cập nhật giá, nội dung, định dạng thật, cách liên hệ, phương thức thanh toán, thời gian giao ebook và chính sách hỗ trợ/hoàn tiền phù hợp. Sửa câu hỏi thường gặp và bỏ các ghi chú minh họa sau khi thông tin đã chính xác. Không đưa ebook trả phí hoặc thông tin khách hàng lên repository công khai: các tệp của website tĩnh đều có thể truy cập công khai.
+### Cloudflare Pages
+
+Website không cần build. Với dự án Pages liên kết Git, chọn đúng repository và nhánh muốn triển khai, framework **None**, bỏ trống lệnh build và chọn thư mục đầu ra gốc chứa `index.html` (thường là `.`). Nếu giao diện yêu cầu lệnh build, có thể dùng `exit 0`. Không cần biến môi trường hoặc backend. Có thể giữ repository ở chế độ riêng tư nếu đã cấp quyền phù hợp cho Cloudflare.
+
+Chỉ xuất bản bản có QR sau khi đã thêm ảnh thật vào `assets` và kiểm tra trên địa chỉ triển khai. Đổi nhánh triển khai trên Cloudflare nếu mã mới vẫn ở nhánh `work`; cập nhật nhánh khác không tự cập nhật bản đang triển khai từ `main`.
 
 ## 4. Đưa lên mạng miễn phí với GitHub Pages
 
@@ -66,7 +63,8 @@ Không cần mua tên miền, hosting hay khai báo khóa API. Việc tạo tệ
 
 - Mở trang trên máy tính và điện thoại; kiểm tra chữ không tràn ngang.
 - Thử các liên kết điều hướng, mở từng chương và câu hỏi.
-- Bấm “Mua ebook”; thử nút đóng, “Tôi đã hiểu” và phím Escape.
+- Bấm “Mua ebook” để đến phần chuyển khoản; kiểm tra QR thật hiển thị và quét đúng tài khoản.
+- Thử nút nhận ebook: mở đúng Google Forms ở tab mới, không hiển thị xác nhận thanh toán.
 - Dùng phím Tab để kiểm tra liên kết/nút và viền focus.
 - Kiểm tra ảnh, giá, thông tin liên hệ trước khi công khai.
 
