@@ -1187,10 +1187,10 @@ details[open] .toggle:before {
   margin-top: 12px;
 }
 .home-illustration {
-  padding: 15px;
-  border: 1px solid #e0d6bf;
-  border-radius: 34px 34px 18px 18px;
-  background: #f4efdf;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius);
+  background: transparent;
 }
 .home-illustration figcaption {
   text-align: center;
@@ -1238,9 +1238,6 @@ details[open] .toggle:before {
   .community-intro {
     grid-template-columns: minmax(0, 1fr);
     gap: 28px;
-  }
-  .home-illustration {
-    padding: 10px;
   }
   .footer-brand {
     align-self: center;

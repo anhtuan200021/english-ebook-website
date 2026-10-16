@@ -6,13 +6,17 @@
 - `mb-bank-qr.jpg`: ảnh QR gốc do chủ repository cung cấp; không thay đổi trong bản cập nhật hình ảnh. Chỉ dùng để hiển thị hướng dẫn chuyển khoản.
 - `ebook-cover.svg`: bìa minh họa đã có từ bản website đầu tiên, tiếp tục được ghi rõ là minh họa; không phải bìa chính thức mới.
 
-## Hình minh họa mới
+## Ảnh trang chủ do chủ repository cung cấp
 
-Tất cả tệp sau do Codex tự thiết kế bằng SVG cho website TuanBong trong lần cập nhật này, không lấy từ kho ảnh bên thứ ba. Chủ repository có thể sử dụng, chỉnh sửa và phân phối chúng cùng website, không cần mua hoặc trả phí ảnh.
+`illustrations/homepage-study.png` là ảnh PNG 1536 × 1024 do chủ repository tải lên, tên ban đầu là “Góc học tập ấm áp bên cửa sổ.png” (tên Unicode có thể được lưu dạng dấu tách). Chỉ đổi tên tệp, giữ nguyên dữ liệu ảnh. Ảnh thay hình SVG ở đầu trang chủ và đã có chú thích bên trong nên không thêm chú thích HTML lặp lại.
+
+## Hình minh họa SVG
+
+Tất cả tệp SVG sau do Codex tự thiết kế bằng SVG cho website TuanBong trong lần cập nhật này, không lấy từ kho ảnh bên thứ ba. Chủ repository có thể sử dụng, chỉnh sửa và phân phối chúng cùng website, không cần mua hoặc trả phí ảnh.
 
 | Tệp trong `illustrations/` | Nội dung                                          | Vị trí          |
 | -------------------------- | ------------------------------------------------- | --------------- |
-| `study-corner.svg`         | Cửa sổ đón ánh sáng, sổ tay, cây xanh và tách trà | Trang chủ       |
+| `study-corner.svg`         | Cửa sổ đón ánh sáng, sổ tay, cây xanh và tách trà | Minh họa cũ, giữ lại trong assets |
 | `reading-time.svg`         | Máy đọc ebook, sách mở và tách trà                | Trang Ebook     |
 | `coaching.svg`             | Hai khung hội thoại minh họa trao đổi cá nhân     | Coaching 1:1    |
 | `video-learning.svg`       | Màn hình video, nút phát và sổ ghi chú            | Khóa học video  |
