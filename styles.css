@@ -1406,3 +1406,64 @@ details[open] .toggle:before {
     font-size: 20px;
   }
 }
+
+/* Hai lựa chọn xác nhận sau chuyển khoản, chỉ dùng trên trang Ebook. */
+.payment-confirmation {
+  margin-top: 32px;
+}
+.payment-confirmation > h3 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 28px;
+  font-weight: 400;
+  line-height: 1.35;
+  color: var(--green);
+}
+.payment-confirmation > p,
+.confirmation-option > p {
+  font-size: 15px;
+  color: var(--muted);
+}
+.confirmation-options {
+  display: grid;
+  gap: 18px;
+  margin-top: 24px;
+}
+.confirmation-option {
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #f1f3e9;
+  min-width: 0;
+}
+.confirmation-option h4 {
+  margin: 0 0 14px;
+  color: var(--green);
+  font-size: 17px;
+  line-height: 1.5;
+}
+.confirmation-option .button {
+  width: 100%;
+  text-align: center;
+}
+.zalo-phone {
+  display: block;
+  color: var(--green);
+  font-size: 22px;
+  letter-spacing: 1px;
+  margin-top: 8px;
+}
+.confirmation-option > .sample-note {
+  margin: 16px 0 0;
+  font-size: 12px;
+}
+.confirmation-manual-note {
+  margin: 22px 0 0;
+}
+@media (max-width: 600px) {
+  .confirmation-option {
+    padding: 20px;
+  }
+  .confirmation-option .button {
+    padding-inline: 14px;
+  }
+}
