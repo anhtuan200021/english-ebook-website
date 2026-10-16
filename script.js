@@ -61,7 +61,7 @@ if (transferCode) {
     copyStatus.textContent = "";
     try {
       await navigator.clipboard.writeText(transferCode.textContent);
-      copyStatus.textContent = `Đã sao chép ${transferCode.textContent}. Giữ nguyên mã khi chuyển khoản và điền Google Forms.`;
+      copyStatus.textContent = `Đã sao chép ${transferCode.textContent}. Giữ nguyên mã khi chuyển khoản và gửi mã qua Google Form hoặc Zalo.`;
     } catch {
       copyStatus.textContent = `Không thể sao chép tự động. Hãy chọn và sao chép hoặc nhập thủ công đúng mã ${transferCode.textContent}, không sửa mã.`;
     }
