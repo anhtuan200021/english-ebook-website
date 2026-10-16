@@ -1246,3 +1246,97 @@ details[open] .toggle:before {
     align-self: center;
   }
 }
+
+/* Nội dung câu chuyện và bốn nguyên tắc chỉ có trên Trang chủ. */
+.personal-story .story-layout {
+  max-width: 760px;
+  margin-top: 32px;
+}
+.personal-story .story-block:first-child {
+  border-top: 0;
+  padding-top: 0;
+  margin-top: 0;
+}
+.personal-story strong {
+  color: var(--green);
+}
+.method-intro {
+  max-width: 760px;
+  margin-bottom: 36px;
+}
+.method-intro > p:last-child {
+  color: #4f5c53;
+  font-size: 17px;
+}
+.principle-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+.principle-card {
+  display: flex;
+  flex-direction: column;
+  padding: 32px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: #f1f3e9;
+}
+.principle-listening {
+  background: #e5ecdc;
+  border-color: #c8d3ba;
+}
+.principle-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  margin-bottom: 24px;
+  border-radius: 50%;
+  background: #dde5d2;
+  color: var(--green);
+  font-size: 12px;
+  font-weight: 700;
+}
+.principle-listening .principle-number {
+  background: #d1dec3;
+}
+.principle-card h3 {
+  font-size: 22px;
+  line-height: 1.4;
+  color: var(--green);
+  margin-bottom: 20px;
+}
+.principle-card p {
+  font-size: 16px;
+  color: #4f5c53;
+}
+.principle-card .principle-takeaway {
+  margin-top: auto;
+  margin-bottom: 0;
+  padding-top: 20px;
+  border-top: 1px solid #d1dac6;
+  color: var(--green);
+}
+.method-closing {
+  max-width: 720px;
+  margin: 36px auto 0;
+  text-align: center;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 22px;
+  color: var(--green);
+}
+@media (max-width: 700px) {
+  .principle-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .principle-card {
+    padding: 25px;
+  }
+  .method-intro > p:last-child {
+    font-size: 16px;
+  }
+  .method-closing {
+    font-size: 20px;
+  }
+}
