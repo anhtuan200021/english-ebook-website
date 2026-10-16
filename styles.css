@@ -871,6 +871,36 @@ details[open] .toggle:before {
 #form-note {
   margin-top: 18px;
 }
+.transfer-reference {
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+.transfer-reference h4 {
+  margin: 0 0 12px;
+  font-size: 16px;
+}
+.reference-copy {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.reference-copy code {
+  font-size: 19px;
+  color: var(--green);
+  user-select: all;
+}
+.reference-copy .button {
+  padding: 10px 16px;
+}
+.transfer-reference p:last-child {
+  margin-bottom: 0;
+}
+#copy-status:empty {
+  display: none;
+}
 @media (max-width: 700px) {
   .payment-layout {
     grid-template-columns: minmax(0, 1fr);
