@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450">
+<title>Minh họa coaching một đối một bằng hai khung hội thoại</title>
+<rect width="800" height="450" rx="24" fill="#e6e9da"/>
+<circle cx="654" cy="103" r="51" fill="#efd7a1"/>
+<rect x="102" y="99" width="263" height="173" rx="24" fill="#174b3e"/><path d="m310 266 27 37-73-33" fill="#174b3e"/>
+<g stroke="#d8e7b4" stroke-width="9" stroke-linecap="round"><path d="M141 146h181m-181 30h151m-151 30h100"/></g>
+<rect x="432" y="168" width="261" height="173" rx="24" fill="#fffaf0"/><path d="m483 335-27 36 73-33" fill="#fffaf0"/>
+<g stroke="#d1afa3" stroke-width="9" stroke-linecap="round"><path d="M472 215h180m-180 30h151m-151 30h100"/></g>
+<path d="M379 142q69-46 97 8m-49 173q-70 42-104-5" fill="none" stroke="#9bac85" stroke-width="5" stroke-dasharray="8 10" stroke-linecap="round"/>
+<path d="M150 365h163" stroke="#c8d0b7" stroke-width="4" stroke-linecap="round"/>
+<circle cx="113" cy="366" r="12" fill="#d7afa2"/>
+</svg>
