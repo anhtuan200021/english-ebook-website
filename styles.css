@@ -1247,6 +1247,72 @@ details[open] .toggle:before {
   }
 }
 
+/* Khung đọc thử chỉ dùng trên trang Ebook. */
+.ebook-sample > .eyebrow {
+  text-transform: uppercase;
+}
+.sample-page {
+  max-width: 820px;
+  margin: 36px auto 0;
+  padding: 48px 56px;
+  background: #fffaf0;
+  border: 1px solid #ded8c6;
+  border-left: 5px solid #c6d2b4;
+  border-radius: 6px 18px 18px 6px;
+  box-shadow: 0 8px 24px #174b3e08;
+  color: var(--green-dark);
+}
+.sample-page h3 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(25px, 3vw, 32px);
+  font-weight: 400;
+  line-height: 1.4;
+  margin-bottom: 30px;
+}
+.sample-page > p {
+  font-size: 17px;
+  line-height: 1.9;
+  margin-bottom: 24px;
+}
+.sample-expressions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  margin-bottom: 24px;
+}
+.sample-expressions p {
+  margin: 0;
+  padding: 12px 22px;
+  border-radius: 8px;
+  background: #e9eedf;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 23px;
+}
+.sample-page .sample-question {
+  padding-top: 8px;
+}
+.sample-page .sample-disclaimer {
+  margin: 32px 0 0;
+  padding-top: 22px;
+  border-top: 1px solid #ded8c6;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.8;
+}
+@media (max-width: 600px) {
+  .sample-page {
+    margin-top: 26px;
+    padding: 28px 22px;
+  }
+  .sample-page > p {
+    font-size: 16px;
+  }
+  .sample-expressions p {
+    padding: 10px 16px;
+    font-size: 21px;
+  }
+}
+
 /* Nội dung câu chuyện và bốn nguyên tắc chỉ có trên Trang chủ. */
 .personal-story .story-layout {
   max-width: 760px;
