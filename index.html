@@ -340,15 +340,16 @@
           <div class="payment-card">
             <h3>Thanh toán qua MB Bank</h3>
             <div class="qr-frame">
-              <!-- Lưu ảnh QR gốc vào assets/mb-bank-qr.jpg. Không dùng QR tự tạo thay thế. -->
+              <!-- Ảnh QR gốc, giữ nguyên tỉ lệ và không cắt mã. -->
               <img
                 id="payment-qr"
                 src="assets/mb-bank-qr.jpg"
+                width="1080"
+                height="2267"
                 alt="QR chuyển khoản MB Bank — ALANG MINH TUAN, tài khoản 0332441322"
-                hidden
               />
-              <p id="qr-status" role="status">
-                Ảnh QR đang được cập nhật. Bạn có thể nhập thông tin tài khoản
+              <p id="qr-status" role="status" hidden>
+                Không tải được ảnh QR. Bạn có thể nhập thông tin tài khoản
                 bên dưới trong ứng dụng ngân hàng.
               </p>
             </div>
