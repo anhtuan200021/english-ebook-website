@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="480" viewBox="0 0 360 480">
+<defs><linearGradient id="cover" x2="1" y2="1"><stop stop-color="#205342"/><stop offset="1" stop-color="#123b31"/></linearGradient><clipPath id="arch"><path d="M58 435V305a122 122 0 0 1 244 0v130Z"/></clipPath></defs>
+<path fill="url(#cover)" d="M0 0h360v480H0z"/><path fill="#ffffff0b" d="M0 0h12v480H0z"/><path stroke="#e4e7b7" stroke-opacity=".3" d="M25 23h310v434H25z" fill="none"/>
+<text x="180" y="53" text-anchor="middle" fill="#d9e4ba" font-family="Arial,sans-serif" font-size="9" letter-spacing="2">MỘT CHÚT MỖI NGÀY</text>
+<g fill="#f7f3df" text-anchor="middle" font-family="Georgia,serif" font-size="34"><text x="180" y="105">Hành trình</text><text x="180" y="149">tự học tiếng Anh</text></g>
+<text x="180" y="177" text-anchor="middle" fill="#b8cbb0" font-family="Arial,sans-serif" font-size="10">Bắt đầu nhỏ. Đi thật xa.</text>
+<g clip-path="url(#arch)"><path fill="#cbd8ad" d="M50 190h260v250H50z"/><circle cx="220" cy="270" r="35" fill="#f1d59b"/><path d="M30 360Q110 258 220 360T360 340V450H30" fill="#8fa87e"/><path d="M10 410Q140 300 340 388V450H10" fill="#557e62"/><path d="M166 440q100-60 39-95t11-49q-31 18-4 44t-93 100" fill="#e8dfb7"/></g>
+<text x="180" y="457" text-anchor="middle" fill="#d9e4ba" font-family="Arial,sans-serif" font-size="8" letter-spacing="2">BÌA EBOOK MINH HỌA</text>
+</svg>
