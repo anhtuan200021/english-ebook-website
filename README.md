@@ -29,9 +29,13 @@ Nên dùng máy chủ tĩnh để xem trước cấu trúc thư mục `/ebook/`,
 - **JavaScript:** `script.js` dùng chung, chỉ chạy chức năng QR và mã chuyển khoản nếu có thành phần tương ứng trên trang Ebook.
 - **Tài nguyên:** giữ ảnh trong `assets`. Trang con dùng `../assets/...`, `../styles.css`, `../script.js`; trang chủ dùng `./...`. Liên kết tương đối hoạt động cả khi triển khai dưới một thư mục con.
 
-### Logo và nội dung còn chờ
+### Logo và hình minh họa
 
-**Chưa có tệp logo TuanBong trong repository.** Hình chú chó ôm bông hoa trong chat chưa có tệp tải được trong môi trường. Header/footer hiện dùng tên thương hiệu dạng chữ, không có logo tự tạo thay thế. Hãy tải file logo gốc (PNG/SVG/WebP) lên `assets` và cung cấp tên tệp để bổ sung; không vẽ lại hoặc thay đổi hình.
+Logo gốc đã được tích hợp ở header, footer và favicon của bốn trang. Tệp do chủ repository cung cấp được đổi tên từ `Pink Cute Simple Flower Shop Circle Logo.png` thành `assets/tuanbong-logo.png`; dữ liệu ảnh giữ nguyên. PNG có kênh trong suốt, nên được đặt trực tiếp trên nền kem, không cắt hoặc kéo méo. Favicon dùng chính PNG gốc, không vẽ logo khác; logo nhiều chi tiết nên có thể khó đọc ở kích thước tab rất nhỏ.
+
+Năm hình mới trong `assets/illustrations/` là **SVG tự thiết kế**, không phải ảnh thật hoặc hình học viên/lớp học đã diễn ra. Tổng dung lượng khoảng 8 KB, không có phông chữ, script hoặc tài nguyên bên ngoài. Xem `assets/README.md` để biết nguồn từng hình. Các ảnh dưới đầu trang được tải chậm bằng `loading="lazy"`; chiều rộng/chiều cao khai báo trước và CSS giữ đúng tỉ lệ.
+
+### Nội dung còn chờ
 
 Bìa ebook hiện vẫn là hình minh họa `assets/ebook-cover.svg`, có ghi rõ. Mục lục chi tiết và tác giả giả trong bản minh họa cũ đã được bỏ; chờ nội dung chính thức nếu muốn bổ sung. Trang khóa học chỉ dùng thông tin định hướng đã cung cấp, không đặt học phí, lịch hoặc chức năng thanh toán giả.
 

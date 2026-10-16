@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450">
+<title>Minh họa học video qua màn hình với nút phát và sổ ghi chú</title>
+<rect width="800" height="450" rx="24" fill="#f0e8d8"/>
+<rect x="109" y="65" width="456" height="280" rx="18" fill="#174b3e"/>
+<rect x="126" y="82" width="422" height="231" rx="6" fill="#dce5d1"/>
+<circle cx="337" cy="184" r="48" fill="#fffaf0"/><path d="m324 158 39 26-39 26z" fill="#174b3e"/>
+<path d="M154 279h364" stroke="#b7c5a4" stroke-width="7" stroke-linecap="round"/><path d="M154 279h142" stroke="#174b3e" stroke-width="7" stroke-linecap="round"/><circle cx="296" cy="279" r="8" fill="#174b3e"/>
+<path d="M308 345v31h-59v15h178v-15h-59v-31" fill="#9caf8d"/>
+<g transform="rotate(8 614 303)"><rect x="548" y="216" width="135" height="166" rx="8" fill="#fffaf0"/><path d="M570 246h88m-88 24h88m-88 24h88m-88 24h55" stroke="#c3cdb4" stroke-width="5" stroke-linecap="round"/><path d="M562 217v164" stroke="#e2b8a9" stroke-width="3"/></g>
+<path d="m702 261-24 115" stroke="#d0a04d" stroke-width="9" stroke-linecap="round"/>
+<path d="M77 398h645" stroke="#d8cfba" stroke-width="3"/>
+</svg>

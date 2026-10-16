@@ -9,6 +9,7 @@
     />
     <meta name="theme-color" content="#174b3e" />
     <title>Cộng đồng — Cùng học, cùng chia sẻ | TuanBong</title>
+    <link rel="icon" type="image/png" href="../assets/tuanbong-logo.png" />
     <link rel="stylesheet" href="../styles.css" />
     <script src="../script.js" defer></script>
   </head>
@@ -16,9 +17,20 @@
     <a class="skip-link" href="#main">Đến nội dung chính</a>
     <header class="site-header">
       <div class="container nav">
-        <a class="brand brand-name" href="../" aria-label="TuanBong — Trang chủ"
-          >TuanBong<span>Một chút mỗi ngày</span></a
+        <a
+          class="brand brand-lockup"
+          href="../"
+          aria-label="TuanBong — Trang chủ"
         >
+          <img
+            class="brand-logo"
+            src="../assets/tuanbong-logo.png"
+            width="2000"
+            height="2000"
+            alt=""
+          />
+          <span class="brand-name">TuanBong<span>Một chút mỗi ngày</span></span>
+        </a>
         <nav class="primary-nav" aria-label="Điều hướng chính">
           <a href="../">Trang chủ</a>
           <a href="../ebook/">Ebook</a>
@@ -28,14 +40,25 @@
       </div>
     </header>
     <main id="main">
-      <section class="container page-intro">
-        <p class="eyebrow">KẾT NỐI VỚI TUANBONG</p>
-        <h1>Cùng học.<br />Cùng chia sẻ.<br /><em>Cùng phát triển.</em></h1>
-        <p class="intro">
-          Một không gian kết nối qua những câu chuyện tự học tiếng Anh và phát
-          triển bản thân. Chia sẻ điều mình biết, lắng nghe góc nhìn mới và cùng
-          nhau tiến bộ từng chút một.
-        </p>
+      <section class="container page-intro community-intro">
+        <div>
+          <p class="eyebrow">KẾT NỐI VỚI TUANBONG</p>
+          <h1>Cùng học.<br />Cùng chia sẻ.<br /><em>Cùng phát triển.</em></h1>
+          <p class="intro">
+            Một không gian kết nối qua những câu chuyện tự học tiếng Anh và phát
+            triển bản thân. Chia sẻ điều mình biết, lắng nghe góc nhìn mới và
+            cùng nhau tiến bộ từng chút một.
+          </p>
+        </div>
+        <figure class="illustration community-illustration">
+          <img
+            src="../assets/illustrations/shared-conversations.svg"
+            width="800"
+            height="600"
+            alt="Minh họa những khung trò chuyện kết nối quanh cuốn sách mở và tách trà"
+          />
+          <figcaption>Mỗi cuộc trò chuyện mở ra một góc nhìn mới.</figcaption>
+        </figure>
       </section>
       <section
         class="container community-channels"
@@ -111,9 +134,21 @@
       </section>
     </main>
     <footer class="container footer">
-      <a class="brand brand-name" href="../"
-        >TuanBong<span>Một chút mỗi ngày</span></a
+      <a
+        class="brand footer-brand"
+        href="../"
+        aria-label="TuanBong — Trang chủ"
       >
+        <img
+          class="footer-logo"
+          src="../assets/tuanbong-logo.png"
+          width="2000"
+          height="2000"
+          loading="lazy"
+          alt="Logo TuanBong: chú chó ôm bông hoa và chữ TUANBONG"
+        />
+        <span>Một chút mỗi ngày</span>
+      </a>
       <nav class="footer-links" aria-label="Điều hướng cuối trang">
         <a href="../">Trang chủ</a>
         <a href="../ebook/">Ebook</a>

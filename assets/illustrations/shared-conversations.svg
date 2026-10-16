@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+<title>Những cuộc trò chuyện kết nối qua sách, tách trà và khung hội thoại</title>
+<rect width="800" height="600" rx="32" fill="#e9eddf"/>
+<circle cx="400" cy="295" r="206" fill="#f8f4e8"/>
+<rect x="119" y="110" width="235" height="128" rx="24" fill="#174b3e"/><path d="m290 231 26 36-74-32" fill="#174b3e"/>
+<g fill="#d8e7b4"><circle cx="184" cy="174" r="10"/><circle cx="235" cy="174" r="10"/><circle cx="286" cy="174" r="10"/></g>
+<rect x="443" y="184" width="235" height="128" rx="24" fill="#e4b7ac"/><path d="m495 305-28 37 79-33" fill="#e4b7ac"/>
+<path d="M486 228h146m-146 35h98" stroke="#fffaf0" stroke-width="8" stroke-linecap="round"/>
+<path d="M310 129q81-68 160 21m146 188q-15 94-111 118m-230-12q-75-22-98-125" fill="none" stroke="#a8b992" stroke-width="4" stroke-dasharray="8 12" stroke-linecap="round"/>
+<path d="M262 387q64-25 130-3 64-22 133 3v108q-67-25-133-3-63-22-130 3z" fill="#fffaf0" stroke="#c8b993" stroke-width="3"/><path d="M392 386v104" stroke="#c8b993" stroke-width="3"/>
+<g stroke="#afbe9c" stroke-width="5" stroke-linecap="round"><path d="m287 414 78-4m-78 29 78-4m52-25 80 4m-80 21 80 4m-210 25 57-4m73 0 59 4"/></g>
+<path d="M134 354h62v46q-32 22-62 0z" fill="#e6c78b"/><path d="M196 361q35-4 23 24-6 13-23 6" fill="none" stroke="#d6b371" stroke-width="7"/>
+<circle cx="597" cy="422" r="34" fill="#ead39b"/><path d="m580 424 12 12 23-28" fill="none" stroke="#9b844e" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="640" viewBox="0 0 800 640">
+<title>Góc tự học với sổ tay, cây xanh và ánh sáng bên cửa sổ</title>
+<defs><linearGradient id="light" x2="1" y2="1"><stop stop-color="#f6dfac" stop-opacity=".7"/><stop offset="1" stop-color="#f6dfac" stop-opacity="0"/></linearGradient></defs>
+<rect width="800" height="640" rx="32" fill="#eceee1"/>
+<path d="M70 0h660v400H70z" fill="#f4f2e7"/>
+<rect x="390" y="48" width="330" height="330" rx="150" fill="#d9e3d1"/>
+<path d="M555 49v329M392 210h326" stroke="#faf7ed" stroke-width="12"/>
+<circle cx="623" cy="131" r="41" fill="#f3d695"/>
+<path d="M406 234 100 555h600l-28-320" fill="url(#light)"/>
+<path d="M90 484h620v25H90z" fill="#b89670"/>
+<path d="M120 509v99m560-99v99" stroke="#947754" stroke-width="16" stroke-linecap="round"/>
+<path d="M210 440c-2-61-21-118-44-163m44 163c9-86 17-140 53-193" fill="none" stroke="#82926e" stroke-width="8"/>
+<g fill="#a6b992"><ellipse cx="161" cy="308" rx="24" ry="54" transform="rotate(-39 161 308)"/><ellipse cx="252" cy="282" rx="24" ry="51" transform="rotate(36 252 282)"/><ellipse cx="186" cy="377" rx="25" ry="49" transform="rotate(-48 186 377)"/><ellipse cx="233" cy="354" rx="24" ry="47" transform="rotate(35 233 354)"/></g>
+<path d="M163 409h100l-13 75h-74z" fill="#d9afa0"/><path d="M158 408h110v16H158z" fill="#e7beb0"/>
+<path d="m325 453 87-36 131 25-85 39z" fill="#174b3e"/><path d="m325 439 87-36 131 25-85 39z" fill="#fffaf0"/><path d="m413 403 2 46" stroke="#d1c4a4" stroke-width="2"/>
+<g stroke="#a6b992" stroke-width="3"><path d="m342 436 56-23m-42 33 44-18m36-12 70 13m-69-1 53 10"/></g>
+<path d="m331 478 75-30" stroke="#d09a45" stroke-width="7" stroke-linecap="round"/>
+<rect x="551" y="411" width="62" height="68" rx="12" fill="#f0d99f"/><path d="M613 426c35-2 35 40 0 39" fill="none" stroke="#e2c386" stroke-width="8"/>
+<path d="M570 391q-12-14 0-30m24 31q-12-14 0-30" fill="none" stroke="#c7cabb" stroke-width="3" stroke-linecap="round"/>
+<path d="M60 556h680" stroke="#d9decb" stroke-width="2"/>
+</svg>
