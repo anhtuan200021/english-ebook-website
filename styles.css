@@ -87,6 +87,10 @@ p {
   margin-bottom: 23px;
 }
 .site-header {
+  /* Giữ logo và menu luôn nhìn thấy khi cuộn trang. */
+  position: sticky;
+  top: 0;
+  z-index: 100;
   border-bottom: 1px solid var(--line);
   background: var(--cream);
 }
@@ -626,6 +630,10 @@ details[open] .toggle:before {
   }
 }
 @media (max-width: 600px) {
+  /* Menu hai hàng trên điện thoại không che các điểm đến trong trang. */
+  html {
+    scroll-padding-top: 165px;
+  }
   .nav {
     min-height: 80px;
     gap: 10px;
