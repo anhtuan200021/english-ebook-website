@@ -2170,3 +2170,17 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
  }
  .site-header .nav .primary-nav .nav-submenu a{font-size:15px;padding:12px 14px}
 }
+
+/* Consistent compact header and ebook introduction on phones. */
+@media(max-width:700px){
+ .site-header>.container.nav{gap:10px;padding-block:12px 0}
+ .site-header .brand-lockup{gap:9px}
+ .site-header .brand-logo{width:48px;height:48px}
+ .site-header .brand-name{font-size:26px;line-height:1.15}
+ .site-header .brand-name>span{font-size:10px;line-height:1.4;margin-top:5px}
+ .ebook-hero{width:calc(100% - 36px);grid-template-columns:minmax(0,1fr);padding-block:32px;gap:28px}
+ .ebook-hero .hero-copy{min-width:0}
+ .ebook-hero h1{font-size:clamp(28px,8.5vw,40px);line-height:1.2;letter-spacing:-1px;margin-bottom:22px}
+ .ebook-hero .eyebrow{font-size:9px;line-height:1.6;letter-spacing:1px;margin-bottom:22px}
+ .ebook-hero .intro{font-size:16px;line-height:1.75;margin-bottom:18px}
+}
