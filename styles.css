@@ -2128,3 +2128,11 @@ details[open] .toggle:before {
  .primary-nav .nav-submenu a{padding:12px 14px;font-size:14px;text-align:left;white-space:normal}
 }
 @media(prefers-reduced-motion:reduce){.nav-dropdown summary>span{transition:none}}
+
+/* Light navigation: the caret alone identifies expandable groups. */
+.site-header .nav .primary-nav>a,
+.site-header .nav .primary-nav .nav-dropdown>summary{font-family:inherit;font-size:13px;font-weight:400;color:inherit;border:0;box-shadow:none;background:transparent;text-decoration:none}
+.site-header .nav .primary-nav>a:hover,
+.site-header .nav .primary-nav>a[aria-current="page"],
+.site-header .nav .primary-nav .nav-dropdown>summary:hover{font-weight:400;border:0;text-decoration:none}
+.site-header .nav .primary-nav .nav-submenu a{font-weight:400;text-decoration:none}
