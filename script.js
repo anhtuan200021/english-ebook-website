@@ -67,3 +67,21 @@ if (transferCode) {
     }
   });
 }
+
+
+// Dự phòng khi đường dẫn mở Zalo không hoạt động trên trình duyệt.
+// Chỉ sao chép số liên hệ công khai, không gửi hay lưu dữ liệu người dùng.
+for (const button of document.querySelectorAll("[data-copy-zalo]")) {
+  button.addEventListener("click", async () => {
+    const section = button.closest(".contact-card, .course-contact");
+    const status = section?.querySelector("[data-zalo-status]");
+    if (!status) return;
+    try {
+      if (!navigator.clipboard?.writeText) throw new Error("Clipboard API unavailable");
+      await navigator.clipboard.writeText("0332441322");
+      status.textContent = "Đã sao chép 0332441322. Hãy mở Zalo và tìm theo số này nhé!";
+    } catch {
+      status.textContent = "Không thể sao chép tự động. Bạn có thể nhập số 0332441322 trực tiếp vào ô tìm kiếm Zalo.";
+    }
+  });
+}
