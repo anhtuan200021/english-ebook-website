@@ -1999,3 +1999,87 @@ details[open] .toggle:before {
     padding: 8px 5px;
   }
 }
+
+/* Nút dự phòng Zalo cho trang Liên hệ và Coaching 1:1. */
+.contact-copy-button,
+.course-copy-zalo {
+  width: 100%;
+  margin-top: 10px;
+  padding: 11px 14px;
+  min-height: 44px;
+  background: #edf1e8;
+  border: 1px solid #becfba;
+  border-radius: 7px;
+  color: var(--green);
+  font-size: 13px;
+  font-weight: 700;
+  transition: background .2s;
+}
+.contact-copy-button:hover,
+.course-copy-zalo:hover {
+  background: #dde9d8;
+}
+.contact-fallback-note,
+.course-zalo-note {
+  margin-top: 6px;
+  margin-bottom: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+.zalo-copy-status {
+  min-height: 0;
+  margin: 8px 0 0;
+  color: var(--green);
+  font-size: 12px;
+  line-height: 1.6;
+}
+.zalo-copy-status:empty {
+  display: none;
+}
+.course-contact {
+  margin-top: 30px;
+  padding: 23px;
+  border: 1px solid #ccd9c8;
+  border-radius: 14px;
+  background: #f9faf5;
+}
+.course-contact .eyebrow {
+  margin-bottom: 10px;
+}
+.course-contact h3 {
+  margin: 0 0 10px;
+  color: var(--green);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 25px;
+  font-weight: 400;
+}
+.course-contact > p:not(.eyebrow, .zalo-copy-status, .course-zalo-note) {
+  margin-bottom: 16px;
+  color: #53645b;
+  font-size: 14px;
+}
+.course-zalo-action {
+  width: 100%;
+  justify-content: space-between;
+  gap: 12px;
+  padding-inline: 18px;
+  font-size: 13px;
+}
+.course-zalo-note a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  color: var(--green);
+}
+.contact-card #zalo,
+#zalo {
+  scroll-margin-top: 155px;
+}
+@media (max-width: 700px) {
+  #zalo {
+    scroll-margin-top: 240px;
+  }
+  .course-contact {
+    padding: 18px;
+  }
+}
