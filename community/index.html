@@ -12,7 +12,32 @@
     <link rel="icon" type="image/png" href="../assets/tuanbong-logo.png" />
     <link rel="stylesheet" href="../styles.css?v=20261022-mascots-1" />
     <script src="../script.js" defer></script>
-  </head>
+  <style>
+.community-intro{grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:56px;padding-block:52px 42px}
+.community-intro>div{min-width:0}
+.community-intro .tb-mascot-kicker{justify-content:flex-start;gap:16px;margin-bottom:18px;max-width:none}
+.community-intro .tb-mascot-kicker .tb-mascot{width:64px;height:64px}
+.community-intro h1{font-size:clamp(38px,4.2vw,54px);line-height:1.16;margin-bottom:24px}
+.community-intro .intro{font-size:16px;line-height:1.8;margin:0;max-width:550px}
+.community-intro .community-illustration{align-self:center;width:100%;margin:0}
+.community-intro .community-illustration figcaption{text-align:center;font-size:12px;line-height:1.6;margin-top:12px}
+.community-channels{gap:24px;align-items:stretch}
+.community-channels .benefit-card{display:flex;flex-direction:column;min-width:0;padding:32px}
+.community-channels .benefit-card>.eyebrow{font-size:10px;color:var(--green);letter-spacing:1.4px;margin-bottom:14px}
+.community-channels h2{font-size:clamp(28px,2.8vw,34px);line-height:1.25;margin-bottom:18px}
+.community-channels .benefit-card>p:not(.eyebrow):not(.channel-note){margin-bottom:22px}
+.community-channels .benefit-card>.button{align-self:flex-start;margin-top:auto;max-width:100%;text-align:center}
+.community-channels .channel-note{margin:14px 0 0;font-size:12px;line-height:1.6}
+@media(max-width:700px){
+ .community-intro{grid-template-columns:minmax(0,1fr);gap:26px;padding-block:32px}
+ .community-intro .tb-mascot-kicker{gap:12px;margin-bottom:16px}
+ .community-intro .tb-mascot-kicker .tb-mascot{width:56px;height:56px}
+ .community-intro h1{font-size:clamp(34px,8.5vw,42px);letter-spacing:-1px}
+ .community-intro .community-illustration{max-width:480px;justify-self:center}
+ .community-channels{grid-template-columns:minmax(0,1fr);gap:18px}
+ .community-channels .benefit-card{padding:25px}
+}
+</style></head>
   <body>
     <a class="skip-link" href="#main">Đến nội dung chính</a>
     <header class="site-header">

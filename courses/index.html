@@ -12,7 +12,33 @@
     <link rel="icon" type="image/png" href="../assets/tuanbong-logo.png" />
     <link rel="stylesheet" href="../styles.css?v=20261022-mascots-1" />
     <script src="../script.js" defer></script>
-  </head>
+  <style>
+.course-intro{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(180px,.65fr);align-items:center;gap:56px;padding-block:60px 42px}
+.course-intro .eyebrow{margin-bottom:20px}
+.course-intro h1{font-size:clamp(40px,4.4vw,58px);line-height:1.16;margin-bottom:24px}
+.course-intro .intro{max-width:610px;font-size:17px;line-height:1.8;margin:0}
+.course-intro-art{justify-self:center;width:220px;max-width:100%;aspect-ratio:1;display:grid;place-items:center;border-radius:50%;background:#edf0e7}
+.course-intro-art .tb-mascot{width:196px;height:196px}
+.course-options{align-items:stretch}
+.course-options .course-card{min-width:0;padding:32px}
+.course-options .course-card>.eyebrow{margin-bottom:18px}
+.course-options .course-card>h2{font-size:clamp(27px,2.6vw,34px);line-height:1.25;margin-bottom:24px}
+.course-options .course-illustration{margin-block:0 24px}
+@media(max-width:700px){
+ .course-intro{grid-template-columns:minmax(0,1fr) 84px;gap:14px;padding-block:36px 30px;align-items:start}
+ .course-intro h1{font-size:clamp(29px,7.5vw,40px);letter-spacing:-1px;line-height:1.2}
+ .course-intro .eyebrow{font-size:9px;line-height:1.6;letter-spacing:1px;margin-bottom:16px}
+ .course-intro .intro{font-size:16px}
+ .course-intro-copy{display:contents}
+ .course-intro-copy .eyebrow,.course-intro-copy h1{grid-column:1}
+ .course-intro-copy .eyebrow{grid-row:1}
+ .course-intro-copy h1{grid-row:2;margin:0}
+ .course-intro-copy .intro{grid-column:1/-1;grid-row:3;margin-top:6px}
+ .course-intro-art{grid-column:2;grid-row:1/3;width:84px;align-self:center}
+ .course-intro-art .tb-mascot{width:80px;height:80px}
+ .course-options .course-card{padding:25px}
+}
+</style></head>
   <body>
     <a class="skip-link" href="#main">Đến nội dung chính</a>
     <header class="site-header">
@@ -41,13 +67,16 @@
       </div>
     </header>
     <main id="main">
-      <section class="container page-intro">
-        <div class="tb-mascot-kicker"><p class="eyebrow">HỌC THEO CÁCH PHÙ HỢP VỚI BẠN</p><img class="tb-mascot " src="../assets/mascots/learning.webp" width="360" height="360" alt="" aria-hidden="true" loading="lazy" decoding="async"></div>
+      <section class="container page-intro course-intro">
+        <div class="course-intro-copy">
+        <p class="eyebrow">HỌC THEO CÁCH PHÙ HỢP VỚI BẠN</p>
         <h1>Nắm vững cái gốc.<br /><em>Tự tin đi tiếp.</em></h1>
         <p class="intro">
           Hiểu điều mình học, sử dụng điều mình biết và từng bước làm chủ hành
           trình tự học tiếng Anh.
         </p>
+      </div>
+        <div class="course-intro-art" aria-hidden="true"><img class="tb-mascot " src="../assets/mascots/learning.webp" width="360" height="360" alt="" aria-hidden="true" loading="lazy" decoding="async"></div>
       </section>
       <section class="container course-options" aria-label="Các hình thức học">
         <article class="course-card">
