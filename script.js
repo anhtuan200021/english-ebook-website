@@ -85,3 +85,20 @@ for (const button of document.querySelectorAll("[data-copy-zalo]")) {
     }
   });
 }
+
+
+// Keep one dropdown open and allow dismissal by outside click or Escape.
+const navGroups = [...document.querySelectorAll(".primary-nav .nav-dropdown")];
+for (const group of navGroups) {
+  group.addEventListener("toggle", () => {
+    if (group.open) for (const other of navGroups) if (other !== group) other.open = false;
+  });
+}
+document.addEventListener("click", event => {
+  if (!event.target.closest(".nav-dropdown")) for (const group of navGroups) group.open = false;
+});
+document.addEventListener("keydown", event => {
+  if (event.key !== "Escape") return;
+  const open = navGroups.find(group => group.open);
+  if (open) { open.open = false; open.querySelector("summary").focus(); }
+});
