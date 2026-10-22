@@ -1112,7 +1112,7 @@ details[open] .toggle:before {
   .nav .primary-nav {
     width: 100%;
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 0;
   }
   .primary-nav a {
@@ -1741,5 +1741,29 @@ details[open] .toggle:before {
   .donate-copy-button,
   .donate-secondary-button {
     width: 100%;
+  }
+}
+
+/* Menu có 5 mục: chuyển sang 2 hàng trên màn hình hẹp, không tràn ngang. */
+@media (max-width: 700px) {
+  html {
+    scroll-padding-top: 165px;
+  }
+  .nav {
+    flex-wrap: wrap;
+    gap: 12px;
+    padding-block: 12px 0;
+  }
+  .nav .primary-nav {
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0;
+  }
+  .primary-nav a {
+    padding: 11px 1px;
+    text-align: center;
+    font-size: clamp(10px, 1.85vw, 12px);
+    white-space: nowrap;
   }
 }
