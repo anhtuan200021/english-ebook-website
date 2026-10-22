@@ -2209,3 +2209,20 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
  }
  .footer>p span{font-size:inherit}
 }
+
+/* The TuanBong puppy: small, static accents that leave room for content. */
+.tb-mascot{display:block;width:104px;height:104px;max-width:100%;object-fit:contain;flex:0 0 auto;pointer-events:none;user-select:none}
+.tb-mascot-heading,.tb-mascot-kicker{display:flex;align-items:center;justify-content:space-between;gap:24px}
+.tb-mascot-heading{margin-bottom:24px}
+.tb-mascot-heading h2{margin:0;min-width:0}
+.tb-mascot-kicker{max-width:600px;margin-bottom:18px}
+.tb-mascot-kicker .eyebrow{margin:0}
+.tb-mascot-kicker .tb-mascot{width:88px;height:88px}
+.tb-mascot-centered{width:120px;height:120px;margin:0 auto 24px}
+@media(max-width:700px){
+ .tb-mascot{width:80px;height:80px}
+ .tb-mascot-heading,.tb-mascot-kicker{gap:12px}
+ .tb-mascot-kicker .tb-mascot{width:68px;height:68px}
+ .tb-mascot-heading h2{flex:1}
+ .tb-mascot-centered{width:96px;height:96px;margin-bottom:20px}
+}

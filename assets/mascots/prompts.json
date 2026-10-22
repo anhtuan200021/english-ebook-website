@@ -1,0 +1,14 @@
+{
+  "tool": "Built-in image_gen",
+  "reference": "assets/tuanbong-logo.png",
+  "style": "Same cream puppy, caramel floppy ears, rosy cheeks, soft taupe outline and pastel colors; isolated transparent mascot, no text or frame.",
+  "poses": {
+    "welcome": "Smiling, waving hello, holding a pink flower.",
+    "reading": "Reading an open forest-green book, curious and attentive.",
+    "learning": "Writing in a notebook with a pencil, flower by one ear.",
+    "connecting": "Listening to a friend on a sage-green telephone.",
+    "thanks": "Hugging a pink heart with a grateful smile.",
+    "listening": "Peacefully listening through forest-green headphones."
+  },
+  "delivery": "360 × 360 transparent WebP; one small decorative accent per page; no animation."
+}
