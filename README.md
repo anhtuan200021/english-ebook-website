@@ -9,7 +9,7 @@ Website tiếng Việt gồm **bốn trang nội dung chính** và các trang ph
 | `/courses/`   | `courses/index.html`   | Định hướng coaching 1:1 và khóa học video                         |
 | `/community/` | `community/index.html` | YouTube và Facebook cá nhân chính thức được cung cấp              |
 
-**Trang phụ:** `/donate/` (`donate/index.html`) dành cho ủng hộ tự nguyện qua QR MB Bank, tách biệt với thanh toán ebook. `/contact/` (`contact/index.html`) có liên kết Zalo và Facebook cá nhân, cùng thẻ TikTok chờ URL tài khoản chính xác. Cả hai trang đều xuất hiện trong menu và footer.
+**Trang phụ:** `/donate/` (`donate/index.html`) dành cho ủng hộ tự nguyện qua QR MB Bank, tách biệt với thanh toán ebook. `/contact/` (`contact/index.html`) có liên kết Zalo, Facebook cá nhân và TikTok `@tuanwinds`. Do việc mở link Zalo theo số điện thoại tùy ứng dụng và quyền riêng tư của tài khoản, trang Liên hệ và khung Coaching 1:1 đều có nút sao chép số Zalo `0332441322` để tìm trong ứng dụng. Cả hai trang đều xuất hiện trong menu và footer.
 
 ## Xem trước
 
