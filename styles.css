@@ -1475,3 +1475,271 @@ details[open] .toggle:before {
     padding-inline: 14px;
   }
 }
+
+/* Trang ủng hộ riêng /donate/: đồng bộ phong cách kem - xanh của TuanBong. */
+.donate-page {
+  padding-bottom: 34px;
+}
+.donate-hero {
+  max-width: 920px;
+  padding-block: 78px 50px;
+  text-align: center;
+}
+.donate-coffee {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 76px;
+  height: 76px;
+  margin-bottom: 27px;
+  background: #e7eddf;
+  border: 1px solid #d5dfcb;
+  border-radius: 50%;
+  font-size: 38px;
+}
+.donate-hero .eyebrow {
+  margin-bottom: 17px;
+}
+.donate-hero h1 {
+  font-size: clamp(36px, 4.3vw, 57px);
+  line-height: 1.23;
+  letter-spacing: -1.7px;
+  margin-bottom: 25px;
+}
+.donate-hero h1 em {
+  color: var(--green);
+}
+.donate-intro {
+  max-width: 740px;
+  margin: 0 auto;
+  color: var(--muted);
+  font-size: 17px;
+  line-height: 1.85;
+}
+.donate-card {
+  display: grid;
+  grid-template-columns: minmax(0, 0.91fr) minmax(0, 1.09fr);
+  gap: 50px;
+  align-items: center;
+  padding: 48px;
+  border: 1px solid #dbe2d5;
+  border-radius: 24px;
+  background: #f0f3e9;
+}
+.donate-qr-side {
+  min-width: 0;
+  text-align: center;
+}
+.donate-qr-side .eyebrow {
+  margin-bottom: 24px;
+}
+.donate-qr-frame {
+  width: min(100%, 370px);
+  aspect-ratio: 1;
+  overflow: hidden;
+  margin: 0 auto;
+  background: #dceefa;
+  border: 10px solid white;
+  border-radius: 20px;
+  box-shadow: 0 14px 36px #143b2920;
+}
+.donate-qr-frame img {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  /* QR nằm ở nửa trên ảnh gốc chụp từ ứng dụng ngân hàng. */
+  object-position: center 35%;
+}
+.donate-qr-caption {
+  max-width: 400px;
+  margin: 23px auto 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.8;
+}
+.donate-qr-error {
+  margin-top: 16px;
+  color: #a23a2c;
+  font-size: 13px;
+}
+.donate-bank-side {
+  min-width: 0;
+}
+.donate-bank-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 6px 13px;
+  margin-bottom: 22px;
+  background: #dce9d9;
+  border-radius: 40px;
+  color: var(--green);
+  font-size: 12px;
+  font-weight: 700;
+}
+.donate-bank-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #318b66;
+}
+.donate-bank-side h2 {
+  margin-bottom: 19px;
+  font-size: clamp(30px, 3vw, 41px);
+}
+.donate-bank-lead {
+  font-size: 15px;
+  color: #516157;
+  line-height: 1.8;
+  margin-bottom: 25px;
+}
+.donate-bank-list {
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid #d8e0d2;
+  border-radius: 14px;
+  background: #fffdf8;
+}
+.donate-bank-list > div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 5px 15px;
+  padding: 13px 19px;
+}
+.donate-bank-list > div + div {
+  border-top: 1px solid #e3e8dd;
+}
+.donate-bank-list dt {
+  font-size: 13px;
+  color: var(--muted);
+}
+.donate-bank-list dd {
+  margin: 0;
+  color: var(--green-dark);
+  font-size: 15px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+.donate-bank-list .donate-account-number {
+  font-size: 20px;
+  letter-spacing: 0.5px;
+  user-select: all;
+}
+.donate-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 22px;
+}
+.donate-copy-button {
+  gap: 13px;
+}
+.donate-secondary-button {
+  min-height: 50px;
+  padding: 10px 13px;
+  background: transparent;
+  border: 1px solid #a8b8a4;
+  border-radius: 6px;
+  color: var(--green);
+  font-size: 13px;
+  font-weight: 700;
+}
+.donate-secondary-button:hover {
+  background: #e0e8dc;
+}
+.donate-copy-status {
+  min-height: 24px;
+  margin: 8px 0 0;
+  color: var(--green);
+  font-size: 13px;
+  line-height: 1.5;
+}
+.donate-safety {
+  margin-top: 20px;
+  padding: 16px 18px;
+  border-left: 3px solid #8aab84;
+  background: #e8eee1;
+  border-radius: 0 9px 9px 0;
+}
+.donate-safety strong {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--green);
+  font-size: 14px;
+}
+.donate-safety p {
+  margin: 0;
+  font-size: 12px;
+  color: #526457;
+  line-height: 1.8;
+}
+.donate-outro {
+  max-width: 800px;
+  padding-block: 76px 45px;
+  text-align: center;
+}
+.donate-outro p {
+  margin-bottom: 20px;
+  color: #526458;
+  font: italic 23px/1.7 Georgia, "Times New Roman", serif;
+}
+.donate-outro a {
+  color: var(--green);
+}
+@media (max-width: 800px) {
+  .donate-card {
+    gap: 26px;
+    padding: 30px;
+  }
+  .donate-qr-frame {
+    width: min(100%, 340px);
+  }
+}
+@media (max-width: 700px) {
+  .donate-hero {
+    padding-block: 50px 35px;
+  }
+  .donate-coffee {
+    width: 64px;
+    height: 64px;
+    font-size: 32px;
+    margin-bottom: 22px;
+  }
+  .donate-hero h1 {
+    font-size: clamp(34px, 8vw, 44px);
+  }
+  .donate-intro {
+    font-size: 15px;
+  }
+  .donate-card {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 23px;
+    gap: 34px;
+  }
+  .donate-bank-side h2 {
+    font-size: 32px;
+  }
+  .donate-outro {
+    padding-block: 54px 30px;
+  }
+  .donate-outro p {
+    font-size: 20px;
+  }
+}
+@media (max-width: 400px) {
+  .donate-card {
+    padding: 16px;
+  }
+  .donate-bank-list > div {
+    padding: 12px;
+  }
+  .donate-copy-button,
+  .donate-secondary-button {
+    width: 100%;
+  }
+}
