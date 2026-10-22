@@ -2083,3 +2083,23 @@ details[open] .toggle:before {
     padding: 18px;
   }
 }
+
+/* Hai nút trong phần giới thiệu ebook: khám phá và mua ngay. */
+.ebook-hero-actions {
+  flex-wrap: wrap;
+  gap: 14px 16px;
+}
+.ebook-hero-actions .ebook-buy-cta {
+  color: var(--green);
+  background: transparent;
+  border-color: var(--green);
+  gap: 16px;
+}
+.ebook-hero-actions .ebook-buy-cta:hover {
+  background: #e5eee3;
+  color: var(--green-dark);
+}
+.ebook-hero-actions > .text-link {
+  flex-basis: 100%;
+  width: fit-content;
+}
