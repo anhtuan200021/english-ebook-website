@@ -1,6 +1,6 @@
 # TuanBong
 
-Website tiếng Việt gồm **đúng bốn trang chính**, dùng HTML, CSS và JavaScript thuần. Giữ phong cách xanh lá, nền kem; không có backend, bước build hay thư viện ứng dụng phải cài.
+Website tiếng Việt gồm **bốn trang nội dung chính** và các trang phụ Donate, Liên hệ, dùng HTML, CSS và JavaScript thuần. Giữ phong cách xanh lá, nền kem; không có backend, bước build hay thư viện ứng dụng phải cài.
 
 | Địa chỉ       | Tệp                    | Nội dung                                                          |
 | ------------- | ---------------------- | ----------------------------------------------------------------- |
@@ -9,7 +9,7 @@ Website tiếng Việt gồm **đúng bốn trang chính**, dùng HTML, CSS và 
 | `/courses/`   | `courses/index.html`   | Định hướng coaching 1:1 và khóa học video                         |
 | `/community/` | `community/index.html` | YouTube và Facebook cá nhân chính thức được cung cấp              |
 
-**Trang phụ:** `/donate/` (`donate/index.html`) là trang ủng hộ tự nguyện qua QR MB Bank và thông tin ngân hàng hiện có, không yêu cầu số tiền cố định và không liên quan bước thanh toán ebook. Trang được liên kết nhẹ nhàng ở footer, không thêm vào menu điều hướng chính.
+**Trang phụ:** `/donate/` (`donate/index.html`) dành cho ủng hộ tự nguyện qua QR MB Bank, tách biệt với thanh toán ebook. `/contact/` (`contact/index.html`) có liên kết Zalo và Facebook cá nhân, cùng thẻ TikTok chờ URL tài khoản chính xác. Cả hai trang đều xuất hiện trong menu và footer.
 
 ## Xem trước
 
@@ -21,13 +21,13 @@ python3 -m http.server 8000 --bind 127.0.0.1
 
 Trên Windows có thể dùng `py` thay cho `python3`. Mở trình duyệt trên máy chạy lệnh, nhập `http://127.0.0.1:8000`, sau đó dùng menu để đi giữa các trang. Nhấn `Ctrl+C` để dừng. Trong môi trường cloud, đây là máy chủ kiểm tra nội bộ, không phải địa chỉ công khai.
 
-Nên dùng máy chủ tĩnh để xem trước cấu trúc thư mục `/ebook/`, `/courses/`, `/community/`, `/donate/` giống khi triển khai. Không cần chạy npm hoặc cài dependency.
+Nên dùng máy chủ tĩnh để xem trước cấu trúc thư mục `/ebook/`, `/courses/`, `/community/`, `/donate/`, `/contact/` giống khi triển khai. Không cần chạy npm hoặc cài dependency.
 
 ## Chỉnh sửa
 
 - **Văn bản:** mở tệp HTML tương ứng và sửa phần chữ giữa các thẻ, giữ nguyên các thẻ HTML.
-- **Giao diện:** `styles.css` dùng chung cho bốn trang. Các biến màu nằm ở `:root` đầu tệp.
-- **Menu/footer:** nội dung giống nhau ở bốn tệp HTML; nếu thêm/sửa mục chung, cập nhật cả bốn tệp. Mỗi trang có đúng một mục menu dùng `aria-current="page"`.
+- **Giao diện:** `styles.css` dùng chung cho mọi trang. Các biến màu nằm ở `:root` đầu tệp.
+- **Menu/footer:** nội dung giống nhau ở sáu tệp HTML; nếu thêm/sửa mục chung, cập nhật cả sáu tệp. Mỗi trang có đúng một mục menu dùng `aria-current="page"`.
 - **JavaScript:** `script.js` dùng chung, chỉ chạy chức năng QR và mã chuyển khoản nếu có thành phần tương ứng trên trang Ebook.
 - **Tài nguyên:** giữ ảnh trong `assets`. Trang con dùng `../assets/...`, `../styles.css`, `../script.js`; trang chủ dùng `./...`. Liên kết tương đối hoạt động cả khi triển khai dưới một thư mục con.
 
