@@ -2163,7 +2163,7 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 
 /* Larger desktop navigation; keep the mobile layout unchanged. */
 @media(min-width:981px){
- .site-header .nav .primary-nav{gap:30px}
+ .site-header .nav .primary-nav{gap:20px}
  .site-header .nav .primary-nav>a,
  .site-header .nav .primary-nav .nav-dropdown>summary{
   font-size:16px;line-height:1.5;padding:12px 6px
