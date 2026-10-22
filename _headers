@@ -1,0 +1,9 @@
+# Browser protections for all static pages and assets.
+# Keep scripts, YouTube frames and existing learning tools compatible.
+# Same-origin embedding remains available for pages within this website.
+/*
+  X-Frame-Options: SAMEORIGIN
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Content-Security-Policy: frame-ancestors 'self'; object-src 'none'; base-uri 'self'
+  Permissions-Policy: camera=(), geolocation=(), payment=(), usb=(), microphone=(self)
