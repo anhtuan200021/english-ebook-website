@@ -2184,3 +2184,28 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
  .ebook-hero .eyebrow{font-size:9px;line-height:1.6;letter-spacing:1px;margin-bottom:22px}
  .ebook-hero .intro{font-size:16px;line-height:1.75;margin-bottom:18px}
 }
+
+/* Balanced phone footer: centered brand, six links in two equal rows. */
+@media(max-width:700px){
+ .container.footer{
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
+  gap:20px;padding-block:28px 24px;text-align:center
+ }
+ .footer .footer-brand{align-self:center;gap:8px}
+ .footer .footer-logo{width:112px;height:112px}
+ .footer .footer-brand>span{font-size:11px;line-height:1.5}
+ .footer .footer-links{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:4px 8px;width:100%;max-width:420px
+ }
+ .footer .footer-links>a{
+  display:flex;align-items:center;justify-content:center;
+  min-width:0;min-height:44px;padding:8px 2px;
+  font-size:13px;line-height:1.5;white-space:normal
+ }
+ .footer>p{
+  width:100%;margin:0;padding-top:18px;border-top:1px solid var(--line);
+  font-size:12px;line-height:1.8;text-align:center
+ }
+ .footer>p span{font-size:inherit}
+}
