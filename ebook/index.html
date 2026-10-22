@@ -12,7 +12,29 @@
     <link rel="icon" type="image/png" href="../assets/tuanbong-logo.png" />
     <link rel="stylesheet" href="../styles.css?v=20261022-mascots-1" />
     <script src="../script.js" defer></script>
-  </head>
+  <style>
+/* Keep the introduction as two balanced blocks, with the puppy near its heading. */
+.ebook-story .section-heading{margin-bottom:28px}
+.ebook-story .tb-mascot-heading{justify-content:flex-start;gap:28px;margin:0}
+.ebook-story .tb-mascot-heading .tb-mascot{width:96px;height:96px}
+.ebook-story-layout{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);align-items:center;gap:56px}
+.ebook-story-copy{min-width:0;color:var(--muted)}
+.ebook-story-copy .large-copy{max-width:none;font-size:21px;line-height:1.6;margin-bottom:22px;color:var(--ink)}
+.ebook-story-copy>p:not(.large-copy):not(.sample-note){font-size:16px;line-height:1.8;margin-bottom:18px}
+.ebook-story-copy .sample-note{font-size:12px;line-height:1.7;margin:22px 0 0}
+.ebook-story-layout .reading-illustration{margin:0;width:100%}
+.ebook-story-layout .reading-illustration figcaption{text-align:center;font-size:12px;margin-top:12px}
+@media(max-width:850px){.ebook-story-layout{gap:28px}}
+@media(max-width:700px){
+ .ebook-story .tb-mascot-heading{gap:12px;align-items:center}
+ .ebook-story .tb-mascot-heading h2{font-size:clamp(27px,6.6vw,36px);line-height:1.25;letter-spacing:-1px}
+ .ebook-story .tb-mascot-heading .tb-mascot{width:68px;height:68px}
+ .ebook-story-layout{grid-template-columns:minmax(0,1fr);gap:26px}
+ .ebook-story-copy .large-copy{font-size:19px}
+ .ebook-story-layout .reading-illustration{max-width:480px;justify-self:center}
+}
+</style>
+</head>
   <body>
     <a class="skip-link" href="#main">Đến nội dung chính</a>
     <header class="site-header">
@@ -101,31 +123,17 @@
           ><span><b>03</b> Đọc mọi lúc, mọi nơi</span>
         </div>
       </div>
-      <section class="section container" id="gioi-thieu">
+      <section class="section container ebook-story" id="gioi-thieu">
         <div class="section-heading">
           <p class="eyebrow">BẠN CÓ THẤY MÌNH Ở ĐÂY?</p>
           <div class="tb-mascot-heading"><h2>Đã nhiều lần bắt đầu.<br />Lần này, hãy đi xa hơn.</h2><img class="tb-mascot " src="../assets/mascots/reading.webp" width="360" height="360" alt="" aria-hidden="true" loading="lazy" decoding="async"></div>
         </div>
-        <div class="two-column">
-          <div>
+        <div class="ebook-story-layout">
+          <div class="ebook-story-copy">
             <p class="large-copy">
               Bạn lưu rất nhiều tài liệu, tải nhiều ứng dụng, nhưng vẫn chưa
               biết nên học gì mỗi ngày?
             </p>
-            <figure class="illustration reading-illustration">
-              <img
-                src="../assets/illustrations/reading-time.svg"
-                width="800"
-                height="480"
-                loading="lazy"
-                alt="Minh họa đọc ebook trên thiết bị bên cuốn sách mở và tách trà"
-              />
-              <figcaption>
-                Một khoảng thời gian dành cho việc đọc và học.
-              </figcaption>
-            </figure>
-          </div>
-          <div>
             <p>
               “Hành trình tự học tiếng Anh” là người bạn đồng hành giúp bạn sắp
               xếp lại việc học: hiểu điểm xuất phát, chọn mục tiêu vừa sức và
@@ -140,6 +148,18 @@
               khi có thông tin chính thức.
             </p>
           </div>
+          <figure class="illustration reading-illustration">
+              <img
+                src="../assets/illustrations/reading-time.svg"
+                width="800"
+                height="480"
+                loading="lazy"
+                alt="Minh họa đọc ebook trên thiết bị bên cuốn sách mở và tách trà"
+              />
+              <figcaption>
+                Một khoảng thời gian dành cho việc đọc và học.
+              </figcaption>
+            </figure>
         </div>
       </section>
       <section class="benefits section" id="loi-ich">
