@@ -1,32 +1,38 @@
-TuanBong Chrome — bản thử nghiệm 0.2
+TuanBong Chrome — bản 0.3.0
 
-CÀI ĐẶT (trên Google Chrome máy tính)
-1. Giải nén tệp ZIP vào một thư mục cố định. Đừng xóa/di chuyển thư mục sau khi cài.
-2. Gõ chrome://extensions vào thanh địa chỉ Chrome.
-3. Bật Developer mode / Chế độ nhà phát triển.
-4. Chọn Load unpacked / Tải tiện ích đã giải nén.
-5. Chọn thư mục chứa manifest.json (tuanbong-chrome).
-6. Bấm biểu tượng mảnh ghép và ghim TuanBong.
+CÀI ĐẶT / CẬP NHẬT (Google Chrome trên máy tính)
+1. Giải nén ZIP vào thư mục cố định tuanbong-chrome.
+2. Đã cài bản cũ: chép TOÀN BỘ tệp mới vào đúng thư mục tiện ích cũ, gồm cả background.js và youtube.js. Không chỉ chép mỗi manifest.json.
+3. Mở chrome://extensions → bật Developer mode / Chế độ nhà phát triển.
+4. Nếu cập nhật: bấm Reload / Tải lại trên thẻ TuanBong. Nếu Chrome yêu cầu, đồng ý quyền chạy trên YouTube và trang TuanBong. Nếu cài lần đầu: Load unpacked / Tải tiện ích đã giải nén → chọn thư mục chứa manifest.json.
+5. Tải lại tab YouTube đang mở để nút mới xuất hiện. Nếu có hai bản TuanBong, chỉ giữ bật bản mới.
 
-DÙNG
-1. Mở video tại youtube.com/watch trong Chrome.
-2. Mở mô tả → Hiện bản chép lời / Show transcript.
-3. Chọn phụ đề tiếng Anh, giữ mốc giờ hiển thị, đợi danh sách tải xong.
-4. Bấm biểu tượng TuanBong → Đưa vào TuanBong.
-5. Tab TuanBong YouTube mở ra tại website Cloudflare công khai. Kiểm tra video và số dòng rồi bấm Nhập và mở bài học.
-6. Nếu không thấy hộp nhập: tải lại tab TuanBong YouTube. Nếu vẫn không được, bấm tiện ích lại ở tab YouTube.
+DÙNG MỘT NÚT
+1. Mở một video dạng youtube.com/watch trong Chrome.
+2. Bấm “🐶 Học cùng TuanBong” bên dưới video, gần các nút thích / chia sẻ.
+3. Tiện ích thử mở phần mô tả và bản chép lời, ưu tiên tiếng Anh khi YouTube hiện lựa chọn đó, rồi đọc các dòng có mốc thời gian.
+4. Trang học mở ở tab mới, nạp video và phụ đề tự động. Video ở tab YouTube ban đầu được tạm dừng để tránh hai nơi cùng phát.
+5. Nếu đã có bài học với phụ đề trong trình duyệt: mở tiếp bài cũ, giữ nguyên phụ đề đã chỉnh, nhãn thì, câu đã lưu và tiến độ. Bài mới lưu phụ đề tự động, đánh dấu chưa xác nhận phủ toàn video.
+6. Có thể dùng nút trong popup tiện ích nếu không thấy nút dưới video.
 
-DỮ LIỆU CŨ
-Nếu trước đây dùng TuanBong trong Safari: Cài đặt → Xuất bản sao lưu. Mở TuanBong bằng Chrome → Cài đặt → Khôi phục, chọn tệp vừa xuất. Dữ liệu của hai trình duyệt không tự đồng bộ.
+KHI CHƯA LẤY ĐƯỢC
+- Thời gian chờ khoảng 18 giây. Không có phụ đề / giao diện không tương thích: thông báo lỗi ngay cạnh nút và có đường dẫn mở đúng video để nhập SRT/VTT hoặc dán thủ công.
+- Bạn cũng có thể mở mô tả → Hiện bản chép lời, chọn tiếng Anh, bật mốc thời gian rồi bấm thử lại.
+- Không chuyển sang video khác trong lúc đang lấy phụ đề. Tiện ích sẽ hủy để tránh chuyển nhầm nội dung.
+- Cần cho tiện ích quyền truy cập youtube.com; không chỉ bật quyền “khi bấm” nếu muốn nút tự xuất hiện.
+
+QUYỀN VÀ DỮ LIỆU
+- Tiện ích chạy trên YouTube để thêm nút. Chỉ đọc bản chép lời khi bạn bấm học; không tự tải phụ đề hay mở trang học chỉ vì bạn đang xem video.
+- Chỉ xin quyền YouTube và /youtube/ trên website TuanBong, không quyền mọi website. activeTab + scripting hỗ trợ popup; storage lưu tạm gói chuyển; background mở tab bài học.
+- Chỉ chuyển nội dung phụ đề, tên và link video đến chính trang TuanBong. Không đọc mật khẩu, cookie đăng nhập hoặc gửi dữ liệu đến dịch vụ tải phụ đề trung gian. Không API trả phí, AI hoặc backend.
+- Mỗi lần mở có một gói riêng, tự xóa sau khi trang học nhận xong; gói quá 24 giờ được dọn trong lần mở tiếp theo.
+- Dữ liệu học nằm trong trình duyệt, không tự đồng bộ giữa Chrome/Safari hay hai máy. Dùng Cài đặt → Xuất/Khôi phục bản sao lưu nếu muốn chuyển dữ liệu.
 
 GIỚI HẠN
-- Đây là bản thử nghiệm, chưa kiểm chứng trực tiếp trên giao diện YouTube hiện tại.
-- Chỉ đọc các dòng có mặt trong bản chép lời đang mở. Không bảo đảm đủ toàn video; hãy kiểm tra phạm vi và cuộn bản chép lời để đối chiếu.
-- Video không có bản chép lời hoặc giao diện YouTube thay đổi có thể không lấy được. Khi đó vẫn dùng SRT/VTT hoặc dán thủ công.
-- Mốc bắt đầu đọc từ bản chép lời, mốc kết thúc ước lượng, không phải mốc từng từ. Không đảm bảo lặp câu khớp âm thanh tuyệt đối.
-- Không dùng API trả phí, AI hay máy chủ tải phụ đề trung gian. Gói đọc phụ đề lưu tạm trong tiện ích rồi chuyển đến chính trang TuanBong.
-- Quyền activeTab: đọc tab YouTube khi bạn bấm tiện ích; scripting: chạy bộ đọc; storage: chuyển dữ liệu tạm; quyền trang TuanBong: nhận gói phụ đề. Không yêu cầu quyền mọi website.
-- Muốn cập nhật: thay tệp trong cùng thư mục, vào chrome://extensions rồi bấm Reload trên thẻ tiện ích.
+- Tự động phụ thuộc giao diện và bản chép lời YouTube hiện có. Không bảo đảm mọi video, tài khoản, ngôn ngữ hoặc giao diện đều hoạt động.
+- Chỉ đọc nội dung có trong giao diện bản chép lời; thử cuộn để gom dòng nếu danh sách nạp dần. Hãy kiểm tra phạm vi phụ đề, vẫn có thể thiếu một phần video.
+- Mốc kết thúc ước lượng từ dòng kế tiếp, không phải mốc từng từ; lặp câu không bảo đảm khớp âm thanh tuyệt đối.
+- Chưa kiểm thử trọn luồng bằng tiện ích cài trong Chrome thực tế ở môi trường này. Luồng xử lý có kiểm thử tự động và các điều khiển YouTube đã được đối chiếu trực tiếp.
 
-CHUYỂN TỪ BẢN CHATGPT
-Mở bản cũ → Cài đặt → Xuất bản sao lưu. Mở https://english-ebook-website.pages.dev/youtube/ → Cài đặt → Khôi phục → chọn tệp vừa xuất. Dữ liệu không tự chuyển giữa hai địa chỉ.
+BẢN CŨ
+Mở bản ChatGPT cũ → Cài đặt → Xuất bản sao lưu. Mở https://english-ebook-website.pages.dev/youtube/ → Cài đặt → Khôi phục. Không xóa bản cũ trước khi kiểm tra dữ liệu đã chuyển đủ.

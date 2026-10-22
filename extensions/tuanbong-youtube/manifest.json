@@ -1,15 +1,18 @@
 {
   "manifest_version": 3,
-  "name": "TuanBong · Đưa phụ đề vào bài học",
-  "version": "0.2.0",
-  "description": "Chuyển bản chép lời đang mở trên YouTube sang TuanBong. Không API trả phí.",
+  "name": "TuanBong · Học ngay trên YouTube",
+  "version": "0.3.0",
+  "description": "Thêm nút Học cùng TuanBong trên YouTube, tự mở bản chép lời và chuyển sang bài học. Không API trả phí.",
   "permissions": [
     "activeTab",
     "scripting",
     "storage"
   ],
   "host_permissions": [
-    "https://english-ebook-website.pages.dev/youtube/*"
+    "https://english-ebook-website.pages.dev/youtube/*",
+    "https://www.youtube.com/*",
+    "https://youtube.com/*",
+    "https://m.youtube.com/*"
   ],
   "action": {
     "default_title": "Đưa vào TuanBong",
@@ -24,6 +27,21 @@
         "bridge.js"
       ],
       "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://www.youtube.com/*",
+        "https://youtube.com/*",
+        "https://m.youtube.com/*"
+      ],
+      "js": [
+        "extract.js",
+        "youtube.js"
+      ],
+      "run_at": "document_idle"
     }
-  ]
+  ],
+  "background": {
+    "service_worker": "background.js"
+  }
 }
