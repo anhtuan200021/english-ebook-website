@@ -9,6 +9,8 @@ Website tiếng Việt gồm **đúng bốn trang chính**, dùng HTML, CSS và 
 | `/courses/`   | `courses/index.html`   | Định hướng coaching 1:1 và khóa học video                         |
 | `/community/` | `community/index.html` | YouTube và Facebook cá nhân chính thức được cung cấp              |
 
+**Trang phụ:** `/donate/` (`donate/index.html`) là trang ủng hộ tự nguyện qua QR MB Bank và thông tin ngân hàng hiện có, không yêu cầu số tiền cố định và không liên quan bước thanh toán ebook. Trang được liên kết nhẹ nhàng ở footer, không thêm vào menu điều hướng chính.
+
 ## Xem trước
 
 Mở terminal tại thư mục repository rồi chạy:
@@ -19,7 +21,7 @@ python3 -m http.server 8000 --bind 127.0.0.1
 
 Trên Windows có thể dùng `py` thay cho `python3`. Mở trình duyệt trên máy chạy lệnh, nhập `http://127.0.0.1:8000`, sau đó dùng menu để đi giữa các trang. Nhấn `Ctrl+C` để dừng. Trong môi trường cloud, đây là máy chủ kiểm tra nội bộ, không phải địa chỉ công khai.
 
-Nên dùng máy chủ tĩnh để xem trước cấu trúc thư mục `/ebook/`, `/courses/`, `/community/` giống khi triển khai. Không cần chạy npm hoặc cài dependency.
+Nên dùng máy chủ tĩnh để xem trước cấu trúc thư mục `/ebook/`, `/courses/`, `/community/`, `/donate/` giống khi triển khai. Không cần chạy npm hoặc cài dependency.
 
 ## Chỉnh sửa
 
@@ -65,6 +67,8 @@ Liên kết mua cũ ở trang chủ `/#mua-ebook` và `/#thanh-toan` được ch
 Không cần biến môi trường, dịch vụ trả phí hay thêm script build. Nếu đang dùng Pages preview theo nhánh, nhánh mới chỉ phục vụ kiểm tra; không tự cập nhật bản triển khai từ `main` cho đến khi PR được merge. Không đổi cài đặt production hoặc merge nếu chưa được chủ repository duyệt.
 
 ## Kiểm tra sau khi chỉnh sửa
+
+- Trên `/donate/`: QR giữ đúng mã gốc, thông tin chủ tài khoản/ngân hàng khớp trang Ebook, có thể sao chép số tài khoản, số tiền hoàn toàn tự nguyện và không hiển thị quy trình mua ebook.
 
 - Mở trực tiếp và tải lại cả bốn trang; kiểm tra menu và footer dẫn đúng, mục đang mở được đánh dấu.
 - Thử trên điện thoại và máy tính, kiểm tra không tràn ngang, ảnh giữ tỉ lệ.
