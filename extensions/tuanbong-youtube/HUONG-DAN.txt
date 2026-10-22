@@ -1,0 +1,32 @@
+TuanBong Chrome — bản thử nghiệm 0.2
+
+CÀI ĐẶT (trên Google Chrome máy tính)
+1. Giải nén tệp ZIP vào một thư mục cố định. Đừng xóa/di chuyển thư mục sau khi cài.
+2. Gõ chrome://extensions vào thanh địa chỉ Chrome.
+3. Bật Developer mode / Chế độ nhà phát triển.
+4. Chọn Load unpacked / Tải tiện ích đã giải nén.
+5. Chọn thư mục chứa manifest.json (tuanbong-chrome).
+6. Bấm biểu tượng mảnh ghép và ghim TuanBong.
+
+DÙNG
+1. Mở video tại youtube.com/watch trong Chrome.
+2. Mở mô tả → Hiện bản chép lời / Show transcript.
+3. Chọn phụ đề tiếng Anh, giữ mốc giờ hiển thị, đợi danh sách tải xong.
+4. Bấm biểu tượng TuanBong → Đưa vào TuanBong.
+5. Tab TuanBong YouTube mở ra tại website Cloudflare công khai. Kiểm tra video và số dòng rồi bấm Nhập và mở bài học.
+6. Nếu không thấy hộp nhập: tải lại tab TuanBong YouTube. Nếu vẫn không được, bấm tiện ích lại ở tab YouTube.
+
+DỮ LIỆU CŨ
+Nếu trước đây dùng TuanBong trong Safari: Cài đặt → Xuất bản sao lưu. Mở TuanBong bằng Chrome → Cài đặt → Khôi phục, chọn tệp vừa xuất. Dữ liệu của hai trình duyệt không tự đồng bộ.
+
+GIỚI HẠN
+- Đây là bản thử nghiệm, chưa kiểm chứng trực tiếp trên giao diện YouTube hiện tại.
+- Chỉ đọc các dòng có mặt trong bản chép lời đang mở. Không bảo đảm đủ toàn video; hãy kiểm tra phạm vi và cuộn bản chép lời để đối chiếu.
+- Video không có bản chép lời hoặc giao diện YouTube thay đổi có thể không lấy được. Khi đó vẫn dùng SRT/VTT hoặc dán thủ công.
+- Mốc bắt đầu đọc từ bản chép lời, mốc kết thúc ước lượng, không phải mốc từng từ. Không đảm bảo lặp câu khớp âm thanh tuyệt đối.
+- Không dùng API trả phí, AI hay máy chủ tải phụ đề trung gian. Gói đọc phụ đề lưu tạm trong tiện ích rồi chuyển đến chính trang TuanBong.
+- Quyền activeTab: đọc tab YouTube khi bạn bấm tiện ích; scripting: chạy bộ đọc; storage: chuyển dữ liệu tạm; quyền trang TuanBong: nhận gói phụ đề. Không yêu cầu quyền mọi website.
+- Muốn cập nhật: thay tệp trong cùng thư mục, vào chrome://extensions rồi bấm Reload trên thẻ tiện ích.
+
+CHUYỂN TỪ BẢN CHATGPT
+Mở bản cũ → Cài đặt → Xuất bản sao lưu. Mở https://english-ebook-website.pages.dev/youtube/ → Cài đặt → Khôi phục → chọn tệp vừa xuất. Dữ liệu không tự chuyển giữa hai địa chỉ.

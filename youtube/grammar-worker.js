@@ -1,0 +1,2 @@
+importScripts('vendor/compromise.js','grammar.js');
+let current=0;onmessage=e=>{const{job,rows}=e.data;current=job;let i=0;const tick=()=>{if(job!==current)return;const results=[];for(let n=0;n<20&&i<rows.length;n++,i++){const r=rows[i];results.push({id:r.id,entries:TBGrammar.analyze(r.text)});}postMessage({job,results,done:i===rows.length,count:i,total:rows.length});if(i<rows.length)setTimeout(tick,0);};tick();};
