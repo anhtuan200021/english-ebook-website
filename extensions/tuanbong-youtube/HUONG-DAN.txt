@@ -1,4 +1,4 @@
-TuanBong Chrome — bản 0.3.5
+TuanBong Chrome — bản 0.3.6
 
 CÀI ĐẶT / CẬP NHẬT (Google Chrome trên máy tính)
 1. Giải nén ZIP vào thư mục cố định tuanbong-chrome.
@@ -7,7 +7,12 @@ CÀI ĐẶT / CẬP NHẬT (Google Chrome trên máy tính)
 4. Nếu cập nhật: bấm Reload / Tải lại trên thẻ TuanBong. Nếu Chrome yêu cầu, đồng ý quyền chạy trên YouTube và trang TuanBong. Nếu cài lần đầu: Load unpacked / Tải tiện ích đã giải nén → chọn thư mục chứa manifest.json.
 5. Tải lại tab YouTube đang mở để nút mới xuất hiện. Nếu có hai bản TuanBong, chỉ giữ bật bản mới.
 
-SỬA LỖI 0.3.5
+TỐI ƯU 0.3.6
+- Phụ đề dài: chỉ xử lý lại các dòng mới hoặc thay đổi trong mỗi lần lấy.
+- Giảm sao chép nội dung và đo bố cục lặp lại. Không tự tải trước khi bấm học.
+- Có kiểm thử 4.500 dòng mô phỏng 75 phút; đây không phải đo tốc độ trên podcast thật.
+
+CÁC SỬA LỖI TRƯỚC
 - Kiểm tra địa chỉ hiện tại của tab khi YouTube chuyển video trong cùng trang.
 - Chờ thông tin video mới ổn định thay vì báo lỗi ngay.
 - Thông báo lỗi hiện ngoài thanh nút và có trạng thái Thử lại.
