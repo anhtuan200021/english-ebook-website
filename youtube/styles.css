@@ -328,3 +328,22 @@ header .brand-block>.site-home-link{padding:4px 0;min-height:26px;line-height:1.
 @media(max-width:1100px){header{height:auto;min-height:88px;padding-block:10px}header .brand-block{justify-self:start}}
 @media(max-width:900px){header .brand-block{grid-column:1;grid-row:1}header nav{align-self:start}}
 @media(max-width:760px){header .brand-logo{width:40px;height:40px;flex-basis:40px}header .brand-block>.site-home-link{font-size:11px;min-height:25px}}
+
+/* Choose on YouTube first; expand manual entry only when needed. */
+header .video-picker{width:100%;min-width:0}
+header .youtube-launch{display:flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:9px 10px;border-radius:8px;background:#1b5e4b;color:#fff;text-decoration:none;font-size:12px;font-weight:600;line-height:1.45;text-align:left}
+header .youtube-launch:hover{background:#164d3e}
+header .youtube-launch:focus-visible,header .manual-video>summary:focus-visible{outline:2px solid #17634f;outline-offset:3px}
+header .youtube-launch>span:first-child{font-size:15px;flex:none}
+header .manual-video{margin-top:9px;min-width:0}
+header .manual-video>summary{display:flex;align-items:center;justify-content:space-between;gap:5px;list-style:none;cursor:pointer;padding:5px 0;font-size:11px;font-weight:400;line-height:1.5;color:#546e63}
+header .manual-video>summary::-webkit-details-marker{display:none}
+header .manual-video>summary::after{content:'⌄';flex:none;font-size:13px}
+header .manual-video[open]>summary::after{content:'⌃'}
+header .manual-video .url-bar{display:flex;flex-direction:column;align-items:stretch;gap:8px;margin:0;padding:9px 0 0;border:0;border-radius:0;background:transparent;width:100%;min-width:0}
+header .manual-video .url-bar input{width:100%;min-width:0;border:1px solid var(--line);border-radius:6px;background:var(--bg);padding:8px;font-size:12px;line-height:1.5}
+header .manual-video .url-bar button{width:100%;min-height:36px;padding:7px 8px;font-size:12px}
+header .manual-video .youtube-icon{display:none}
+@media(min-width:1101px){header .video-picker{padding-top:14px;border-top:1px solid var(--line)}}
+@media(max-width:1100px) and (min-width:901px){header .video-picker{max-width:260px;justify-self:center}}
+@media(max-width:900px){header .video-picker{grid-column:1 / -1;grid-row:2;max-width:640px;justify-self:center}header .youtube-launch{min-height:40px;gap:8px;text-align:center}header .manual-video .url-bar{max-width:360px}header .manual-video>summary{justify-content:center;gap:8px}}
