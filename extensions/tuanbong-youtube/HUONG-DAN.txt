@@ -1,4 +1,4 @@
-TuanBong Chrome — bản 0.4.0
+TuanBong Chrome — bản 0.4.3
 
 CÀI ĐẶT / CẬP NHẬT (Google Chrome trên máy tính)
 1. Giải nén ZIP vào thư mục cố định tuanbong-chrome.
@@ -7,11 +7,17 @@ CÀI ĐẶT / CẬP NHẬT (Google Chrome trên máy tính)
 4. Nếu cập nhật: bấm Reload / Tải lại trên thẻ TuanBong. Nếu Chrome yêu cầu, đồng ý quyền chạy trên YouTube và trang TuanBong. Nếu cài lần đầu: Load unpacked / Tải tiện ích đã giải nén → chọn thư mục chứa manifest.json.
 5. Tải lại tab YouTube đang mở để nút mới xuất hiện. Nếu có hai bản TuanBong, chỉ giữ bật bản mới.
 
-KẾT NỐI WEBSITE 0.4.0
+KẾT NỐI WEBSITE 0.4.3
 - Trang học tự kiểm tra tiện ích và chỉ mở công cụ khi nhận diện được kết nối.
 - Chưa cài hoặc chưa kết nối: hiện hướng dẫn và nút tải.
 - Cài / cập nhật xong: tải lại trang học và tab YouTube. Có thể bấm Tôi đã cài — Kiểm tra lại.
 - Không thêm quyền truy cập website nào; vẫn chỉ YouTube và trang học TuanBong.
+
+TỐI ƯU 0.4.3
+- Nhận diện tiêu đề phân cảnh trong bản chép lời mới của YouTube, tránh cuộn toàn bộ khi phụ đề đã tải đủ.
+- Cuộn lấy phụ đề dài theo nhịp 25ms khi YouTube đã hiển thị vùng tiếp theo, thay cho chờ cố định 100ms.
+- Chỉ cuộn tiếp trong phạm vi phụ đề đã đọc, chờ khi YouTube dựng dòng chậm để tránh bỏ sót.
+- Tốc độ thực tế vẫn tùy YouTube và máy. Không rút ngắn thời gian chờ phụ đề tải đủ.
 
 CÁC TỐI ƯU TRƯỚC
 - Phụ đề dài: chỉ xử lý lại các dòng mới hoặc thay đổi trong mỗi lần lấy.

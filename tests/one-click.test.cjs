@@ -83,4 +83,15 @@ test('bridge delivers only its own transfer and never deletes a different launch
 });
 test('manual fallback opens the requested video and preserves all other lessons',()=>{const i=importing();i.ctx.location.href=origin+'/youtube/?video='+OTHER;const v=i.ctx.launchVideoFromURL();assert.equal(v.id,OTHER);assert.equal(v.cues.length,0);assert.equal(i.ctx.state.videos[0],i.lesson);assert.equal(i.ctx.state.videos.length,2);});
 test('invalid fallback IDs cannot create a lesson',()=>{const i=importing();i.ctx.location.href=origin+'/youtube/?video=javascript:evil';assert.equal(i.ctx.launchVideoFromURL(),null);assert.equal(i.ctx.state.videos.length,1);});
-test('extension access is restricted to YouTube and the TuanBong learning path',()=>{const m=JSON.parse(fs.readFileSync(path.join(ext,'manifest.json')));assert.equal(m.version,'0.4.0');assert.deepEqual(m.permissions,['activeTab','scripting','storage']);assert.deepEqual(m.host_permissions,[origin+'/youtube/*','https://www.youtube.com/*','https://youtube.com/*','https://m.youtube.com/*']);assert.equal(m.background.service_worker,'background.js');for(const script of ['extract.js','youtube.js','background.js','popup.js','bridge.js'])assert.doesNotMatch(fs.readFileSync(path.join(ext,script),'utf8'),/fetch\s*\(|XMLHttpRequest|eval\s*\(/);});
+test('extension access is restricted to YouTube and the TuanBong learning path',()=>{const m=JSON.parse(fs.readFileSync(path.join(ext,'manifest.json')));assert.equal(m.version,'0.4.3');assert.deepEqual(m.permissions,['activeTab','scripting','storage']);assert.deepEqual(m.host_permissions,[origin+'/youtube/*','https://www.youtube.com/*','https://youtube.com/*','https://m.youtube.com/*']);assert.equal(m.background.service_worker,'background.js');for(const script of ['extract.js','youtube.js','background.js','popup.js','bridge.js'])assert.doesNotMatch(fs.readFileSync(path.join(ext,script),'utf8'),/fetch\s*\(|XMLHttpRequest|eval\s*\(/);});
+
+test('chapter headers in the combined transcript do not trigger unnecessary full-list scrolling',async()=>{
+ const e=extractor({open:true,mounted:true}),panel=e.ctx.document.querySelector('ytd-transcript-renderer'),read=panel.querySelectorAll;
+ panel.scrollHeight=1072;
+ panel.querySelectorAll=selector=>{
+  if(selector==='yt-item-section-renderer > #header')return [{getBoundingClientRect:()=>({top:0,bottom:72,height:72})}];
+  return read(selector).map(node=>{const rect=node.getBoundingClientRect;node.getBoundingClientRect=()=>{const r=rect();return {...r,top:r.top+72,bottom:r.bottom+72};};return node;});
+ };
+ let moves=0;Object.defineProperty(panel,'scrollTop',{get:()=>0,set:()=>moves++});
+ const result=await e.ctx.prepareYouTubeTranscript();assert.equal(result.count,10);assert.ok(e.elapsed<=500);assert.equal(moves,1,'only restore original position, never scan an already mounted list');
+});

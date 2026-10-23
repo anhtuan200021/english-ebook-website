@@ -86,12 +86,17 @@ async function prepareYouTubeTranscript(options={}){
   if(!scroller)return true;
   if(mountedCache?.root===root&&mountedCache.scroller===scroller&&mountedCache.height===scroller.scrollHeight&&mountedCache.width===scroller.clientWidth&&nodes.length===mountedCache.nodes.length&&nodes.every((node,i)=>node===mountedCache.nodes[i]))return true;
   if(!nodes.length||!scroller.getBoundingClientRect)return false;
-  const rects=nodes.map(node=>node.getBoundingClientRect?.()).filter(rect=>rect&&rect.height>0).sort((a,b)=>a.top-b.top);
+  let rects=nodes.map(node=>node.getBoundingClientRect?.()).filter(rect=>rect&&rect.height>0);
   if(rects.length!==nodes.length)return false;
   // Measure the shared list container when headers/footers sit in the scroller.
   let list=nodes[0].parentElement;
   while(list&&list!==scroller&&!nodes.every(node=>list.contains(node)))list=list.parentElement;
   const area=list&&scroller.contains?.(list)&&list.scrollHeight>0?list:scroller;
+  // YouTube's combined transcript groups captions under chapter headers.
+  // Those real headers occupy space before/between rows; they are not gaps
+  // from virtualized captions. Keep unknown gaps/spacers out of this proof.
+  const headers=[...(area.querySelectorAll?.('yt-item-section-renderer > #header')||[])].map(node=>node.getBoundingClientRect?.()).filter(rect=>rect&&rect.height>0);
+  rects=[...rects,...headers].sort((a,b)=>a.top-b.top);
   const top=area.getBoundingClientRect().top-(area.scrollTop||0);
   if(Math.abs(rects[0].top-top)>48||Math.abs(top+area.scrollHeight-rects.at(-1).bottom)>48)return false;
   const complete=rects.every((rect,i)=>!i||rect.top-rects[i-1].bottom<=96);
@@ -102,6 +107,7 @@ async function prepareYouTubeTranscript(options={}){
  progress('Đang mở phụ đề trên YouTube…');
  try{
   while(Date.now()-started<limit){
+   let cadence=100;
    if(!check()){progress('Đang chờ YouTube chuyển xong video mới…');await wait();continue;}const root=visible(activePanel)?activePanel:panel();activePanel=root;
    if(visible(root)){
     // If YouTube exposes a language chooser, prefer an available English track.
@@ -129,14 +135,28 @@ async function prepareYouTubeTranscript(options={}){
      if(!scrollNode){
       const candidates=[root,...root.querySelectorAll('#segments-container,ytd-transcript-segment-list-renderer,yt-transcript-segment-list-renderer,div')];
       scrollNode=candidates.find(node=>node.clientHeight>80&&node.scrollHeight>node.clientHeight+20&&/auto|scroll/.test(getComputedStyle(node).overflowY));
-      if(scrollNode){originalScroll=scrollNode.scrollTop;if(originalScroll>0&&!fullyMounted(root,scrollNode,nodes)){scrollNode.scrollTop=0;lastScrollAt=Date.now();await wait();continue;}}
+      if(scrollNode){originalScroll=scrollNode.scrollTop;if(originalScroll>0&&!fullyMounted(root,scrollNode,nodes)){scrollNode.scrollTop=0;lastScrollAt=Date.now();await wait(25);continue;}}
      }
      const signature=accumulated.size+'|'+result.transcript;
      if(signature!==stable){stable=signature;stableAt=Date.now();}
      const complete=fullyMounted(root,scrollNode,nodes);
      const canScroll=!complete&&scrollNode&&scrollNode.scrollTop+scrollNode.clientHeight<scrollNode.scrollHeight-4;
      // Collect virtualized rows progressively instead of jumping over unseen rows.
-     if(canScroll&&Date.now()-lastScrollAt>=100){scrollNode.scrollTop+=Math.max(80,scrollNode.clientHeight*.9);lastScrollAt=Date.now();stableAt=Date.now();}
+     if(canScroll){
+      cadence=25;
+      if(Date.now()-lastScrollAt>=25){
+       const viewport=scrollNode.getBoundingClientRect?.(),first=nodes[0]?.getBoundingClientRect?.(),last=nodes.at(-1)?.getBoundingClientRect?.();
+       let step=Math.max(80,scrollNode.clientHeight*.9);
+       // Never move beyond the captions already read. Slow virtual renderers
+       // must fill the new window before we advance again.
+       if(viewport&&last&&Number.isFinite(last.bottom)&&Number.isFinite(viewport.top)){
+        const overlap=Math.min(32,scrollNode.clientHeight*.1);
+        step=Math.min(step,last.bottom-viewport.top-(scrollNode.clientTop||0)-overlap);
+        if(first&&first.top>=viewport.top+scrollNode.clientHeight)step=0;
+       }
+       if(step>=10){scrollNode.scrollTop+=step;lastScrollAt=Date.now();stableAt=Date.now();}
+      }
+     }
      if(!canScroll&&Date.now()-stableAt>=300){
       if(!check()){await wait();continue;}
       const seconds=t=>t.split(':').reduce((sum,n)=>sum*60+Number(n),0);
@@ -157,7 +177,7 @@ async function prepareYouTubeTranscript(options={}){
     if(control){control.click();opened=true;}
     else if(!expanded){const expand=document.querySelector('ytd-watch-metadata #description-inline-expander #expand,ytd-watch-metadata #description #expand,ytd-watch-metadata ytd-text-inline-expander #expand');if(visible(expand)){expand.click();expanded=true;}}
    }
-   await wait();
+   await wait(cadence);
   }
   if(!check())throw Error('YouTube chưa chuyển xong video. Đợi video tải xong rồi bấm Thử lại nhé.');
   throw Error(accumulated.size?'Phụ đề chưa tải đủ trong thời gian chờ. Giữ bản chép lời mở rồi bấm thử lại.':'Chưa lấy được phụ đề tự động. Hãy mở mô tả → Hiện bản chép lời, chọn tiếng Anh và bật mốc giờ, rồi thử lại. Video không có phụ đề có thể nhập SRT/VTT thủ công.');
