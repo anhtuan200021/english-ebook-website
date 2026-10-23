@@ -1,3 +1,10 @@
+function stripCaptionTimeLabel(text,start){
+ const normalized=String(text||'').normalize('NFC');
+ const match=normalized.match(/^(?:(\d+)\s*giờ\s*)?(?:(\d+)\s*phút\s*)?(?:(\d+)\s*giây\s*)?/i);
+ if(!match?.[0]||!/[A-Za-z]/.test(normalized.slice(match[0].length,match[0].length+1)))return text;
+ const seconds=Number(match[1]||0)*3600+Number(match[2]||0)*60+Number(match[3]||0);
+ return Math.abs(seconds-start)<.01?normalized.slice(match[0].length):text;
+}
 // Pick a visible transcript, including YouTube's combined chapters/transcript panel.
 function tuanbongTranscriptPanel(){
  const shown=node=>node&&node.getClientRects().length&&node.getAttribute?.('visibility')!=='ENGAGEMENT_PANEL_VISIBILITY_HIDDEN'&&node.getAttribute?.('aria-hidden')!=='true';
@@ -7,6 +14,16 @@ function tuanbongTranscriptPanel(){
  return candidates.find(node=>node.querySelectorAll('ytd-transcript-segment-renderer,yt-transcript-segment-view-model,transcript-segment-view-model').length)||known.find(shown)||null;
 }
 // Runs only in the YouTube tab selected by the user; no private APIs or network requests.
+function tuanbongSubtitleText(node){
+ if(!node)return '';
+ const copy=node.cloneNode?.(true);
+ if(copy){
+  // textContent includes YouTube's hidden screen-reader duration labels.
+  copy.querySelectorAll('[class*="timestamp" i],.yt-core-screen-reader-only,.sr-only,[hidden]').forEach(child=>child.remove());
+  return (copy.textContent||'').replace(/\s+/g,' ').trim();
+ }
+ return (node.textContent||'').replace(/\s+/g,' ').trim();
+}
 function extractYouTubeTranscript(){
  const url=new URL(location.href),id=url.searchParams.get('v');
  if(!['www.youtube.com','youtube.com','m.youtube.com'].includes(url.hostname)||url.pathname!=='/watch'||!/^[\w-]{11}$/.test(id||''))throw Error('Hãy mở trang video YouTube dạng youtube.com/watch trước.');
@@ -15,12 +32,14 @@ function extractYouTubeTranscript(){
  const segments=[...panel.querySelectorAll('ytd-transcript-segment-renderer,yt-transcript-segment-view-model,transcript-segment-view-model')],rows=[],seen=new Set();
  for(const segment of segments){
   const time=(segment.querySelector('.segment-timestamp,.ytTranscriptSegmentViewModelTimestamp,[class*="Timestamp"],[class*="timestamp"],button')?.textContent||'').trim();
-  let text=(segment.querySelector('.segment-text,.ytTranscriptSegmentViewModelText,[class*="SegmentText"],[class*="segment-text"]')?.textContent||'').replace(/\s+/g,' ').trim();
+  let text=tuanbongSubtitleText(segment.querySelector('.segment-text,.ytTranscriptSegmentViewModelText,[class*="SegmentText"],[class*="segment-text"]'));
   if(!text){
-   const pieces=[...segment.querySelectorAll('yt-formatted-string,.yt-core-attributed-string')].map(node=>(node.textContent||'').replace(/\s+/g,' ').trim()).filter(value=>value&&!/^\d+(?::\d{2}){1,2}$/.test(value));
-   text=pieces.sort((a,b)=>b.length-a.length)[0]||(segment.textContent||'').replace(/^\s*\d+(?::\d{2}){1,2}\s*/,'').replace(/\s+/g,' ').trim();
+   const pieces=[...segment.querySelectorAll('yt-formatted-string,.yt-core-attributed-string')].map(tuanbongSubtitleText).filter(value=>value&&!/^\d+(?::\d{2}){1,2}$/.test(value));
+   text=pieces.sort((a,b)=>b.length-a.length)[0]||tuanbongSubtitleText(segment).replace(/^\s*\d+(?::\d{2}){1,2}\s*/,'');
+   if(time&&text.startsWith(time))text=text.slice(time.length).trimStart();
   }
   if(!/^\d+(?::\d{2}){1,2}$/.test(time)||!text)continue;
+  text=stripCaptionTimeLabel(text,time.split(':').reduce((sum,n)=>sum*60+Number(n),0));
   const key=time+'|'+text;if(!seen.has(key)){rows.push({time,text});seen.add(key);}
  }
  if(!rows.length)throw Error('Chưa đọc được dòng có mốc giờ. Hãy bật mốc thời gian trong bản chép lời. Nếu vẫn lỗi, dùng cách dán thủ công.');
@@ -55,9 +74,13 @@ async function prepareYouTubeTranscript(options={}){
   if(!nodes.length||!scroller.getBoundingClientRect)return false;
   const rects=nodes.map(node=>node.getBoundingClientRect?.()).filter(rect=>rect&&rect.height>0).sort((a,b)=>a.top-b.top);
   if(rects.length!==nodes.length)return false;
-  const top=scroller.getBoundingClientRect().top-scroller.scrollTop;
-  if(Math.abs(rects[0].top-top)>48||Math.abs(top+scroller.scrollHeight-rects.at(-1).bottom)>48)return false;
-  return rects.every((rect,i)=>!i||rect.top-rects[i-1].bottom<=32);
+  // Measure the shared list container when headers/footers sit in the scroller.
+  let list=nodes[0].parentElement;
+  while(list&&list!==scroller&&!nodes.every(node=>list.contains(node)))list=list.parentElement;
+  const area=list&&scroller.contains?.(list)&&list.scrollHeight>0?list:scroller;
+  const top=area.getBoundingClientRect().top-(area.scrollTop||0);
+  if(Math.abs(rects[0].top-top)>48||Math.abs(top+area.scrollHeight-rects.at(-1).bottom)>48)return false;
+  return rects.every((rect,i)=>!i||rect.top-rects[i-1].bottom<=96);
  };
  const accumulated=new Map();let opened=false,expanded=false,stable='',stableAt=0,scrollNode=null,originalScroll=0,lastScrollAt=0,languageTried=false;
  progress('Đang mở phụ đề trên YouTube…');
@@ -93,8 +116,8 @@ async function prepareYouTubeTranscript(options={}){
      const complete=fullyMounted(root,scrollNode);
      const canScroll=!complete&&scrollNode&&scrollNode.scrollTop+scrollNode.clientHeight<scrollNode.scrollHeight-4;
      // Collect virtualized rows progressively instead of jumping over unseen rows.
-     if(canScroll&&Date.now()-lastScrollAt>=150){scrollNode.scrollTop+=Math.max(80,scrollNode.clientHeight*.75);lastScrollAt=Date.now();stableAt=Date.now();}
-     if(!canScroll&&Date.now()-stableAt>=500){
+     if(canScroll&&Date.now()-lastScrollAt>=100){scrollNode.scrollTop+=Math.max(80,scrollNode.clientHeight*.9);lastScrollAt=Date.now();stableAt=Date.now();}
+     if(!canScroll&&Date.now()-stableAt>=300){
       check();
       const seconds=t=>t.split(':').reduce((sum,n)=>sum*60+Number(n),0);
       const rows=[...accumulated.values()].sort((a,b)=>seconds(a.time)-seconds(b.time));

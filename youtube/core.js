@@ -63,5 +63,12 @@
   }
   function playbackAction({time:t,paused,range,mode,closed}){if(paused||!range||mode==='off'||closed)return null;if(t>=range.end&&t<range.end+1.5)return mode==='loop'?{type:'seek',time:range.start}:{type:'pause',hold:range.end-.04};return null;}
   function validVideo(v){if(!v||typeof v.id!=='string'||v.id.length>100||typeof v.title!=='string'||!Array.isArray(v.cues)||v.cues.length>12000)throw Error('Bản sao có video không hợp lệ.');if(v.url)videoURL(v.url);const ids=new Set();for(const c of v.cues){if(!c||typeof c.id!=='string'||ids.has(c.id)||typeof c.text!=='string'||c.text.length>20000||!Number.isFinite(c.start)||!Number.isFinite(c.end)||c.start<0||c.end<=c.start)throw Error('Bản sao có dòng phụ đề không hợp lệ.');ids.add(c.id);}return v;}
-  const api={time,stamp,hash,videoURL,parse,active,group,sentences,phraseChunks,cueSpan,readingExcerpt,sentenceWindow,loopRange,playbackAction,validVideo};if(typeof module!=='undefined')module.exports=api;else root.TB=api;
+function stripCaptionTimeLabel(text,start){
+ const normalized=String(text||'').normalize('NFC');
+ const match=normalized.match(/^(?:(\d+)\s*giờ\s*)?(?:(\d+)\s*phút\s*)?(?:(\d+)\s*giây\s*)?/i);
+ if(!match?.[0]||!/[A-Za-z]/.test(normalized.slice(match[0].length,match[0].length+1)))return text;
+ const seconds=Number(match[1]||0)*3600+Number(match[2]||0)*60+Number(match[3]||0);
+ return Math.abs(seconds-start)<.01?normalized.slice(match[0].length):text;
+}
+  const api={stripCaptionTimeLabel,time,stamp,hash,videoURL,parse,active,group,sentences,phraseChunks,cueSpan,readingExcerpt,sentenceWindow,loopRange,playbackAction,validVideo};if(typeof module!=='undefined')module.exports=api;else root.TB=api;
 })(globalThis);

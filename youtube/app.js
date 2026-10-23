@@ -102,7 +102,15 @@ function renderMeta(){
  $('#transcriptInfo').title=coverage;
  renderRecent();
 }
-function useVideo(v){captureVideoProgress(true);if(pendingLessonJump?.videoId!==v.id)pendingLessonJump=null;$('#selectionBubble').hidden=true;video=v;v.updated=Date.now();state.current=v.id;activeIndex=-1;range=null;pendingSeek=null;closed=false;manualScroll=false;transcriptLimit=150;$('#returnActive').hidden=true;renderMeta();renderTranscript();analyze();persist();loadPlayer();updateCurrent(-1);}
+function repairExtensionCaptionLabels(v){
+ if(!/YouTube.*tiện ích/.test(v.format||'')||v.cues.length<3)return false;
+ const fixed=v.cues.map(c=>TB.stripCaptionTimeLabel(c.text,c.start));
+ const count=fixed.filter((text,i)=>text!==v.cues[i].text).length;
+ // Repair only the repeated import artifact, preserving manual/other subtitles.
+ if(count<3||count/v.cues.length<.8)return false;
+ v.cues.forEach((c,i)=>{c.text=fixed[i];});return true;
+}
+function useVideo(v){repairExtensionCaptionLabels(v);captureVideoProgress(true);if(pendingLessonJump?.videoId!==v.id)pendingLessonJump=null;$('#selectionBubble').hidden=true;video=v;v.updated=Date.now();state.current=v.id;activeIndex=-1;range=null;pendingSeek=null;closed=false;manualScroll=false;transcriptLimit=150;$('#returnActive').hidden=true;renderMeta();renderTranscript();analyze();persist();loadPlayer();updateCurrent(-1);}
 function ensureLesson(){if(video)return video;const v={id:'manual-'+Date.now(),title:'Bài học phụ đề',url:'',cues:[],labels:{},format:'',partial:false,updated:Date.now()};state.videos.push(v);useVideo(v);return v;}
 $('#recentSelect').onchange=e=>{const v=state.videos.find(v=>v.id===e.target.value);if(v)useVideo(v);};
 // Select the complete address for quick replacement with a new video.
