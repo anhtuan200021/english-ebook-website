@@ -9,5 +9,23 @@
  return{version:1,videos:unique(videos),saved:unique(saved),words:unique(s.words.map(word)),current:str(s.current,100)?s.current:'',settings:{font:[16,18,21].includes(s.settings?.font)?s.settings.font:18}};
  }
  function merge(a,b){const combine=(x,y)=>[...new Map([...x,...y].map(v=>[v.id,v])).values()];return validate({...a,videos:combine(a.videos,b.videos),saved:combine(a.saved,b.saved),words:combine(a.words,b.words)});}
- const api={validate,word,merge};if(typeof module!=='undefined')module.exports=api;else root.TBData=api;
+ function readLesson(file){
+  if(!file||file.type!=='tuanbong-lesson'||file.version!==1||!file.video||!Array.isArray(file.saved))throw Error('Hãy chọn tệp bài học TuanBong đã xuất bằng nút “Xuất bài học này”.');
+  const v=file.video,link=root.TB.videoURL(v.url||'');
+  if(v.id!==link.id||!Array.isArray(v.cues)||!v.cues.length)throw Error('Bài học cần đúng link YouTube và có phụ đề.');
+  const incoming=validate({version:1,videos:[{...v,url:link.url}],saved:file.saved,words:[],current:v.id,settings:{font:18}});
+  if(incoming.saved.some(s=>s.videoId!==v.id||(s.url&&root.TB.videoURL(s.url).id!==v.id)))throw Error('Tệp chứa câu đã lưu của video khác.');
+  return incoming;
+ }
+ function lessonFile(video,saved){
+  const checked=readLesson({type:'tuanbong-lesson',version:1,video,saved:saved.filter(s=>s.videoId===video.id)});
+  return {type:'tuanbong-lesson',version:1,video:checked.videos[0],saved:checked.saved};
+ }
+ function mergeLesson(state,file){
+  const incoming=readLesson(file),v=incoming.videos[0],existing=state.videos.find(x=>x.id===v.id);
+  if(incoming.saved.some(s=>state.saved.some(old=>old.id===s.id&&old.videoId!==v.id)))throw Error('ID câu đã lưu trùng với bài khác. Chưa nhập tệp để bảo vệ kho hiện tại.');
+  v.favorite=v.favorite||existing?.favorite===true;
+  return validate({...state,videos:[...state.videos.filter(x=>x.id!==v.id),v],saved:[...new Map([...state.saved,...incoming.saved].map(s=>[s.id,s])).values()],current:v.id});
+ }
+ const api={validate,word,merge,readLesson,lessonFile,mergeLesson};if(typeof module!=='undefined')module.exports=api;else root.TBData=api;
 })(globalThis);

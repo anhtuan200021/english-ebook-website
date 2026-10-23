@@ -72,6 +72,7 @@ function resumePlayer(v){
 function renderVideoBookmarks(){
  const enabled=!!video?.url,saved=enabled&&video.favorite===true,b=$('#saveVideoBtn');
  b.disabled=!enabled;b.textContent=saved?'♥ Đã lưu video':'♡ Lưu video';b.setAttribute('aria-pressed',String(saved));b.setAttribute('aria-label',saved?'Bỏ lưu video hiện tại':'Lưu video hiện tại');
+ $('#exportLessonBtn').disabled=!dataReady||!video?.url||!video.cues.length;
  $('#savedVideoCount').textContent=state.videos.filter(v=>v.favorite&&v.url).length;
 }
 function toggleFavoriteVideo(){
@@ -280,6 +281,32 @@ $('#addWordBtn').onclick=()=>editWord();$('#wordEditForm').onsubmit=e=>{e.preven
 function renderCustomWords(){$('#customWordList').innerHTML=state.words.length?state.words.map(w=>'<div><span>'+esc(w.term)+'</span><span><button data-edit-word="'+esc(w.id)+'">Sửa</button> <button data-delete-word="'+esc(w.id)+'">Xóa</button></span></div>').join(''):'<p class="subtle">Bạn chưa thêm mục riêng.</p>';}
 $('#customWordList').onclick=e=>{const b=e.target.closest('[data-edit-word],[data-delete-word]');if(!b)return;if(b.dataset.editWord){$('#settingsDialog').close();editWord(state.words.find(w=>w.id===b.dataset.editWord));}else{const w=state.words.find(w=>w.id===b.dataset.deleteWord);state.words=state.words.filter(x=>x!==w);renderCustomWords();persist();toast('Đã xóa mục riêng “'+w.term+'”. Bản sao lưu cũ vẫn giữ mục nếu bạn đã xuất.');}};
 $('#settingsBtn').onclick=()=>{renderCustomWords();openDialog('#settingsDialog');};$('#fontSize').onchange=e=>{state.settings.font=Number(e.target.value);document.documentElement.style.setProperty('--reading',state.settings.font+'px');persist();};
+// A portable lesson includes only the selected video and its saved sentences.
+let pendingLessonFile=null,lessonFileBusy=false;
+$('#exportLessonBtn').onclick=()=>{
+ try{if(!dataReady||!video?.url||!video.cues.length)throw Error('Mở một video có phụ đề trước khi xuất bài học nhé.');captureVideoProgress(true);
+  download('TuanBong-bai-hoc-'+video.id+'.json',TBData.lessonFile(video,state.saved));toast('Đã xuất bài học. Sang Safari, bấm Nhập bài học và chọn tệp vừa tải.');
+ }catch(e){toast(e.message);}
+};
+$('#importLessonBtn').onclick=()=>{if(dataReady&&!lessonFileBusy)$('#lessonFile').click();};
+$('#lessonFile').onchange=async e=>{
+ const file=e.target.files[0];if(!file)return;
+ try{if(!dataReady||lessonFileBusy)throw Error('Đợi dữ liệu tải xong rồi nhập lại nhé.');if(file.size>20000000)throw Error('Tệp bài học tối đa 20 MB.');
+  const raw=JSON.parse(await file.text()),checked=TBData.readLesson(raw),v=checked.videos[0];
+  pendingLessonFile=TBData.lessonFile(v,checked.saved);
+  $('#lessonFileTitle').textContent=v.title;$('#lessonFileInfo').textContent=v.cues.length+' dòng phụ đề · '+TB.stamp(v.cues[0].start)+'–'+TB.stamp(Math.max(...v.cues.map(c=>c.end)))+(v.partial?' · Phụ đề một phần':'')+' · Đã xem đến '+TB.stamp(v.lastPosition)+' · '+checked.saved.length+' câu đã lưu';
+  $('#lessonFileReplace').textContent=state.videos.some(old=>old.id===v.id)?'Video này đã có trong kho. Nếu tiếp tục, phụ đề, nhãn thì và vị trí xem của video này sẽ được cập nhật từ tệp. Các câu đã lưu được gộp; câu trùng ID dùng nội dung trong tệp. Các bài khác được giữ nguyên.':'';
+  $('#lessonFileError').textContent='';openDialog('#lessonImportDialog');
+ }catch(error){pendingLessonFile=null;toast('Không nhập tệp: '+error.message);}finally{e.target.value='';}
+};
+$('#lessonImportForm').onsubmit=async e=>{
+ e.preventDefault();if(!pendingLessonFile||lessonFileBusy)return;lessonFileBusy=true;$('#lessonFileSubmit').disabled=true;
+ try{captureVideoProgress(true);const merged=TBData.mergeLesson(state,pendingLessonFile);clearTimeout(saveTimer);await TBStore.set(merged);clearTimeout(saveTimer);state=merged;
+  const lesson=state.videos.find(v=>v.id===state.current);pendingLessonJump=null;useVideo(lesson);updateSaved();$('#lessonImportDialog').close();toast('Đã nhập bài học cùng phụ đề. Bạn có thể học tiếp tại đây.');
+ }catch(error){$('#lessonFileError').textContent='Chưa nhập bài học: '+error.message;}finally{lessonFileBusy=false;$('#lessonFileSubmit').disabled=false;}
+};
+$('#lessonImportDialog').addEventListener('cancel',e=>{if(lessonFileBusy)e.preventDefault();});
+$('#lessonImportDialog').addEventListener('close',()=>{pendingLessonFile=null;});
 $('#exportBtn').onclick=()=>download('TuanBong-backup-'+new Date().toISOString().slice(0,10)+'.json',state);$('#exportWords').onclick=()=>download('TuanBong-kho-cach-noi.json',{version:1,words:state.words});
 $('#backupFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{if(f.size>20000000)throw Error('Tệp sao lưu tối đa 20 MB.');const incoming=TBData.validate(JSON.parse(await f.text())),merged=TBData.merge(state,incoming);clearTimeout(saveTimer);await TBStore.set(merged);state=merged;const v=state.videos.find(v=>v.id===state.current)||state.videos[0];if(v)useVideo(v);updateSaved();renderCustomWords();renderRecent();toast('Đã kiểm tra và gộp bản sao lưu an toàn.');}catch(err){toast('Không nhập tệp: '+err.message);}finally{e.target.value='';}};
 $('#wordsFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{if(f.size>3000000)throw Error('Kho nhập tối đa 3 MB.');const data=JSON.parse(await f.text());if(data.version!==1||!Array.isArray(data.words)||data.words.length>10000)throw Error('Cần tệp kho cách nói TuanBong v1.');const words=data.words.map(TBData.word);const combined=[...new Map([...state.words,...words].map(w=>[w.id,w])).values()];const next={...state,words:combined};TBData.validate(next);clearTimeout(saveTimer);await TBStore.set(next);state=next;renderCustomWords();toast('Đã nhập '+words.length+' cách nói riêng.');}catch(err){toast('Không nhập kho: '+err.message);}finally{e.target.value='';}};
@@ -362,6 +389,6 @@ function launchVideoFromURL(){
  if(!url.searchParams.has('transfer')){url.searchParams.delete('video');history.replaceState(null,'',url.href);}
  return lesson;
 }
-async function init(){try{const data=await TBStore.get();if(data)state=TBData.validate(data);}catch(e){toast(e.message+' Bạn có thể dùng tạm và xuất bản sao lưu.');}dataReady=true;document.documentElement.style.setProperty('--reading',state.settings.font+'px');$('#fontSize').value=state.settings.font;const transferring=/^[a-f0-9-]{36}$/.test(new URL(location.href).searchParams.get('transfer')||'');const v=launchVideoFromURL()||(!transferring&&(state.videos.find(v=>v.id===state.current)||state.videos[0]));if(v)useVideo(v);else{renderRecent();renderGrammar();}updateSaved();lookup('');showTab('transcript');tick();if(transferring)setTimeout(()=>{if(new URL(location.href).searchParams.has('transfer')&&!incomingTransfer)toast('Chưa nhận được phụ đề từ tiện ích. Tải lại tab YouTube và bấm học lại, hoặc dùng Nhập phụ đề.');},15000);}
+async function init(){try{const data=await TBStore.get();if(data)state=TBData.validate(data);}catch(e){toast(e.message+' Bạn có thể dùng tạm và xuất bản sao lưu.');}dataReady=true;$('#importLessonBtn').disabled=false;document.documentElement.style.setProperty('--reading',state.settings.font+'px');$('#fontSize').value=state.settings.font;const transferring=/^[a-f0-9-]{36}$/.test(new URL(location.href).searchParams.get('transfer')||'');const v=launchVideoFromURL()||(!transferring&&(state.videos.find(v=>v.id===state.current)||state.videos[0]));if(v)useVideo(v);else{renderRecent();renderGrammar();}updateSaved();lookup('');showTab('transcript');tick();if(transferring)setTimeout(()=>{if(new URL(location.href).searchParams.has('transfer')&&!incomingTransfer)toast('Chưa nhận được phụ đề từ tiện ích. Tải lại tab YouTube và bấm học lại, hoặc dùng Nhập phụ đề.');},15000);}
 init();
 
