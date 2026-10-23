@@ -320,3 +320,11 @@ input[type=checkbox]{accent-color:#226f50}
 @media(max-width:600px){#libraryDialog{width:calc(100vw - 24px);padding:18px 14px}#libraryList .library-item{padding:14px}#libraryList .quote{font-size:19px}.library-meta{font-size:11px;gap:8px}.library-actions{gap:6px}.library-actions button{font-size:11px;padding-inline:8px}}
 
 .site-home-link{display:inline-flex;align-items:center;padding:8px;font-size:12px;color:#28523f;text-decoration:none;border-radius:7px}.site-home-link:hover{background:#e8f1eb}.site-home-link:focus-visible{outline:2px solid #17634f;outline-offset:2px}
+
+/* Keep the website link directly below the shared TuanBong brand. */
+header .brand-block{display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-width:0}
+header .brand-logo{display:block;width:44px;height:44px;object-fit:contain;flex:0 0 44px}
+header .brand-block>.site-home-link{padding:4px 0;min-height:26px;line-height:1.5;font-size:12px;white-space:nowrap}
+@media(max-width:1100px){header{height:auto;min-height:88px;padding-block:10px}header .brand-block{justify-self:start}}
+@media(max-width:900px){header .brand-block{grid-column:1;grid-row:1}header nav{align-self:start}}
+@media(max-width:760px){header .brand-logo{width:40px;height:40px;flex-basis:40px}header .brand-block>.site-home-link{font-size:11px;min-height:25px}}
