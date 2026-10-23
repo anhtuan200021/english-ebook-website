@@ -1,4 +1,4 @@
-TuanBong Chrome — bản 0.3.0
+TuanBong Chrome — bản 0.3.1
 
 CÀI ĐẶT / CẬP NHẬT (Google Chrome trên máy tính)
 1. Giải nén ZIP vào thư mục cố định tuanbong-chrome.
@@ -6,6 +6,11 @@ CÀI ĐẶT / CẬP NHẬT (Google Chrome trên máy tính)
 3. Mở chrome://extensions → bật Developer mode / Chế độ nhà phát triển.
 4. Nếu cập nhật: bấm Reload / Tải lại trên thẻ TuanBong. Nếu Chrome yêu cầu, đồng ý quyền chạy trên YouTube và trang TuanBong. Nếu cài lần đầu: Load unpacked / Tải tiện ích đã giải nén → chọn thư mục chứa manifest.json.
 5. Tải lại tab YouTube đang mở để nút mới xuất hiện. Nếu có hai bản TuanBong, chỉ giữ bật bản mới.
+
+TỐI ƯU 0.3.1
+- Bỏ cuộn lần lượt khi bố cục cho thấy toàn bộ các dòng đã được tải vào trang.
+- Giảm thời gian chờ khi mở bản chép lời và khi chuyển gói sang bài học.
+- Danh sách chỉ hiện từng phần vẫn được thu thập lần lượt. Tốc độ thực tế phụ thuộc YouTube và đường truyền.
 
 DÙNG MỘT NÚT
 1. Mở một video dạng youtube.com/watch trong Chrome.

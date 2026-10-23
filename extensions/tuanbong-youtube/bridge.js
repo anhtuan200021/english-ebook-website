@@ -13,5 +13,5 @@
    if(values.tuanbongTransfer?.transferId===transferId)await chrome.storage.local.remove('tuanbongTransfer');
   }
  });
- deliver();interval=setInterval(deliver,1000);setTimeout(()=>clearInterval(interval),120000);
+ deliver();interval=setInterval(deliver,250);setTimeout(()=>clearInterval(interval),120000);
 })();

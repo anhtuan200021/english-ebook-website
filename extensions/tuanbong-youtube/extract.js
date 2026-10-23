@@ -33,8 +33,20 @@ async function prepareYouTubeTranscript(options={}){
   const flex=document.querySelector('ytd-watch-flexy[video-id]');
   if(flex&&flex.getAttribute('video-id')!==original)throw Error('YouTube đang đổi video. Đợi video tải xong rồi thử lại nhé.');
  };
- const wait=()=>new Promise(resolve=>setTimeout(resolve,250));
- const accumulated=new Map();let opened=false,expanded=false,stable='',stableAt=0,scrollNode=null,originalScroll=0,scrollStep=0,lastScrollAt=0,languageTried=false;
+ const wait=(ms=100)=>new Promise(resolve=>setTimeout(resolve,ms));
+ // Most YouTube transcripts already have every row mounted. Check the actual
+ // layout (including gaps), so a virtualized list cannot take this fast path.
+ const fullyMounted=(root,scroller)=>{
+  if(!scroller)return true;
+  const nodes=[...root.querySelectorAll('ytd-transcript-segment-renderer,yt-transcript-segment-view-model')];
+  if(!nodes.length||!scroller.getBoundingClientRect)return false;
+  const rects=nodes.map(node=>node.getBoundingClientRect?.()).filter(rect=>rect&&rect.height>0).sort((a,b)=>a.top-b.top);
+  if(rects.length!==nodes.length)return false;
+  const top=scroller.getBoundingClientRect().top-scroller.scrollTop;
+  if(Math.abs(rects[0].top-top)>48||Math.abs(top+scroller.scrollHeight-rects.at(-1).bottom)>48)return false;
+  return rects.every((rect,i)=>!i||rect.top-rects[i-1].bottom<=32);
+ };
+ const accumulated=new Map();let opened=false,expanded=false,stable='',stableAt=0,scrollNode=null,originalScroll=0,lastScrollAt=0,languageTried=false;
  progress('Đang mở phụ đề trên YouTube…');
  try{
   while(Date.now()-started<limit){
@@ -45,9 +57,9 @@ async function prepareYouTubeTranscript(options={}){
     if(!languageTried&&visible(chooser)){
      languageTried=true;
      if(!/english|tieng anh/.test(normalize(chooser.textContent))){
-      chooser.click();await wait();check();
+      chooser.click();await wait(250);check();
       const english=[...document.querySelectorAll('tp-yt-paper-listbox [role="option"],tp-yt-paper-item,ytd-menu-service-item-renderer')].find(node=>visible(node)&&/^(english|tieng anh)(\b|\s|\()/.test(normalize(node.textContent)));
-      if(english){english.click();await wait();continue;}
+      if(english){english.click();await wait(250);continue;}
       // Close only the chooser we opened, leaving the current track intact.
       chooser.click();
      }
@@ -61,14 +73,15 @@ async function prepareYouTubeTranscript(options={}){
      if(!scrollNode){
       const candidates=[root,...root.querySelectorAll('#segments-container,ytd-transcript-segment-list-renderer,yt-transcript-segment-list-renderer,div')];
       scrollNode=candidates.find(node=>node.clientHeight>80&&node.scrollHeight>node.clientHeight+20&&/auto|scroll/.test(getComputedStyle(node).overflowY));
-      if(scrollNode){originalScroll=scrollNode.scrollTop;if(originalScroll>0){scrollNode.scrollTop=0;lastScrollAt=Date.now();await wait();continue;}}
+      if(scrollNode){originalScroll=scrollNode.scrollTop;if(originalScroll>0&&!fullyMounted(root,scrollNode)){scrollNode.scrollTop=0;lastScrollAt=Date.now();await wait();continue;}}
      }
      const signature=accumulated.size+'|'+result.transcript;
      if(signature!==stable){stable=signature;stableAt=Date.now();}
-     const canScroll=scrollNode&&scrollNode.scrollTop+scrollNode.clientHeight<scrollNode.scrollHeight-4;
+     const complete=fullyMounted(root,scrollNode);
+     const canScroll=!complete&&scrollNode&&scrollNode.scrollTop+scrollNode.clientHeight<scrollNode.scrollHeight-4;
      // Collect virtualized rows progressively instead of jumping over unseen rows.
-     if(canScroll&&Date.now()-lastScrollAt>300){scrollNode.scrollTop+=Math.max(80,scrollNode.clientHeight*.75);lastScrollAt=Date.now();scrollStep++;stableAt=Date.now();}
-     if(!canScroll&&Date.now()-stableAt>=900){
+     if(canScroll&&Date.now()-lastScrollAt>=150){scrollNode.scrollTop+=Math.max(80,scrollNode.clientHeight*.75);lastScrollAt=Date.now();stableAt=Date.now();}
+     if(!canScroll&&Date.now()-stableAt>=500){
       check();
       const seconds=t=>t.split(':').reduce((sum,n)=>sum*60+Number(n),0);
       const rows=[...accumulated.values()].sort((a,b)=>seconds(a.time)-seconds(b.time));
