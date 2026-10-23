@@ -1,21 +1,22 @@
 'use strict';
 (()=>{
+ const boot=document.querySelector('#extensionBoot');
  const gate=document.querySelector('#extensionGate'),study=document.querySelector('#studyApp'),status=document.querySelector('#extensionCheckStatus'),retry=document.querySelector('#extensionCheck');
  const ua=navigator.userAgent||'',manualSafari=/Safari\//.test(ua)&&/Version\//.test(ua)&&!/Chrome|Chromium|CriOS|FxiOS|Edg|OPR|Android|SamsungBrowser/i.test(ua);
  let requestId='',interval,timer,loading=false;
  function stop(){clearInterval(interval);clearTimeout(timer);}
  function openStudy(){
-  if(loading)return;loading=true;stop();retry.disabled=true;status.textContent=manualSafari?'Đang mở công cụ nhập thủ công…':'Đã kết nối tiện ích · Đang mở bài học…';
+  if(loading)return;loading=true;stop();gate.hidden=true;boot.hidden=false;retry.disabled=true;status.textContent=manualSafari?'Đang mở công cụ nhập thủ công…':'Đã kết nối tiện ích · Đang mở bài học…';
   const script=document.createElement('script');script.src=study.dataset.appSrc;
-  script.onload=()=>{if(manualSafari){const manual=document.querySelector('.manual-video');if(manual)manual.open=true;const launch=document.querySelector('.youtube-launch');if(launch)launch.title='Mở YouTube để sao chép link video và bản chép lời, rồi nhập vào bài học.';}study.hidden=false;study.inert=false;gate.hidden=true;};
-  script.onerror=()=>{script.remove();loading=false;retry.disabled=false;status.textContent='Chưa tải được trang học. Bấm Kiểm tra lại hoặc tải lại trang nhé.';};
+  script.onload=()=>{if(manualSafari){const manual=document.querySelector('.manual-video');if(manual)manual.open=true;const launch=document.querySelector('.youtube-launch');if(launch)launch.title='Mở YouTube để sao chép link video và bản chép lời, rồi nhập vào bài học.';}study.hidden=false;study.inert=false;gate.hidden=true;boot.hidden=true;};
+  script.onerror=()=>{script.remove();loading=false;boot.hidden=true;gate.hidden=false;retry.disabled=false;status.textContent='Chưa tải được trang học. Bấm Kiểm tra lại hoặc tải lại trang nhé.';};
   document.head.append(script);
  }
  function check(){
   if(loading)return;if(manualSafari){openStudy();return;}stop();requestId=crypto.randomUUID();retry.disabled=true;status.textContent='Đang kiểm tra tiện ích…';
   const ping=()=>window.postMessage({source:'tuanbong-app',type:'extension-ping',requestId},location.origin);
   ping();interval=setInterval(ping,250);
-  timer=setTimeout(()=>{stop();retry.disabled=false;status.textContent='Chưa kết nối được tiện ích. Bạn cài theo hướng dẫn bên dưới, hoặc bấm Kiểm tra lại nếu đã cài.';},4000);
+  timer=setTimeout(()=>{stop();boot.hidden=true;gate.hidden=false;retry.disabled=false;status.textContent='Chưa kết nối được tiện ích. Bạn cài theo hướng dẫn bên dưới, hoặc bấm Kiểm tra lại nếu đã cài.';},4000);
  }
  window.addEventListener('message',e=>{
   if(e.source!==window||e.origin!==location.origin||e.data?.source!=='tuanbong-extension')return;

@@ -6,7 +6,7 @@ function setup({transfer=false,clipboardFails=false,userAgent=""}={}){
  const events={},docEvents={},nodes=new Map(),scripts=[],sent=[],timers=new Map();let n=0,copies=[];
  const node=()=>({hidden:false,inert:false,disabled:false,textContent:'',dataset:{appSrc:'app.js?v=0.4.0'},addEventListener(e,f){this[e]=f;},remove(){this.removed=true;}});
  const get=s=>{if(!nodes.has(s))nodes.set(s,node());return nodes.get(s);};
- get('#studyApp').hidden=true;get('#studyApp').inert=true;
+ get('#extensionGate').hidden=true;get('#studyApp').hidden=true;get('#studyApp').inert=true;
  const ctx={URL,TBTransfer:Transfer,location:{href:origin+'/youtube/'+(transfer?'?transfer='+UUID:''),origin},crypto:{randomUUID:()=>++n===1?UUID:'22345678-1234-1234-1234-123456789abc'},navigator:{userAgent,clipboard:{writeText:async text=>{if(clipboardFails)throw Error('Denied');copies.push(text);}}},setInterval:(f,ms)=>{const id=++n;timers.set(id,{f,ms,interval:true});return id;},clearInterval:id=>timers.delete(id),setTimeout:(f,ms)=>{const id=++n;timers.set(id,{f,ms});return id;},clearTimeout:id=>timers.delete(id),document:{hidden:false,querySelector:get,createElement:node,head:{append:s=>scripts.push(s)},addEventListener:(e,f)=>docEvents[e]=f},window:{addEventListener:(e,f)=>events[e]=f,postMessage:m=>sent.push(m)}};
  vm.createContext(ctx);vm.runInContext(gateSource,ctx);
  const deliver=(data,extra={})=>events.message({source:ctx.window,origin,data:{source:'tuanbong-extension',...data},...extra});
@@ -98,4 +98,23 @@ test('Chrome and other browsers with Safari in their user agent retain extension
  ]){
   const s=setup({userAgent});assert.equal(s.scripts.length,0);assert.equal(s.sent.length,1);assert.equal(s.get('#studyApp').hidden,true);
  }
+});
+
+test('installation guide stays hidden throughout a successful extension connection',()=>{
+ const s=setup();assert.equal(s.get('#extensionGate').hidden,true);assert.equal(s.get('#extensionBoot').hidden,false);
+ s.ready();assert.equal(s.get('#extensionGate').hidden,true);assert.equal(s.get('#extensionBoot').hidden,false);
+ s.scripts[0].onload();assert.equal(s.get('#extensionGate').hidden,true);assert.equal(s.get('#extensionBoot').hidden,true);
+ assert.equal(s.get('#studyApp').hidden,false);
+});
+test('only a connection timeout reveals installation instructions, and a late connection hides them again',()=>{
+ const s=setup();assert.equal(s.get('#extensionGate').hidden,true);s.timeout();
+ assert.equal(s.get('#extensionGate').hidden,false);assert.equal(s.get('#extensionBoot').hidden,true);
+ s.ready();assert.equal(s.get('#extensionGate').hidden,true);assert.equal(s.get('#extensionBoot').hidden,false);
+ s.scripts[0].onerror();assert.equal(s.get('#extensionGate').hidden,false);assert.equal(s.get('#extensionBoot').hidden,true);
+});
+test('HTML hides instructions before any script executes, with an accessible loading state and no-JS fallback',()=>{
+ const html=fs.readFileSync(path.join(root,'youtube/index.html'),'utf8');
+ assert.match(html,/id="extensionGate"[^>]*hidden/);
+ assert.match(html,/id="extensionBoot"[^>]*role="status"/);
+ assert.match(html,/<noscript><style>#extensionBoot\{display:none\}/);
 });
