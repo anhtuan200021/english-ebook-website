@@ -1,0 +1,39 @@
+#studyApp[hidden],#extensionGate[hidden]{display:none!important}
+.install-gate{max-width:1020px;margin:0 auto;padding:32px 24px 48px;color:#19382e}
+.install-top{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:36px}
+.install-brand{display:flex;align-items:center;gap:10px;color:#19382e;text-decoration:none;font-size:19px;font-weight:600}
+.install-brand img{width:64px;height:64px;object-fit:contain}
+.install-back{color:#496b59;font-size:13px;text-decoration:none}
+.install-hero{max-width:720px;margin:0 auto 28px;text-align:center}
+.install-kicker{font-size:12px;font-weight:600;letter-spacing:.7px;color:#52745f;margin:0 0 12px}
+.install-hero h1{font-size:clamp(27px,4vw,40px);font-weight:650;letter-spacing:-1px;line-height:1.25;margin:0 0 16px}
+.install-hero>p:not(.install-kicker){font-size:15px;line-height:1.75;color:#546e63;margin:0 auto 18px;max-width:600px}
+.install-actions{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin:24px 0 14px}
+.install-download,.install-check{min-height:46px;padding:12px 20px;border-radius:9px;font-family:inherit;font-size:14px;font-weight:500;line-height:1.5;text-decoration:none}
+.install-download{display:inline-flex;align-items:center;justify-content:center;background:#1b5e4b;color:#fff;font-size:14px;font-weight:600}
+.install-download:hover{background:#164d3e}
+.install-check{background:#fff;border:1px solid #bbd2c2;color:#28533e;font-family:inherit;font-size:14px}
+.install-check:disabled{opacity:.65;cursor:wait}
+.install-status{font-size:13px;line-height:1.6;color:#496a57;min-height:42px;max-width:650px;margin:0 auto}
+.install-platform{font-size:12px!important;color:#667e6d!important}
+.install-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:28px 0}
+.install-step{background:#fff;border:1px solid #d5e3d8;border-radius:14px;padding:22px;min-width:0}
+.install-step h2{font-size:16px;line-height:1.5;margin:18px 0 10px;font-weight:600}
+.install-step p{font-size:13px;line-height:1.8;color:#546e63;margin:0 0 12px}
+.install-step code{font-size:12px;background:#edf3eb;padding:3px 6px;border-radius:4px;overflow-wrap:anywhere;color:#234c38}
+.install-visual{height:112px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;background:#f1f6ef;border:1px solid #e0eadd;border-radius:9px;color:#315f46;font-size:12px}
+.install-visual svg{width:48px;height:48px;stroke:#417454;fill:none;stroke-width:1.5}
+.install-mock-address{background:white;border:1px solid #cadbcf;border-radius:6px;padding:7px 10px;font-size:12px}
+.install-mock-toggle{display:flex;align-items:center;gap:8px;font-size:10px}
+.install-mock-toggle i{width:25px;height:14px;background:#3c7b57;border-radius:14px;position:relative}
+.install-mock-toggle i:after{content:'';position:absolute;right:2px;top:2px;width:10px;height:10px;border-radius:50%;background:white}
+.install-mock-study{padding:9px 12px;background:#e1eee2;border:1px solid #b7d0be;border-radius:20px;font-size:12px;font-weight:600}
+.install-copy{border:1px solid #c7dacd;background:#f5f8f2;color:#315c43;border-radius:7px;font-size:12px;padding:7px 9px;min-height:34px}
+.install-copy-status{display:block;font-size:11px;line-height:1.6;color:#54705d;margin-top:7px}
+.install-help{max-width:780px;margin:24px auto 0;padding:18px 22px;border:1px solid #d3e2d5;border-radius:12px;background:#edf4e9;font-size:13px;line-height:1.8;color:#42634e}
+.install-help summary{cursor:pointer;font-weight:600;color:#28553c}
+.install-help p{margin:12px 0 0}
+.install-links{font-size:13px;text-align:center;line-height:1.8;margin-top:24px;color:#5e7765}
+.install-links a{color:#275c40;text-underline-offset:3px}
+.install-gate a:focus-visible,.install-gate button:focus-visible,.install-gate summary:focus-visible{outline:3px solid #78a98a;outline-offset:3px}
+@media(max-width:760px){.install-gate{padding:18px 16px 30px}.install-top{margin-bottom:26px}.install-brand{font-size:16px}.install-brand img{width:48px;height:48px}.install-back{font-size:11px}.install-steps{grid-template-columns:1fr;gap:12px}.install-step{padding:18px}.install-visual{height:96px}.install-hero h1{letter-spacing:-.6px}.install-actions{flex-direction:column;align-items:stretch}.install-hero>p:not(.install-kicker){font-size:14px}.install-status{min-height:60px}}

@@ -54,6 +54,6 @@ test('failed API loading unlocks the retry without reporting a ready player',asy
 });
 test('the app and caption core use the same cache version so old dependencies cannot be reused',()=>{
  const html=fs.readFileSync(path.join(root,'youtube/index.html'),'utf8');
- const core=html.match(/src="core\.js\?v=([^"]+)"/),app=html.match(/src="app\.js\?v=([^"]+)"/);
+ const core=html.match(/src="core\.js\?v=([^"]+)"/),app=html.match(/data-app-src="app\.js\?v=([^"]+)"/);
  assert.ok(core);assert.ok(app);assert.equal(core[1],app[1]);
 });
