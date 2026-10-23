@@ -62,8 +62,9 @@ async function prepareYouTubeTranscript(options={}){
  const check=()=>{
   if(options.signal?.aborted)throw Error('Đã hủy lấy phụ đề. Bấm học lại ở video hiện tại nhé.');
   if(new URL(location.href).searchParams.get('v')!==original)throw Error('Video đã thay đổi. Hãy bấm Học cùng TuanBong ở video mới.');
-  const flex=document.querySelector('ytd-watch-flexy[video-id]');
-  if(flex&&flex.getAttribute('video-id')!==original)throw Error('YouTube đang đổi video. Đợi video tải xong rồi thử lại nhé.');
+  const visiblePlayers=[...document.querySelectorAll('ytd-watch-flexy[video-id]')].filter(visible);
+  const flex=visiblePlayers.find(node=>node.getAttribute('video-id')===original)||visiblePlayers[0]||document.querySelector('ytd-watch-flexy[video-id]');
+  return !flex||flex.getAttribute('video-id')===original;
  };
  const wait=(ms=100)=>new Promise(resolve=>setTimeout(resolve,ms));
  // Most YouTube transcripts already have every row mounted. Check the actual
@@ -86,14 +87,14 @@ async function prepareYouTubeTranscript(options={}){
  progress('Đang mở phụ đề trên YouTube…');
  try{
   while(Date.now()-started<limit){
-   check();const root=panel();
+   if(!check()){progress('Đang chờ YouTube chuyển xong video mới…');await wait();continue;}const root=panel();
    if(visible(root)){
     // If YouTube exposes a language chooser, prefer an available English track.
     const chooser=root.querySelector('ytd-transcript-footer-renderer #trigger,ytd-transcript-footer-renderer button,ytd-transcript-footer-renderer #label');
     if(!languageTried&&visible(chooser)){
      languageTried=true;
      if(!/english|tieng anh/.test(normalize(chooser.textContent))){
-      chooser.click();await wait(250);check();
+      chooser.click();await wait(250);if(!check())continue;
       const english=[...document.querySelectorAll('tp-yt-paper-listbox [role="option"],tp-yt-paper-item,ytd-menu-service-item-renderer')].find(node=>visible(node)&&/^(english|tieng anh)(\b|\s|\()/.test(normalize(node.textContent)));
       if(english){english.click();await wait(250);continue;}
       // Close only the chooser we opened, leaving the current track intact.
@@ -118,7 +119,7 @@ async function prepareYouTubeTranscript(options={}){
      // Collect virtualized rows progressively instead of jumping over unseen rows.
      if(canScroll&&Date.now()-lastScrollAt>=100){scrollNode.scrollTop+=Math.max(80,scrollNode.clientHeight*.9);lastScrollAt=Date.now();stableAt=Date.now();}
      if(!canScroll&&Date.now()-stableAt>=300){
-      check();
+      if(!check()){await wait();continue;}
       const seconds=t=>t.split(':').reduce((sum,n)=>sum*60+Number(n),0);
       const rows=[...accumulated.values()].sort((a,b)=>seconds(a.time)-seconds(b.time));
       const transcript=rows.map(row=>row.time+' '+row.text).join('\n');
@@ -138,7 +139,7 @@ async function prepareYouTubeTranscript(options={}){
    }
    await wait();
   }
-  check();
+  if(!check())throw Error('YouTube chưa chuyển xong video. Đợi video tải xong rồi bấm Thử lại nhé.');
   throw Error(accumulated.size?'Phụ đề chưa tải đủ trong thời gian chờ. Giữ bản chép lời mở rồi bấm thử lại.':'Chưa lấy được phụ đề tự động. Hãy mở mô tả → Hiện bản chép lời, chọn tiếng Anh và bật mốc giờ, rồi thử lại. Video không có phụ đề có thể nhập SRT/VTT thủ công.');
  }finally{if(scrollNode)scrollNode.scrollTop=originalScroll;}
 }

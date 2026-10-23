@@ -35,16 +35,31 @@ test('faster progressive collection still includes every virtualized caption',as
  assert.equal(p.count,10);assert.ok(e.elapsed<=1400);assert.equal(e.scroll.top,200);
 });
 test('navigation during extraction cancels instead of transferring the wrong video',async()=>{await assert.rejects(extractor({navigate:true}).ctx.prepareYouTubeTranscript(),/Video đã thay đổi/);});
+test('temporary old player metadata during SPA navigation is allowed to settle before reading captions',async()=>{
+ const e=extractor({open:true}),read=e.ctx.document.querySelector;
+ e.ctx.document.querySelector=s=>s.includes('watch-flexy')?{getAttribute:()=>e.elapsed<300?OTHER:ID}:read(s);
+ const p=await e.ctx.prepareYouTubeTranscript();assert.equal(p.count,2);assert.ok(e.elapsed>=600);
+});
 test('missing transcript times out with usable manual fallback instructions',async()=>{await assert.rejects(extractor({noTranscript:true}).ctx.prepareYouTubeTranscript({timeoutMs:1000}),/Hiện bản chép lời/);});
 test('automatic import is opt-in and payload size, identity and timestamps are validated',()=>{assert.equal(Transfer.decode(payload(),UUID).autoOpen,false);assert.equal(Transfer.decode(payload({autoOpen:true}),UUID).autoOpen,true);assert.equal(Transfer.decode(payload({autoOpen:'true'}),UUID).autoOpen,false);for(const extra of [{transcript:'x'.repeat(1500001)},{transferId:'other'},{createdAt:0},{url:'javascript:alert(1)'},{transcript:'No times'}])assert.throws(()=>Transfer.decode(payload(extra),UUID));});
-function background(){
+function background({current=ID}={}){
  const values={},created=[];let listener,n=0;
- const chrome={runtime:{onMessage:{addListener:f=>listener=f}},tabs:{get:async()=>({url:'https://www.youtube.com/watch?v='+ID}),create:async args=>created.push(args)},storage:{local:{get:async()=>({...values}),set:async obj=>Object.assign(values,obj),remove:async keys=>{for(const key of [].concat(keys))delete values[key]}}}};
+ const chrome={runtime:{onMessage:{addListener:f=>listener=f}},tabs:{get:async()=>({url:'https://www.youtube.com/watch?v='+current}),create:async args=>created.push(args)},storage:{local:{get:async()=>({...values}),set:async obj=>Object.assign(values,obj),remove:async keys=>{for(const key of [].concat(keys))delete values[key]}}}};
  const ctx={URL,Date,crypto:{randomUUID:()=>n++?'22345678-1234-1234-1234-123456789abc':UUID},chrome};vm.createContext(ctx);vm.runInContext(fs.readFileSync(path.join(ext,'background.js'),'utf8'),ctx);
  return {values,created,send:(p,url='https://www.youtube.com/watch?v='+ID)=>new Promise(resolve=>listener({type:'tuanbong-open-lesson',payload:p},{url,tab:{id:1}},resolve))};
 }
 test('two quick launches receive independent transfer storage and the requested video in each app URL',async()=>{const b=background();const results=await Promise.all([b.send(payload()),b.send(payload())]);assert.ok(results.every(r=>r.ok));assert.equal(Object.keys(b.values).length,2);assert.equal(b.created.length,2);for(const tab of b.created){const u=new URL(tab.url);assert.equal(u.origin,origin);assert.equal(u.pathname,'/youtube/');assert.equal(u.searchParams.get('video'),ID);assert.ok(u.searchParams.get('transfer'));}});
 test('background rejects an unrelated sender or mismatched video without writing or opening tabs',async()=>{const b=background();assert.equal((await b.send(payload(),'https://evil.example/watch?v='+ID)).ok,false);assert.equal((await b.send(payload({url:'https://www.youtube.com/watch?v='+OTHER}))).ok,false);assert.equal(b.created.length,0);assert.equal(Object.keys(b.values).length,0);});
+test('SPA navigation uses the current Chrome tab even if sender URL still identifies the previous document',async()=>{
+ const b=background({current:OTHER});const r=await b.send(payload({url:'https://www.youtube.com/watch?v='+OTHER}),'https://www.youtube.com/watch?v='+ID);
+ assert.equal(r.ok,true);assert.equal(new URL(b.created[0].url).searchParams.get('video'),OTHER);
+});
+test('opening YouTube on its homepage then navigating to a video is supported',async()=>{
+ const b=background();assert.equal((await b.send(payload(),'https://www.youtube.com/')).ok,true);
+});
+test('a stale caption payload is rejected after the tab has moved to the next video',async()=>{
+ const b=background({current:OTHER});assert.equal((await b.send(payload())).ok,false);assert.equal(b.created.length,0);
+});
 function importing({old=true,fail=false}={}){
  const nodes=new Map(),events={},writes=[],messages=[];const lesson={id:ID,url:'https://www.youtube.com/watch?v='+ID,title:'Corrected',cues:TB.parse('0:00 Original corrected caption.').cues,labels:{one:'past_simple'},favorite:true,lastPosition:50};
  const state={version:1,videos:old?[lesson]:[],saved:[],words:[],settings:{font:18}};
@@ -68,4 +83,4 @@ test('bridge delivers only its own transfer and never deletes a different launch
 });
 test('manual fallback opens the requested video and preserves all other lessons',()=>{const i=importing();i.ctx.location.href=origin+'/youtube/?video='+OTHER;const v=i.ctx.launchVideoFromURL();assert.equal(v.id,OTHER);assert.equal(v.cues.length,0);assert.equal(i.ctx.state.videos[0],i.lesson);assert.equal(i.ctx.state.videos.length,2);});
 test('invalid fallback IDs cannot create a lesson',()=>{const i=importing();i.ctx.location.href=origin+'/youtube/?video=javascript:evil';assert.equal(i.ctx.launchVideoFromURL(),null);assert.equal(i.ctx.state.videos.length,1);});
-test('extension access is restricted to YouTube and the TuanBong learning path',()=>{const m=JSON.parse(fs.readFileSync(path.join(ext,'manifest.json')));assert.equal(m.version,'0.3.4');assert.deepEqual(m.permissions,['activeTab','scripting','storage']);assert.deepEqual(m.host_permissions,[origin+'/youtube/*','https://www.youtube.com/*','https://youtube.com/*','https://m.youtube.com/*']);assert.equal(m.background.service_worker,'background.js');for(const script of ['extract.js','youtube.js','background.js','popup.js','bridge.js'])assert.doesNotMatch(fs.readFileSync(path.join(ext,script),'utf8'),/fetch\s*\(|XMLHttpRequest|eval\s*\(/);});
+test('extension access is restricted to YouTube and the TuanBong learning path',()=>{const m=JSON.parse(fs.readFileSync(path.join(ext,'manifest.json')));assert.equal(m.version,'0.3.5');assert.deepEqual(m.permissions,['activeTab','scripting','storage']);assert.deepEqual(m.host_permissions,[origin+'/youtube/*','https://www.youtube.com/*','https://youtube.com/*','https://m.youtube.com/*']);assert.equal(m.background.service_worker,'background.js');for(const script of ['extract.js','youtube.js','background.js','popup.js','bridge.js'])assert.doesNotMatch(fs.readFileSync(path.join(ext,script),'utf8'),/fetch\s*\(|XMLHttpRequest|eval\s*\(/);});

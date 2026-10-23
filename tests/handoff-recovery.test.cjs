@@ -26,6 +26,7 @@ function buttonFlow({prepare=()=>new Promise(()=>{}),send=()=>Promise.resolve({o
 test('a stuck extractor stops waiting and enables retry with the current-video fallback',async()=>{
  const f=buttonFlow(),done=f.start();assert.equal(f.button.disabled,true);f.expire(22000);const result=await done;
  assert.equal(result.ok,false);assert.equal(f.button.disabled,false);assert.equal(f.fallback.hidden,false);assert.ok(f.fallback.href.endsWith('?video='+A));
+ assert.match(f.button.textContent,/Thử lại/);assert.match(f.button.title,/Chờ quá lâu/);
 });
 test('a stalled Chrome response also releases the preparing button',async()=>{
  const f=buttonFlow({prepare:async()=>({url:'https://www.youtube.com/watch?v='+A}),send:()=>new Promise(()=>{})}),done=f.start();await flush();f.expire(8000);assert.equal((await done).ok,false);assert.equal(f.button.disabled,false);
