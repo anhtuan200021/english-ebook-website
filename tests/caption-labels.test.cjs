@@ -1,6 +1,6 @@
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
 const root=path.join(__dirname,'..'),TB=require(path.join(root,'youtube/core.js'));
-const ctx={module:{exports:{}}};vm.createContext(ctx);vm.runInContext(fs.readFileSync(path.join(root,'extensions/tuanbong-youtube/extract.js'),'utf8'),ctx);
+const ctx={URL,location:{href:"https://www.youtube.com/watch?v=5SzO5zxzQLs"},module:{exports:{}}};vm.createContext(ctx);vm.runInContext(fs.readFileSync(path.join(root,'extensions/tuanbong-youtube/extract.js'),'utf8'),ctx);
 test('localized duration artifacts are stripped only when they match the cue timestamp',()=>{
  for(const [start,text,want] of [[0,'0 giâyHi friends.','Hi friends.'],[9,'9 giâyso that you can learn.','so that you can learn.'],[69,'1 phút 9 giâyKeep going.','Keep going.'],[60,'1 phút Hi friends.','Hi friends.'],[3609,'1 giờ 9 giâyHello.','Hello.'],[9,'9 seconds to go.','9 seconds to go.'],[8,'9 giâyHi friends.','9 giâyHi friends.'],[9,'I waited 9 seconds.','I waited 9 seconds.']]){
   assert.equal(TB.stripCaptionTimeLabel(text,start),want);assert.equal(ctx.stripCaptionTimeLabel(text,start),want);
@@ -15,6 +15,12 @@ test('modern row fallback cannot transfer its clock and accessibility duration a
 test('hidden screen-reader nodes are removed from a copy without changing the YouTube DOM',()=>{
  const original={textContent:'0 giâyHi friends.',cloneNode(){const copy={textContent:this.textContent,querySelectorAll:()=>[{remove(){copy.textContent='Hi friends.';}}]};return copy;}};
  assert.equal(ctx.tuanbongSubtitleText(original),'Hi friends.');assert.equal(original.textContent,'0 giâyHi friends.');
+});
+test('a short spoken reply is preferred over a longer standalone duration label',()=>{
+ const row={querySelector:s=>s.includes('Timestamp')?{textContent:'0:09'}:null,querySelectorAll:()=>[{textContent:'9 giây'},{textContent:'Yes.'}]};
+ const panel={getClientRects:()=>[{}],getAttribute:()=>null,querySelectorAll:()=>[row]};
+ ctx.document={title:'Test - YouTube',querySelector:s=>s.includes('engagement-panel-searchable')?panel:null,querySelectorAll:()=>[]};
+ assert.equal(ctx.extractYouTubeTranscript().transcript,'0:09 Yes.');
 });
 const app=fs.readFileSync(path.join(root,'youtube/app.js'),'utf8');
 function repair(){const c={TB};vm.createContext(c);vm.runInContext(app.slice(app.indexOf('function repairExtensionCaptionLabels('),app.indexOf('function useVideo(')),c);return c.repairExtensionCaptionLabels;}

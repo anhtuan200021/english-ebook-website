@@ -34,7 +34,7 @@ function extractYouTubeTranscript(){
   const time=(segment.querySelector('.segment-timestamp,.ytTranscriptSegmentViewModelTimestamp,[class*="Timestamp"],[class*="timestamp"],button')?.textContent||'').trim();
   let text=tuanbongSubtitleText(segment.querySelector('.segment-text,.ytTranscriptSegmentViewModelText,[class*="SegmentText"],[class*="segment-text"]'));
   if(!text){
-   const pieces=[...segment.querySelectorAll('yt-formatted-string,.yt-core-attributed-string')].map(tuanbongSubtitleText).filter(value=>value&&!/^\d+(?::\d{2}){1,2}$/.test(value));
+   const pieces=[...segment.querySelectorAll('yt-formatted-string,.yt-core-attributed-string')].filter(node=>!node.closest?.('.yt-core-screen-reader-only,.sr-only,[hidden],[class*="timestamp" i]')).map(tuanbongSubtitleText).filter(value=>value&&!/^\d+(?::\d{2}){1,2}$/.test(value)&&!/^(?:\d+\s*(?:giờ|phút|giây)\s*)+$/i.test(value));
    text=pieces.sort((a,b)=>b.length-a.length)[0]||tuanbongSubtitleText(segment).replace(/^\s*\d+(?::\d{2}){1,2}\s*/,'');
    if(time&&text.startsWith(time))text=text.slice(time.length).trimStart();
   }
