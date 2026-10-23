@@ -1,13 +1,25 @@
+// Pick a visible transcript, including YouTube's combined chapters/transcript panel.
+function tuanbongTranscriptPanel(){
+ const shown=node=>node&&node.getClientRects().length&&node.getAttribute?.('visibility')!=='ENGAGEMENT_PANEL_VISIBILITY_HIDDEN'&&node.getAttribute?.('aria-hidden')!=='true';
+ const known=[document.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-searchable-transcript"]'),document.querySelector('ytd-transcript-renderer')];
+ const others=[...document.querySelectorAll('ytd-engagement-panel-section-list-renderer,ytd-transcript-search-panel-renderer,yt-transcript-renderer,transcript-view-model')];
+ const candidates=[...new Set([...known,...others])].filter(shown);
+ return candidates.find(node=>node.querySelectorAll('ytd-transcript-segment-renderer,yt-transcript-segment-view-model,transcript-segment-view-model').length)||known.find(shown)||null;
+}
 // Runs only in the YouTube tab selected by the user; no private APIs or network requests.
 function extractYouTubeTranscript(){
  const url=new URL(location.href),id=url.searchParams.get('v');
  if(!['www.youtube.com','youtube.com','m.youtube.com'].includes(url.hostname)||url.pathname!=='/watch'||!/^[\w-]{11}$/.test(id||''))throw Error('Hãy mở trang video YouTube dạng youtube.com/watch trước.');
- const panel=document.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-searchable-transcript"]')||document.querySelector('ytd-transcript-renderer');
+ const panel=tuanbongTranscriptPanel();
  if(!panel||!panel.getClientRects().length||panel.getAttribute?.('visibility')==='ENGAGEMENT_PANEL_VISIBILITY_HIDDEN')throw Error('Bạn mở phần mô tả video → Hiện bản chép lời, rồi bấm tiện ích lại nhé.');
- const segments=[...panel.querySelectorAll('ytd-transcript-segment-renderer,yt-transcript-segment-view-model')],rows=[],seen=new Set();
+ const segments=[...panel.querySelectorAll('ytd-transcript-segment-renderer,yt-transcript-segment-view-model,transcript-segment-view-model')],rows=[],seen=new Set();
  for(const segment of segments){
-  const time=(segment.querySelector('.segment-timestamp,.ytTranscriptSegmentViewModelTimestamp,[class*="Timestamp"]')?.textContent||'').trim();
-  const text=(segment.querySelector('.segment-text,.ytTranscriptSegmentViewModelText,[class*="SegmentText"]')?.textContent||'').replace(/\s+/g,' ').trim();
+  const time=(segment.querySelector('.segment-timestamp,.ytTranscriptSegmentViewModelTimestamp,[class*="Timestamp"],[class*="timestamp"],button')?.textContent||'').trim();
+  let text=(segment.querySelector('.segment-text,.ytTranscriptSegmentViewModelText,[class*="SegmentText"],[class*="segment-text"]')?.textContent||'').replace(/\s+/g,' ').trim();
+  if(!text){
+   const pieces=[...segment.querySelectorAll('yt-formatted-string,.yt-core-attributed-string')].map(node=>(node.textContent||'').replace(/\s+/g,' ').trim()).filter(value=>value&&!/^\d+(?::\d{2}){1,2}$/.test(value));
+   text=pieces.sort((a,b)=>b.length-a.length)[0]||(segment.textContent||'').replace(/^\s*\d+(?::\d{2}){1,2}\s*/,'').replace(/\s+/g,' ').trim();
+  }
   if(!/^\d+(?::\d{2}){1,2}$/.test(time)||!text)continue;
   const key=time+'|'+text;if(!seen.has(key)){rows.push({time,text});seen.add(key);}
  }
@@ -27,8 +39,9 @@ async function prepareYouTubeTranscript(options={}){
  const progress=text=>options.onProgress?.(text);
  const normalize=text=>String(text||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/\s+/g,' ').trim();
  const visible=node=>node&&node.getClientRects().length&&node.getAttribute('aria-hidden')!=='true'&&node.getAttribute('visibility')!=='ENGAGEMENT_PANEL_VISIBILITY_HIDDEN';
- const panel=()=>document.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-searchable-transcript"]')||document.querySelector('ytd-transcript-renderer');
+ const panel=tuanbongTranscriptPanel;
  const check=()=>{
+  if(options.signal?.aborted)throw Error('Đã hủy lấy phụ đề. Bấm học lại ở video hiện tại nhé.');
   if(new URL(location.href).searchParams.get('v')!==original)throw Error('Video đã thay đổi. Hãy bấm Học cùng TuanBong ở video mới.');
   const flex=document.querySelector('ytd-watch-flexy[video-id]');
   if(flex&&flex.getAttribute('video-id')!==original)throw Error('YouTube đang đổi video. Đợi video tải xong rồi thử lại nhé.');
@@ -38,7 +51,7 @@ async function prepareYouTubeTranscript(options={}){
  // layout (including gaps), so a virtualized list cannot take this fast path.
  const fullyMounted=(root,scroller)=>{
   if(!scroller)return true;
-  const nodes=[...root.querySelectorAll('ytd-transcript-segment-renderer,yt-transcript-segment-view-model')];
+  const nodes=[...root.querySelectorAll('ytd-transcript-segment-renderer,yt-transcript-segment-view-model,transcript-segment-view-model')];
   if(!nodes.length||!scroller.getBoundingClientRect)return false;
   const rects=nodes.map(node=>node.getBoundingClientRect?.()).filter(rect=>rect&&rect.height>0).sort((a,b)=>a.top-b.top);
   if(rects.length!==nodes.length)return false;
@@ -91,7 +104,7 @@ async function prepareYouTubeTranscript(options={}){
      }
      progress('Đang lấy phụ đề · '+accumulated.size+' dòng…');
     }catch(error){
-     if(/quá dài|quá lớn/.test(error.message))throw error;
+     if(options.signal?.aborted||/quá dài|quá lớn|Video đã thay đổi|YouTube đang đổi/.test(error.message))throw error;
      // A visible panel can still be loading or have hidden timestamps.
     }
    }else if(!opened){

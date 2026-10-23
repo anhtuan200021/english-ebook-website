@@ -304,7 +304,7 @@ let incomingTransfer=null,transferBusy=false;
 function finishExtensionTransfer(){
  if(!incomingTransfer)return;
  window.postMessage({source:'tuanbong-app',type:'finished',transferId:incomingTransfer.transferId},location.origin);
- incomingTransfer=null;const url=new URL(location.href);url.searchParams.delete('transfer');history.replaceState(null,'',url.href);
+ incomingTransfer=null;const url=new URL(location.href);url.searchParams.delete('transfer');url.searchParams.delete('video');history.replaceState(null,'',url.href);
 }
 function reviewExtensionTransfer(error=''){
  const p=incomingTransfer;if(!p)return;
@@ -346,12 +346,12 @@ $('#extensionImportDialog').addEventListener('close',()=>{if(!transferBusy)finis
 $('#extensionImportForm').onsubmit=async e=>{e.preventDefault();await acceptExtensionTransfer(false);};
 function launchVideoFromURL(){
  const url=new URL(location.href),id=url.searchParams.get('video');
- if(!/^[\w-]{11}$/.test(id||'')||url.searchParams.has('transfer'))return null;
+ if(!/^[\w-]{11}$/.test(id||''))return null;
  let lesson=state.videos.find(v=>v.id===id);
  if(!lesson){lesson={id,url:'https://www.youtube.com/watch?v='+id,title:'YouTube · '+id,cues:[],labels:{},format:'',partial:false,updated:Date.now()};state.videos.push(lesson);}
- url.searchParams.delete('video');history.replaceState(null,'',url.href);
+ if(!url.searchParams.has('transfer')){url.searchParams.delete('video');history.replaceState(null,'',url.href);}
  return lesson;
 }
-async function init(){try{const data=await TBStore.get();if(data)state=TBData.validate(data);}catch(e){toast(e.message+' Bạn có thể dùng tạm và xuất bản sao lưu.');}dataReady=true;document.documentElement.style.setProperty('--reading',state.settings.font+'px');$('#fontSize').value=state.settings.font;const v=launchVideoFromURL()||state.videos.find(v=>v.id===state.current)||state.videos[0];if(v)useVideo(v);else{renderRecent();renderGrammar();}updateSaved();lookup('');showTab('transcript');tick();}
+async function init(){try{const data=await TBStore.get();if(data)state=TBData.validate(data);}catch(e){toast(e.message+' Bạn có thể dùng tạm và xuất bản sao lưu.');}dataReady=true;document.documentElement.style.setProperty('--reading',state.settings.font+'px');$('#fontSize').value=state.settings.font;const transferring=/^[a-f0-9-]{36}$/.test(new URL(location.href).searchParams.get('transfer')||'');const v=launchVideoFromURL()||(!transferring&&(state.videos.find(v=>v.id===state.current)||state.videos[0]));if(v)useVideo(v);else{renderRecent();renderGrammar();}updateSaved();lookup('');showTab('transcript');tick();if(transferring)setTimeout(()=>{if(new URL(location.href).searchParams.has('transfer')&&!incomingTransfer)toast('Chưa nhận được phụ đề từ tiện ích. Tải lại tab YouTube và bấm học lại, hoặc dùng Nhập phụ đề.');},15000);}
 init();
 

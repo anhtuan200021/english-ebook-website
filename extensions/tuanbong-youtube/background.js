@@ -17,7 +17,7 @@ async function openLesson(message,sender){
  const expired=Object.entries(stored).filter(([k,p])=>k.startsWith('tuanbongTransfer:')&&(!Number.isFinite(p?.createdAt)||Date.now()-p.createdAt>86400000)).map(([k])=>k);
  if(expired.length)await chrome.storage.local.remove(expired);
  await chrome.storage.local.set({[key]:payload});
- try{await chrome.tabs.create({url:APP+'?transfer='+encodeURIComponent(payload.transferId)});}catch(error){await chrome.storage.local.remove(key);throw error;}
+ try{await chrome.tabs.create({url:APP+'?video='+id+'&transfer='+encodeURIComponent(payload.transferId)});}catch(error){await chrome.storage.local.remove(key);throw error;}
  return {ok:true,count:payload.count};
 }
 chrome.runtime.onMessage.addListener((message,sender,respond)=>{

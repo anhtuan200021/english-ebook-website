@@ -1,7 +1,7 @@
 'use strict';
 (()=>{
  if(globalThis.__tuanbongYoutubeInstalled)return;globalThis.__tuanbongYoutubeInstalled=true;
- const APP='https://english-ebook-website.pages.dev/youtube/';let busy=false,scheduled=false;
+ const APP='https://english-ebook-website.pages.dev/youtube/';let busy=false,scheduled=false,operation=null;
  const videoId=()=>{const url=new URL(location.href);return url.pathname==='/watch'&&/^[\w-]{11}$/.test(url.searchParams.get('v')||'')?url.searchParams.get('v'):null;};
  let host=document.createElement('div');host.id='tuanbong-youtube-launcher';
  const shadow=host.attachShadow({mode:'closed'});
@@ -11,20 +11,32 @@
  const text=document.createElement('p'),fallback=document.createElement('a');fallback.textContent='Mở bài học và nhập phụ đề thủ công ↗';fallback.target='_blank';fallback.rel='noopener noreferrer';fallback.hidden=true;
  status.append(text,fallback);wrap.append(button,status);shadow.append(style,wrap);
  const show=(message,error=false)=>{text.textContent=message;status.hidden=false;fallback.hidden=!error;fallback.href=APP+'?video='+encodeURIComponent(videoId()||'');};
+ function bounded(task,ms,signal){
+  return new Promise((resolve,reject)=>{
+   let timer;const finish=(fn,value)=>{clearTimeout(timer);signal.removeEventListener('abort',cancel);fn(value);};
+   const cancel=()=>finish(reject,Error('Đã hủy yêu cầu. Bấm học lại ở video hiện tại nhé.'));
+   timer=setTimeout(()=>finish(reject,Error('Chờ quá lâu. Bạn tải lại tab YouTube rồi bấm học lại nhé.')),ms);
+   if(signal.aborted){cancel();return;}
+   signal.addEventListener('abort',cancel,{once:true});Promise.resolve(task).then(v=>finish(resolve,v),e=>finish(reject,e));
+  });
+ }
+ function reset(){busy=false;button.disabled=false;button.textContent='🐶 Học cùng TuanBong';}
  async function start(){
   if(busy)return {ok:false,error:'Đang chuẩn bị bài học, bạn chờ một chút nhé.'};
   const id=videoId();if(!id)return {ok:false,error:'Hãy mở video YouTube dạng youtube.com/watch trước.'};
   busy=true;button.disabled=true;button.textContent='Đang chuẩn bị…';fallback.hidden=true;
+  const current={controller:new AbortController()};operation=current;
   try{
-   const payload=await prepareYouTubeTranscript({onProgress:message=>show(message)});
+   const payload=await bounded(prepareYouTubeTranscript({signal:current.controller.signal,onProgress:message=>{if(operation===current)show(message);}}),22000,current.controller.signal);
    if(videoId()!==id)throw Error('Video đã thay đổi. Bấm lại trên video mới nhé.');
    show('Đang mở bài học TuanBong…');
-   const result=await chrome.runtime.sendMessage({type:'tuanbong-open-lesson',payload});
+   const result=await bounded(chrome.runtime.sendMessage({type:'tuanbong-open-lesson',payload}),8000,current.controller.signal);
+   if(operation!==current||videoId()!==id)return {ok:false,error:'Video đã thay đổi.'};
    if(!result?.ok)throw Error(result?.error||'Tiện ích vừa cập nhật. Tải lại tab YouTube rồi thử lại.');
    if(videoId()===id){const video=document.querySelector('video.html5-main-video');video?.pause();}
    show('Đã mở bài học với '+result.count+' dòng phụ đề.');setTimeout(()=>{if(!busy)status.hidden=true;},4500);return result;
-  }catch(error){const message=/context invalidated/i.test(error.message||'')?'Tiện ích vừa cập nhật. Tải lại tab YouTube rồi thử lại.':error.message||'Chưa lấy được phụ đề. Bạn thử lại nhé.';show(message,true);return {ok:false,error:message};}
-  finally{busy=false;button.disabled=false;button.textContent='🐶 Học cùng TuanBong';}
+  }catch(error){const message=/context invalidated/i.test(error.message||'')?'Tiện ích vừa cập nhật. Tải lại tab YouTube rồi thử lại.':error.message||'Chưa lấy được phụ đề. Bạn thử lại nhé.';if(operation===current)show(message,true);return {ok:false,error:message};}
+  finally{current.controller.abort();if(operation===current){operation=null;reset();}}
  }
  button.addEventListener('click',()=>start());
  chrome.runtime.onMessage.addListener((message,sender,respond)=>{if(message?.type!=='tuanbong-start')return;start().then(respond);return true;});
@@ -36,5 +48,5 @@
  }
  const schedule=()=>{if(!scheduled){scheduled=true;setTimeout(mount,180);}};
  new MutationObserver(schedule).observe(document.documentElement,{childList:true,subtree:true});
- document.addEventListener('yt-navigate-start',()=>{status.hidden=true;host.remove();});document.addEventListener('yt-navigate-finish',schedule);mount();
+ document.addEventListener('yt-navigate-start',()=>{const old=operation;operation=null;old?.controller.abort();reset();status.hidden=true;host.remove();});document.addEventListener('yt-navigate-finish',schedule);mount();
 })();

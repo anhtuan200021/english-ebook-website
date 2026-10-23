@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "TuanBong · Học ngay trên YouTube",
-  "version": "0.3.1",
+  "version": "0.3.3",
   "description": "Thêm nút Học cùng TuanBong trên YouTube, tự mở bản chép lời và chuyển sang bài học. Không API trả phí.",
   "permissions": [
     "activeTab",
