@@ -1,0 +1,10 @@
+'use strict';
+importScripts('perspectives.js?v=0.4.5');
+let current=0;
+onmessage=e=>{const {job,rows}=e.data;current=job;let i=0;
+ const tick=()=>{if(current!==job)return;const results=[];
+  for(let n=0;n<30&&i<rows.length;n++,i++)results.push({id:rows[i].id,axes:TBPerspectives.analyze(rows[i].text)});
+  postMessage({job,results,done:i===rows.length,count:i,total:rows.length});
+  if(i<rows.length)setTimeout(tick,0);
+ };tick();
+};
