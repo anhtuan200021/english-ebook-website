@@ -2,12 +2,12 @@ const test=require('node:test'),assert=require('node:assert/strict'),fs=require(
 const root=path.join(__dirname,'..'),gateSource=fs.readFileSync(path.join(root,'youtube/gate.js'),'utf8'),bridgeSource=fs.readFileSync(path.join(root,'extensions/tuanbong-youtube/bridge.js'),'utf8');
 const origin='https://english-ebook-website.pages.dev',UUID='12345678-1234-1234-1234-123456789abc';
 global.TB=require(path.join(root,'youtube/core.js'));const Transfer=require(path.join(root,'youtube/transfer.js'));
-function setup({transfer=false,clipboardFails=false}={}){
+function setup({transfer=false,clipboardFails=false,userAgent=""}={}){
  const events={},docEvents={},nodes=new Map(),scripts=[],sent=[],timers=new Map();let n=0,copies=[];
  const node=()=>({hidden:false,inert:false,disabled:false,textContent:'',dataset:{appSrc:'app.js?v=0.4.0'},addEventListener(e,f){this[e]=f;},remove(){this.removed=true;}});
  const get=s=>{if(!nodes.has(s))nodes.set(s,node());return nodes.get(s);};
  get('#studyApp').hidden=true;get('#studyApp').inert=true;
- const ctx={URL,TBTransfer:Transfer,location:{href:origin+'/youtube/'+(transfer?'?transfer='+UUID:''),origin},crypto:{randomUUID:()=>++n===1?UUID:'22345678-1234-1234-1234-123456789abc'},navigator:{clipboard:{writeText:async text=>{if(clipboardFails)throw Error('Denied');copies.push(text);}}},setInterval:(f,ms)=>{const id=++n;timers.set(id,{f,ms,interval:true});return id;},clearInterval:id=>timers.delete(id),setTimeout:(f,ms)=>{const id=++n;timers.set(id,{f,ms});return id;},clearTimeout:id=>timers.delete(id),document:{hidden:false,querySelector:get,createElement:node,head:{append:s=>scripts.push(s)},addEventListener:(e,f)=>docEvents[e]=f},window:{addEventListener:(e,f)=>events[e]=f,postMessage:m=>sent.push(m)}};
+ const ctx={URL,TBTransfer:Transfer,location:{href:origin+'/youtube/'+(transfer?'?transfer='+UUID:''),origin},crypto:{randomUUID:()=>++n===1?UUID:'22345678-1234-1234-1234-123456789abc'},navigator:{userAgent,clipboard:{writeText:async text=>{if(clipboardFails)throw Error('Denied');copies.push(text);}}},setInterval:(f,ms)=>{const id=++n;timers.set(id,{f,ms,interval:true});return id;},clearInterval:id=>timers.delete(id),setTimeout:(f,ms)=>{const id=++n;timers.set(id,{f,ms});return id;},clearTimeout:id=>timers.delete(id),document:{hidden:false,querySelector:get,createElement:node,head:{append:s=>scripts.push(s)},addEventListener:(e,f)=>docEvents[e]=f},window:{addEventListener:(e,f)=>events[e]=f,postMessage:m=>sent.push(m)}};
  vm.createContext(ctx);vm.runInContext(gateSource,ctx);
  const deliver=(data,extra={})=>events.message({source:ctx.window,origin,data:{source:'tuanbong-extension',...data},...extra});
  const ready=(extra={})=>deliver({type:'extension-ready',protocol:1,version:'0.4.0',requestId:sent.at(-1).requestId,...extra});
@@ -71,4 +71,31 @@ test('gate and bridge connect end to end through their real message protocol on 
  s.ctx.window.postMessage=data=>queueMicrotask(()=>listeners.forEach(fn=>fn({source:s.ctx.window,origin,data})));
  vm.runInContext(bridgeSource,s.ctx);s.get('#extensionCheck').click();await new Promise(r=>setImmediate(r));
  assert.equal(s.scripts.length,1);s.scripts[0].onload();assert.equal(s.get('#studyApp').hidden,false);assert.equal(s.get('#extensionGate').hidden,true);
+});
+
+test('Safari opens manual study directly, expands the link field, and never waits for a Chrome extension',()=>{
+ for(const userAgent of [
+  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 Version/26.0 Safari/605.1.15',
+  'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Version/18.0 Mobile/15E148 Safari/604.1'
+ ]){
+  const s=setup({userAgent});assert.equal(s.scripts.length,1);assert.equal(s.sent.length,0);
+  s.scripts[0].onload();assert.equal(s.get('#studyApp').hidden,false);assert.equal(s.get('#studyApp').inert,false);
+  assert.equal(s.get('#extensionGate').hidden,true);assert.equal(s.get('.manual-video').open,true);
+  s.events.focus();assert.equal(s.scripts.length,1);
+ }
+});
+test('Safari can retry a failed manual app load without requiring an extension',()=>{
+ const s=setup({userAgent:'Version/26.0 Safari/605.1.15'});
+ s.scripts[0].onerror();assert.equal(s.get('#studyApp').hidden,true);assert.equal(s.get('#extensionCheck').disabled,false);
+ s.get('#extensionCheck').click();assert.equal(s.scripts.length,2);assert.equal(s.sent.length,0);
+});
+test('Chrome and other browsers with Safari in their user agent retain extension onboarding',()=>{
+ for(const userAgent of [
+ 'Mozilla/5.0 AppleWebKit/537.36 Chrome/141.0.0.0 Safari/537.36',
+ 'Mozilla/5.0 AppleWebKit/605.1.15 CriOS/141.0.0.0 Mobile/15E148 Safari/604.1',
+ 'Mozilla/5.0 Version/26.0 EdgiOS/141.0 Safari/605.1.15',
+ 'Mozilla/5.0 Version/4.0 Chrome/141.0 Safari/537.36 SamsungBrowser/28.0'
+ ]){
+  const s=setup({userAgent});assert.equal(s.scripts.length,0);assert.equal(s.sent.length,1);assert.equal(s.get('#studyApp').hidden,true);
+ }
 });
