@@ -50,7 +50,7 @@ function ui(){
 }
 test('new filters count unique sentences, switch axes without changing the tense filter, and seek the source cue',()=>{
  const s=ui();s.ctx.startPerspectives();s.deliver();assert.match(s.get('#perspectiveFilters').innerHTML,/Tất cả <span>3<\/span>/);
- s.get('#perspectiveAxes').onclick({target:{closest:()=>({dataset:{perspectiveAxis:'intentions'}})}});
+ s.ctx.setPerspectiveAxis('intentions');s.ctx.renderPerspectives();
  assert.equal(s.ctx.filter,'past_simple');assert.match(s.get('#perspectiveFilters').innerHTML,/Nhờ vả/);
  s.get('#perspectiveFilters').onclick({target:{closest:()=>({dataset:{perspectiveFilter:'request'}})}});
  assert.match(s.get('#perspectiveList').innerHTML,/Could you help me/);assert.doesNotMatch(s.get('#perspectiveList').innerHTML,/Thanks/);
@@ -66,7 +66,7 @@ test('a failed perspective worker leaves a retry and does not change tense contr
 });
 test('the new panel is separate from the unchanged tense overview',()=>{
  const html=fs.readFileSync(path.join(root,'youtube/index.html'),'utf8');
- assert.match(html,/id="tab-grammar"/);assert.match(html,/id="tab-perspectives"/);assert.match(html,/id="tenseFilters"/);assert.match(html,/id="perspectiveAxes"/);
+ assert.match(html,/id="tab-grammar"/);assert.match(html,/id="tab-structures"/);assert.match(html,/id="tenseFilters"/);assert.doesNotMatch(html,/id="perspectiveAxes"/);
  assert.match(app,/\['all','Tất cả',grammarRows.length\]/);
 });
 test('worker returns progressive results and drops queued work after a new lesson arrives',()=>{

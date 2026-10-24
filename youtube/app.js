@@ -11,8 +11,17 @@ function download(name,data){const url=URL.createObjectURL(new Blob([JSON.string
 function openDialog(id){$('#selectionBubble').hidden=true;$(id).showModal();}
 $$('[data-close]').forEach(b=>b.onclick=()=>b.closest('dialog').close());
 $$('dialog').forEach(d=>d.addEventListener('click',e=>{if(e.target===d){const r=d.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)d.close();}}));
-function showTab(name){tab=name;$$('[data-tab]').forEach(b=>{b.setAttribute('aria-selected',String(b.dataset.tab===name));b.tabIndex=b.dataset.tab===name?0:-1;});['transcript','grammar','perspectives','words'].forEach(t=>$('#panel-'+t).hidden=t!==name);$('#selectionBubble').hidden=true;if(name==='grammar')renderGrammar();if(name==='perspectives'){startPerspectives();renderPerspectives();}if(name==='transcript')requestAnimationFrame(alignTranscript);}
-$$('[data-tab]').forEach(b=>{b.onclick=()=>showTab(b.dataset.tab);b.onkeydown=e=>{if(['ArrowLeft','ArrowRight'].includes(e.key)){e.preventDefault();const tabs=$$('[data-tab]'),i=(tabs.indexOf(b)+(e.key==='ArrowRight'?1:-1)+3)%3;tabs[i].click();tabs[i].focus();}};});
+function showTab(name,axis){
+ if(name==='words')return;
+ if(name==='perspectives'&&axis)setPerspectiveAxis(axis);
+ tab=name;
+ $$('[data-tab]').forEach(b=>{const selected=b.dataset.tab===name&&(name!=='perspectives'||b.dataset.perspectiveAxis===perspectiveAxis);b.setAttribute('aria-selected',String(selected));b.tabIndex=selected?0:-1;});
+ ['transcript','grammar','perspectives','words'].forEach(t=>$('#panel-'+t).hidden=t!==name);
+ $('#panel-perspectives').setAttribute('aria-labelledby','tab-'+perspectiveAxis);
+ $('#selectionBubble').hidden=true;
+ if(name==='grammar')renderGrammar();if(name==='perspectives'){startPerspectives();renderPerspectives();}if(name==='transcript')requestAnimationFrame(alignTranscript);
+}
+$$('[data-tab]').forEach(b=>{b.onclick=()=>showTab(b.dataset.tab,b.dataset.perspectiveAxis);b.onkeydown=e=>{if(['ArrowLeft','ArrowRight','Home','End'].includes(e.key)){e.preventDefault();const tabs=$$('[data-tab]'),i=e.key==='Home'?0:e.key==='End'?tabs.length-1:(tabs.indexOf(b)+(e.key==='ArrowRight'?1:-1)+tabs.length)%tabs.length;tabs[i].click();tabs[i].focus();}};});
 function tokens(text){let out='',end=0;for(const m of text.matchAll(/[A-Za-z]+(?:['’][A-Za-z]+)?/g)){out+=esc(text.slice(end,m.index))+'<span class="word-token">'+esc(m[0])+'</span>';end=m.index+m[0].length;}return out+esc(text.slice(end));}
 function currentSentence(){return readingGroups[readingIndex]||video?.cues[activeIndex];}
 function currentReadingCue(){
@@ -260,7 +269,6 @@ function startPerspectives(){
 function renderPerspectives(){
  const axes=TBPerspectives.axes,axis=axes[perspectiveAxis],counts={},rows=[];
  for(const s of readingGroups){let entries=perspectiveResults.get(s.id)?.[perspectiveAxis];if(!entries)continue;if(!entries.length)entries=[{type:TBPerspectives.fallbackType(perspectiveAxis),forms:[],status:'review'}];rows.push({s,entries});for(const entry of entries)counts[entry.type]=(counts[entry.type]||0)+1;}
- $('#perspectiveAxes').innerHTML=Object.entries(axes).map(([id,v])=>'<button data-perspective-axis="'+id+'" aria-pressed="'+(perspectiveAxis===id)+'">'+esc(v.label)+'</button>').join('');
  $('#perspectiveHint').textContent=perspectiveFilter==='all'?axis.hint:(TBPerspectives.descriptions[perspectiveFilter]||axis.hint);
  const types=axis.types;
  $('#perspectiveFilters').innerHTML=[['all','Tất cả',rows.length],...Object.entries(types).filter(([id])=>counts[id]).map(([id,name])=>[id,name,counts[id]])].map(([id,name,count])=>'<button data-perspective-filter="'+id+'" class="'+(perspectiveFilter===id?'selected':'')+'" aria-pressed="'+(perspectiveFilter===id)+'">'+esc(name)+' <span>'+count+'</span></button>').join('');
@@ -272,7 +280,7 @@ function renderPerspectives(){
  const empty=!readingGroups.length?'<div class="empty"><h3>Nhập phụ đề để khám phá</h3><p>Mỗi góc nhìn giúp bạn quan sát một cách diễn đạt khác nhau.</p></div>':!selected.length?'<div class="empty"><h3>'+(!perspectiveDone&&!perspectiveFailed?'Đang đọc nội dung…':'Chưa có kết quả ở bộ lọc này')+'</h3></div>':'';
  $('#perspectiveList').innerHTML=(perspectiveFailed?'<div class="perspective-error" role="status">Chưa tải được bộ phân loại. Bản chép lời và Theo thì vẫn dùng được. <button class="text-button" data-perspective-retry>Thử lại</button></div>':'')+cards+empty+(selected.length>perspectiveLimit?'<button class="outline full" data-perspective-more>Xem thêm kết quả</button>':'');
 }
-$('#perspectiveAxes').onclick=e=>{const b=e.target.closest('[data-perspective-axis]');if(b&&TBPerspectives.axes[b.dataset.perspectiveAxis]){perspectiveAxis=b.dataset.perspectiveAxis;perspectiveFilter='all';perspectiveLimit=80;renderPerspectives();}};
+function setPerspectiveAxis(axis){if(TBPerspectives.axes[axis]&&axis!==perspectiveAxis){perspectiveAxis=axis;perspectiveFilter='all';perspectiveLimit=80;}}
 $('#perspectiveFilters').onclick=e=>{const b=e.target.closest('[data-perspective-filter]');if(b){perspectiveFilter=b.dataset.perspectiveFilter;perspectiveLimit=80;renderPerspectives();}};
 $('#perspectiveList').onclick=e=>{
  const b=e.target.closest('[data-perspective-seek]');if(b){const s=readingGroups.find(s=>s.id===b.dataset.perspectiveSeek);if(s)seek({...s,id:s.sourceCueIds[0]});return;}
