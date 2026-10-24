@@ -67,7 +67,7 @@ test('a failed perspective worker leaves a retry and does not change tense contr
 test('the new panel is separate from the unchanged tense overview',()=>{
  const html=fs.readFileSync(path.join(root,'youtube/index.html'),'utf8');
  assert.match(html,/id="tab-grammar"/);assert.match(html,/id="tab-structures"/);assert.match(html,/id="tenseFilters"/);assert.doesNotMatch(html,/id="perspectiveAxes"/);
- assert.match(app,/\['all','Tất cả',segments.length\]/);
+ assert.match(app,/\['all','Tất cả',total\]/);
 });
 test('worker returns progressive results and drops queued work after a new lesson arrives',()=>{
  const queued=[],messages=[];const ctx={TBPerspectives:P,importScripts(){},postMessage:m=>messages.push(m),setTimeout:fn=>queued.push(fn)};

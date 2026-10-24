@@ -23,18 +23,33 @@ test('all five analyses use identical sentence units, unique tense counts and st
  vm.createContext(ctx);vm.runInContext(app.slice(app.indexOf('function analyze(){'),app.indexOf("$('#tenseFilters').onclick")),ctx);
  ctx.analyze();const rows=workers[0].message.rows,groups=TB.sentences(cues);assert.equal(rows.length,groups.length);assert.deepEqual(Array.from(rows,r=>r.text),groups.map(s=>s.text));
  workers[0].onmessage({data:{job:ctx.job,results:rows.map(r=>({id:r.id,entries:global.TBGrammar.analyze(r.text)})),done:true}});
- assert.match(get('#tenseFilters').innerHTML,new RegExp('Tất cả <span>'+groups.length+'</span>'));
+ assert.match(get('#tenseFilters').innerHTML,new RegExp('Tất cả <span>'+ctx.grammarRows.reduce((n,r)=>n+Math.max(1,r.entry.forms.length),0)+'</span>'));
  const past=ctx.grammarRows.filter(r=>ctx.typeOf(r)==='past_simple');assert.ok(past.length);assert.ok(past.every(r=>cues.some(c=>c.id===r.s.cueIds[0])));
  assert.equal(ctx.typeOf(ctx.grammarRows.find(r=>r.s.text==='Thanks!')),'imperative');
  for(const axis of Object.keys(P.axes)){const data=new Map(groups.map(s=>[s.id,P.analyze(s.text)[axis]])),audit=C.summarize(groups,s=>data.get(s.id),axis);assert.equal(audit.total,rows.length);assert.equal(audit.processed,rows.length);}
 });
-test('same-tense multiple verbs only count the sentence once per filter',()=>{
- const render=app.slice(app.indexOf('function renderGrammar(){'),app.indexOf("$('#tenseFilters').onclick")),nodes=new Map(),get=k=>{if(!nodes.has(k))nodes.set(k,{});return nodes.get(k)};
- const s={id:'s1',text:'I cook and I clean.',start:0},entry={type:'present_simple',forms:[]};
+test('same-tense multiple verb phrases retain their individual counts',()=>{
+ const render=app.slice(app.indexOf('function grammarEntryCount('),app.indexOf("$('#tenseFilters').onclick")),nodes=new Map(),get=k=>{if(!nodes.has(k))nodes.set(k,{});return nodes.get(k)};
+ const s={id:'s1',text:'I cook and I clean.',start:0},entry={type:'present_simple',forms:[{start:2,end:6}]};
  const ctx={grammarRows:[{s,entry},{s,entry}],segments:[s],grammarProcessed:new Set(['s1']),Map,Set,TYPES:{present_simple:'Hiện tại đơn'},filter:'all',grammarLimit:100,typeOf:r=>r.entry.type,renderCoverage(){},groupGrammarRows:()=>[],esc:String,$:get};
- vm.createContext(ctx);vm.runInContext(render,ctx);ctx.renderGrammar();assert.match(get('#tenseFilters').innerHTML,/Hiện tại đơn <span>1<\/span>/);assert.match(get('#tenseFilters').innerHTML,/Tất cả <span>1<\/span>/);
+ vm.createContext(ctx);vm.runInContext(render,ctx);ctx.renderGrammar();assert.match(get('#tenseFilters').innerHTML,/Hiện tại đơn <span>2<\/span>/);assert.match(get('#tenseFilters').innerHTML,/Tất cả <span>2<\/span>/);
 });
 test('collapsed audit explicitly refuses to invent an accuracy percentage',()=>{
  const el={};
  const ctx={document:{querySelector:()=>el}};vm.createContext(ctx);vm.runInContext(fs.readFileSync(__dirname+'/../youtube/coverage.js','utf8'),ctx);ctx.renderCoverage('#audit',[{id:'a'}],()=>[{type:'present_simple'}],'grammar');assert.match(el.innerHTML,/Chưa đo tỷ lệ đúng\/sai/);assert.match(el.innerHTML,/100%/);
+});
+test('coordinated verb phrases remain distinct even when the grammar engine groups their entries',()=>{
+ const source='I eat and drink.',entry=global.TBGrammar.analyze(source)[0];assert.equal(entry.forms.length,2);
+ const ctx={TYPES:global.TBGrammar.TYPES,esc:String,typeOf:r=>r.entry.type};vm.createContext(ctx);
+ vm.runInContext(app.slice(app.indexOf('function groupGrammarRows('),app.indexOf('function grammarMarkup(')),ctx);
+ vm.runInContext(app.slice(app.indexOf('function grammarEntryCount('),app.indexOf('function renderGrammar(){')),ctx);
+ assert.equal(ctx.grammarEntryCount(entry),2);const grouped=ctx.groupGrammarRows([{s:{id:'1',text:source,start:0},entry}]);
+ const html=ctx.grammarDetails(grouped[0]);assert.match(html,/<strong>eat<\/strong>/);assert.match(html,/<strong>drink<\/strong>/);assert.equal((html.match(/Hiện tại đơn/g)||[]).length,2);
+});
+test('a sentence with two different tenses exposes both phrases and both labels',()=>{
+ const source='I was tired, but I have finished my work.',entries=global.TBGrammar.analyze(source),ctx={TYPES:global.TBGrammar.TYPES,esc:String,typeOf:r=>r.entry.type};vm.createContext(ctx);
+ vm.runInContext(app.slice(app.indexOf('function groupGrammarRows('),app.indexOf('function grammarMarkup(')),ctx);
+ vm.runInContext(app.slice(app.indexOf('function grammarEntryCount('),app.indexOf('function renderGrammar(){')),ctx);
+ const grouped=ctx.groupGrammarRows(entries.map(entry=>({s:{id:'1',text:source,start:0},entry}))),html=ctx.grammarDetails(grouped[0]);
+ assert.match(html,/<strong>was tired<\/strong>/);assert.match(html,/Quá khứ đơn/);assert.match(html,/<strong>have finished<\/strong>/);assert.match(html,/Hiện tại hoàn thành/);
 });
