@@ -391,3 +391,5 @@ header .lesson-transfer p{font-size:10px;line-height:1.6;color:var(--muted);marg
 #panel-perspectives:not([hidden]){padding-top:8px}
 #panel-perspectives>.perspective-hint{margin-top:0}
 @media(max-width:760px){.content-pane>.tabbar button{padding:14px 9px}}
+
+.coverage-check{margin:4px 0 10px;border:1px solid #d6e3da;border-radius:10px;padding:7px 11px;font-size:12px;line-height:1.6;color:#456354;background:#f6faf6}.coverage-check summary{cursor:pointer;font-weight:600}.coverage-check p{margin:6px 0}.coverage-counts{display:flex;gap:5px 14px;flex-wrap:wrap}.coverage-counts span{white-space:nowrap}.coverage-check strong{font-variant-numeric:tabular-nums}

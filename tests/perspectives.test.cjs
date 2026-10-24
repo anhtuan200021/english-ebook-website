@@ -43,7 +43,7 @@ const app=fs.readFileSync(path.join(root,'youtube/app.js'),'utf8');
 function ui(){
  const nodes=new Map(),workers=[],seeks=[],cues=TB.parse('0:00 Could you help me?\n0:04 I think we should rest because we are tired.\n0:10 Thanks!').cues;
  const get=id=>{if(!nodes.has(id))nodes.set(id,{innerHTML:'',textContent:''});return nodes.get(id);};
- const ctx={TB,TBPerspectives:P,Map,readingGroups:TB.sentences(cues),tab:'perspectives',filter:'past_simple',$:get,esc:s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;'),grammarMarkup:s=>s,seek:s=>seeks.push(s),Worker:class{constructor(){workers.push(this)}terminate(){this.terminated=true}postMessage(m){this.message=m;}}};
+ const ctx={renderCoverage(){},TB,TBPerspectives:P,Map,readingGroups:TB.sentences(cues),tab:'perspectives',filter:'past_simple',$:get,esc:s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;'),grammarMarkup:s=>s,seek:s=>seeks.push(s),Worker:class{constructor(){workers.push(this)}terminate(){this.terminated=true}postMessage(m){this.message=m;}}};
  vm.createContext(ctx);vm.runInContext(app.slice(app.indexOf("let perspectiveAxis="),app.indexOf('function norm(t)')),ctx);
  const deliver=(w=workers.at(-1))=>w.onmessage({data:{job:w.message.job,results:w.message.rows.map(s=>({id:s.id,axes:P.analyze(s.text)})),done:true,count:3,total:3}});
  return {ctx,get,workers,seeks,deliver};
@@ -67,7 +67,7 @@ test('a failed perspective worker leaves a retry and does not change tense contr
 test('the new panel is separate from the unchanged tense overview',()=>{
  const html=fs.readFileSync(path.join(root,'youtube/index.html'),'utf8');
  assert.match(html,/id="tab-grammar"/);assert.match(html,/id="tab-structures"/);assert.match(html,/id="tenseFilters"/);assert.doesNotMatch(html,/id="perspectiveAxes"/);
- assert.match(app,/\['all','Tất cả',grammarRows.length\]/);
+ assert.match(app,/\['all','Tất cả',segments.length\]/);
 });
 test('worker returns progressive results and drops queued work after a new lesson arrives',()=>{
  const queued=[],messages=[];const ctx={TBPerspectives:P,importScripts(){},postMessage:m=>messages.push(m),setTimeout:fn=>queued.push(fn)};
