@@ -1,5 +1,6 @@
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
 const root=path.join(__dirname,'..'),P=require(path.join(root,'youtube/perspectives.js')),TB=require(path.join(root,'youtube/core.js'));
+global.nlp=require(path.join(root,'youtube/vendor/compromise.js'));global.TBGrammar=require(path.join(root,'youtube/grammar.js'));
 const has=(r,axis,type)=>r[axis].some(e=>e.type===type);
 test('one sentence has independent grammar, form, intention and connector hints',()=>{
  const r=P.analyze('If you are tired, you should take a break.');
@@ -27,12 +28,12 @@ test('obvious adjective states and complement clauses are not confidently labele
 });
 test('connectors separate cause, result, purpose, contrast and clarification',()=>{
  for(const [text,type] of [['I stayed because I was tired.','reason'],['It was late, so I went home.','result'],['I speak slowly so that you can understand.','purpose'],['I was tired, but I kept going.','contrast'],['In other words, we need more time.','clarify'],['First, wash your hands. Then, eat.','sequence']])assert.ok(has(P.analyze(text),'links',type),text);
- assert.equal(has(P.analyze("I'm so tired."),'links','result'),false);assert.equal(has(P.analyze('Bread and butter.'),'links','addition'),false);
+ assert.equal(has(P.analyze("I'm so tired."),'links','result'),false);assert.equal(has(P.analyze('Bread and butter.'),'links','addition'),true);
  assert.equal(has(P.analyze("I don't know if he is home."),'structures','conditional'),false);
 });
 test('ambiguous since/while remain context-dependent and unknown text is not assigned a made-up intention',()=>{
  assert.ok(has(P.analyze('While I waited, I read.'),'links','ambiguous'));
- assert.equal(P.analyze('The sky looks different today.').intentions.length,0);
+ const r=P.analyze('The sky looks different today.');assert.ok(has(r,'intentions','information'));assert.equal(r.intentions.find(e=>e.type==='information').status,'context');
 });
 test('long input and unknown text preserve the original content and return bounded source spans',()=>{
  const text=Array(300).fill('I think you should rest because you are tired.').join(' '),r=P.analyze(text);
@@ -75,4 +76,33 @@ test('worker returns progressive results and drops queued work after a new lesso
  assert.equal(messages[0].results.length,30);assert.equal(messages[0].done,false);
  ctx.onmessage({data:{job:2,rows:[{id:'new',text:'Thanks!'}]}});queued.forEach(fn=>fn());
  assert.equal(messages.length,2);assert.equal(messages[1].job,2);assert.equal(messages[1].done,true);assert.equal(messages[1].results[0].id,'new');
+});
+test('ordinary complete clauses have basic structures, including noun subjects and be/have complements',()=>{
+ for(const [text,type] of [['I work every day.','basic_clause'],['My mom cleans the house.','basic_clause'],['The sky looks different today.','basic_clause'],["I'm tired.",'be_complement'],['I have a bike.','have_noun'],['There are two chairs.','existential']]){
+  const r=P.analyze(text);assert.ok(has(r,'structures',type),text);assert.ok(has(r,'forms','statement'),text);assert.equal(has(r,'structures','review'),false);
+ }
+ const obligation=P.analyze('I have to go.');assert.ok(has(obligation,'structures','have_to'));assert.equal(has(obligation,'structures','have_noun'),false);
+});
+test('phrases and nonfinite clauses are described without inventing a tense or an independent clause',()=>{
+ assert.ok(has(P.analyze('A lot of interesting ideas.'),'structures','phrase'));
+ assert.ok(has(P.analyze('Walking down the street.'),'structures','nonfinite'));
+ assert.ok(has(P.analyze('To be honest.'),'structures','nonfinite'));
+ const dependent=P.analyze('Because I was tired.');assert.ok(has(dependent,'forms','dependent'));assert.equal(has(dependent,'forms','statement'),false);
+});
+test('a missing explicit connector and a genuinely unresolved structure are different states',()=>{
+ const plain=P.analyze('I work every day.');assert.ok(has(plain,'links','no_marker'));assert.equal(plain.links[0].status,'not_detected');assert.ok(has(plain,'structures','basic_clause'));
+ const unclear=P.analyze('...');assert.ok(has(unclear,'structures','review'));assert.equal(unclear.structures[0].status,'review');assert.ok(has(unclear,'intentions','context'));
+});
+test('ordinary information is only a contextual intention hint, not an asserted specific speech act',()=>{
+ const r=P.analyze('The room is cold.');const hint=r.intentions.find(e=>e.type==='information');assert.ok(hint);assert.equal(hint.status,'context');assert.equal(has(r,'intentions','request'),false);
+ assert.ok(has(P.analyze('Hello!'),'intentions','greeting'));assert.ok(has(P.analyze('Please keep going.'),'intentions','encouragement'));
+});
+test('multiple markers in one category cannot double-count a sentence',()=>{
+ const r=P.analyze('I work and I also study.');assert.equal(r.links.filter(e=>e.type==='addition').length,1);
+ assert.ok(r.links[0].forms.length>=2);
+ for(const axis of Object.values(r))assert.equal(new Set(axis.map(e=>e.type)).size,axis.length);
+});
+test('all fallback labels have a precise meaning instead of a generic unmatched bucket',()=>{
+ for(const axis of Object.keys(P.axes)){const fallback=P.fallbackType(axis);assert.ok(P.axes[axis].types[fallback]);assert.ok(P.descriptions[fallback]);}
+ assert.doesNotMatch(app,/Chưa khớp mẫu/);assert.match(app,/Dạng khác \/ chưa rõ thì/);
 });
