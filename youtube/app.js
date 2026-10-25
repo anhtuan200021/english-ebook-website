@@ -268,7 +268,7 @@ function resetPerspectives(){
 function startPerspectives(){
  if(perspectiveStarted||!segments.length)return;
  perspectiveStarted=true;perspectiveFailed=false;const thisJob=perspectiveJob;
- try{perspectiveWorker=new Worker('perspectives-worker.js?v=0.5.0');
+ try{perspectiveWorker=new Worker('perspectives-worker.js?v=0.5.3');
   perspectiveWorker.onmessage=e=>{if(thisJob!==perspectiveJob||e.data.job!==perspectiveJob)return;
    for(const result of e.data.results)perspectiveResults.set(result.id,result.axes);
    perspectiveDone=e.data.done;$('#perspectiveProgress').textContent=perspectiveDone?'Đã đọc xong các góc nhìn.':'Đang đọc '+e.data.count+'/'+e.data.total+' câu/đoạn…';
@@ -278,6 +278,13 @@ function startPerspectives(){
   perspectiveWorker.onerror=()=>{if(thisJob!==perspectiveJob)return;perspectiveFailed=true;perspectiveStarted=false;perspectiveWorker?.terminate();perspectiveWorker=null;renderPerspectives();};
   perspectiveWorker.postMessage({job:perspectiveJob,rows:segments.map(s=>({id:s.id,text:s.text}))});
  }catch{perspectiveFailed=true;perspectiveStarted=false;renderPerspectives();}
+}
+function patternDetails(s,entries){
+ if(perspectiveAxis!=='structures')return '';
+ return '<details class="pattern-details"><summary>Xem từng mẫu và cụm chữ · '+entries.length+'</summary>'+entries.map(e=>{
+  const definition=globalThis.TBPatterns?.definitions?.[e.type],forms=e.forms||[],label=TBPerspectives.axes.structures.types[e.type]||e.type;
+  return '<div class="pattern-detail"><strong>'+esc(label)+'</strong>'+(definition?.frame?'<p class="pattern-frame">'+esc(definition.frame)+'</p>':'')+(forms.length?'<div class="pattern-evidence">'+forms.map(f=>'<span>'+esc(s.text.slice(f.start,f.end))+'</span>').join('')+'</div>':'')+'<p class="pattern-note">'+esc(e.note||TBPerspectives.descriptions[e.type]||'Cần đọc/nghe thêm.')+(e.status==='context'?' · Cần xét ngữ cảnh.':'')+'</p></div>';
+ }).join('')+'</details>';
 }
 function renderPerspectives(){
  renderCoverage('#perspectiveCoverage',segments,s=>perspectiveResults.get(s.id)?.[perspectiveAxis],perspectiveAxis);
@@ -289,7 +296,7 @@ function renderPerspectives(){
  const selected=rows.filter(r=>perspectiveFilter==='all'||r.entries.some(e=>e.type===perspectiveFilter));
  const cards=selected.slice(0,perspectiveLimit).map(({s,entries})=>{
   const shown=perspectiveFilter==='all'?entries:entries.filter(e=>e.type===perspectiveFilter),forms=shown.flatMap(e=>e.forms);
-  return '<article class="perspective-card"><button class="time-btn" data-perspective-seek="'+esc(s.id)+'" aria-label="Nghe từ '+TB.stamp(s.start)+'">▶ '+TB.stamp(s.start)+'</button><div><p data-text-cue="'+esc(s.sourceCueIds?.[0]||'')+'">'+grammarMarkup(s.text,forms)+'</p><div class="perspective-labels">'+(shown.length?shown.map(e=>'<span class="'+(e.status==='context'||e.status==='review'||e.status==='not_detected'?'context-label':'')+'" title="'+esc(e.note||TBPerspectives.descriptions[e.type]||'Gợi ý theo cách ráp câu')+'">'+esc(types[e.type])+'</span>').join(''):'<span>Cần đọc / nghe thêm</span>')+'</div></div></article>';
+  return '<article class="perspective-card"><button class="time-btn" data-perspective-seek="'+esc(s.id)+'" aria-label="Nghe từ '+TB.stamp(s.start)+'">▶ '+TB.stamp(s.start)+'</button><div><p data-text-cue="'+esc(s.sourceCueIds?.[0]||'')+'">'+grammarMarkup(s.text,forms)+'</p><div class="perspective-labels">'+(shown.length?shown.map(e=>'<span class="'+(e.status==='context'||e.status==='review'||e.status==='not_detected'?'context-label':'')+'" title="'+esc(e.note||TBPerspectives.descriptions[e.type]||'Gợi ý theo cách ráp câu')+'">'+esc(types[e.type])+'</span>').join(''):'<span>Cần đọc / nghe thêm</span>')+'</div>'+patternDetails(s,shown)+'</div></article>';
  }).join('');
  const empty=!segments.length?'<div class="empty"><h3>Nhập phụ đề để khám phá</h3><p>Mỗi góc nhìn giúp bạn quan sát một cách diễn đạt khác nhau.</p></div>':!selected.length?'<div class="empty"><h3>'+(!perspectiveDone&&!perspectiveFailed?'Đang đọc nội dung…':'Chưa có kết quả ở bộ lọc này')+'</h3></div>':'';
  $('#perspectiveList').innerHTML=(perspectiveFailed?'<div class="perspective-error" role="status">Chưa tải được bộ phân loại. Bản chép lời và Theo thì vẫn dùng được. <button class="text-button" data-perspective-retry>Thử lại</button></div>':'')+cards+empty+(selected.length>perspectiveLimit?'<button class="outline full" data-perspective-more>Xem thêm kết quả</button>':'');
@@ -355,9 +362,12 @@ function grammarSnapshot(){
  for(const row of grammarRows){if(!bySegment.has(row.s.id))bySegment.set(row.s.id,[]);bySegment.get(row.s.id).push({...row.entry,type:typeOf(row)});}
  return {version:'tense-audit-0.5.2',engineVersion:3,complete:grammarProcessed.size===segments.length,processed:grammarProcessed.size,total:segments.length,countRule:'Mỗi form là một vị trí app nhận diện; kết quả không có form được giữ riêng. Không phải số câu hoặc tỷ lệ đúng/sai.',units:segments.map(s=>({id:s.id,text:s.text,start:s.start,sourceCueIds:s.cueIds,processed:grammarProcessed.has(s.id),entries:bySegment.get(s.id)||[],details:s.grammarDetails||[]}))};
 }
+function perspectiveSnapshot(){
+ return {version:globalThis.TBPatterns?.version||'legacy',complete:perspectiveDone,failed:perspectiveFailed,processed:perspectiveResults.size,total:segments.length,countRule:'Một họ mẫu trong một vùng nội dung chỉ tính một lần, có thể có nhiều dẫn chứng. Tất cả đếm vùng nội dung; các nhóm có thể chồng nhau.',units:segments.map(s=>({id:s.id,text:s.text,start:s.start,sourceCueIds:s.cueIds,processed:perspectiveResults.has(s.id),axes:perspectiveResults.get(s.id)||null}))};
+}
 $('#exportLessonBtn').onclick=()=>{
  try{if(!dataReady||!video?.url||!video.cues.length)throw Error('Mở một video có phụ đề trước khi xuất bài học nhé.');captureVideoProgress(true);
-  const lesson=TBData.lessonFile(video,state.saved);lesson.analysis=grammarSnapshot();download('TuanBong-bai-hoc-'+video.id+'.json',lesson);toast('Đã xuất bài học. Sang Safari, bấm Nhập bài học và chọn tệp vừa tải.');
+  const lesson=TBData.lessonFile(video,state.saved);lesson.analysis=grammarSnapshot();lesson.perspectiveAnalysis=perspectiveSnapshot();download('TuanBong-bai-hoc-'+video.id+'.json',lesson);toast('Đã xuất bài học. Sang Safari, bấm Nhập bài học và chọn tệp vừa tải.');
  }catch(e){toast(e.message);}
 };
 $('#importLessonBtn').onclick=()=>{if(dataReady&&!lessonFileBusy)$('#lessonFile').click();};

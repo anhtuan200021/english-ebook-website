@@ -403,3 +403,11 @@ header .lesson-transfer p{font-size:10px;line-height:1.6;color:var(--muted);marg
 #grammarList .grammar-card>.verb-supplement{grid-column:2 / -1;min-width:0;width:100%;margin-top:8px;color:#456354;font-size:12px;line-height:1.6}
 #grammarList .verb-supplement>summary{cursor:pointer;font-weight:500;overflow-wrap:anywhere}
 #grammarList .grammar-card .verb-supplement>.category-hint{font-size:12px;line-height:1.6;margin:6px 0 0}
+.pattern-details{margin-top:10px;border-top:1px solid #e0e9e0;padding-top:8px;font-size:12px;color:#456354;min-width:0}
+.pattern-details>summary{cursor:pointer;font-weight:500;line-height:1.6}
+.pattern-detail{margin:10px 0 0;padding:9px 11px;border:1px solid #dce7dc;border-radius:8px;background:#f9fbf7;overflow-wrap:anywhere}
+.perspective-card .pattern-detail>strong{display:block;font-size:13px;color:#245643}
+.perspective-card .pattern-detail .pattern-frame{font-size:12px;line-height:1.6;margin:4px 0;color:#365f49}
+.perspective-card .pattern-detail .pattern-note{font-size:12px;line-height:1.6;margin:6px 0 0;color:#617363}
+.pattern-evidence{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}
+.pattern-evidence span{font-size:13px;line-height:1.5;padding:2px 6px;background:#e6f0df;border-radius:5px;color:#214b33;max-width:100%}
