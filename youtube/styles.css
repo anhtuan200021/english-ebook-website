@@ -399,3 +399,7 @@ header .lesson-transfer p{font-size:10px;line-height:1.6;color:var(--muted);marg
 /* Keep phrase labels in the sentence column, outside the narrow timestamp track. */
 #grammarList .grammar-card>.verb-details{grid-column:2 / -1;min-width:0;max-width:100%;align-self:start}
 #grammarList .verb-details>.verb-detail{flex:0 1 auto;min-width:0;white-space:normal;word-break:normal}
+/* Supplementary forms share the reading column; never collapse into the timestamp gutter. */
+#grammarList .grammar-card>.verb-supplement{grid-column:2 / -1;min-width:0;width:100%;margin-top:8px;color:#456354;font-size:12px;line-height:1.6}
+#grammarList .verb-supplement>summary{cursor:pointer;font-weight:500;overflow-wrap:anywhere}
+#grammarList .grammar-card .verb-supplement>.category-hint{font-size:12px;line-height:1.6;margin:6px 0 0}
