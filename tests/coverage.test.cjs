@@ -19,7 +19,7 @@ test('context and absent explicit connector are not presented as grammar errors'
 test('all five analyses use identical sentence units, unique tense counts and stable original-cue seeks',()=>{
  const cues=TB.parse('0:00 I work. She is resting.\n0:06 I was tired, but I have finished my work.\n0:12 Thanks!').cues,nodes=new Map(),get=k=>{if(!nodes.has(k))nodes.set(k,{textContent:'',innerHTML:''});return nodes.get(k)},workers=[];
  const legacy=TB.group(cues),last=legacy.find(g=>g.text==='Thanks!');
- const ctx={TB,Set,Map,TYPES:global.TBGrammar.TYPES,video:{cues,labels:{[last.id+'/g0']:'imperative'}},job:0,worker:null,tab:'grammar',activeIndex:0,$:get,esc:String,renderCoverage(){},resetPerspectives(){},renderReadingContext(){},toast(){},Worker:class{constructor(){workers.push(this)}postMessage(m){this.message=m}terminate(){}}};
+ const ctx={TENSE_HELP:{},TB,Set,Map,TYPES:global.TBGrammar.TYPES,video:{cues,labels:{[last.id+'/g0']:'imperative'}},job:0,worker:null,tab:'grammar',activeIndex:0,$:get,esc:String,renderCoverage(){},resetPerspectives(){},renderReadingContext(){},toast(){},Worker:class{constructor(){workers.push(this)}postMessage(m){this.message=m}terminate(){}}};
  vm.createContext(ctx);vm.runInContext(app.slice(app.indexOf('function analyze(){'),app.indexOf("$('#tenseFilters').onclick")),ctx);
  ctx.analyze();const rows=workers[0].message.rows,groups=TB.sentences(cues);assert.equal(rows.length,groups.length);assert.deepEqual(Array.from(rows,r=>r.text),groups.map(s=>s.text));
  workers[0].onmessage({data:{job:ctx.job,results:rows.map(r=>({id:r.id,entries:global.TBGrammar.analyze(r.text)})),done:true}});
@@ -31,7 +31,7 @@ test('all five analyses use identical sentence units, unique tense counts and st
 test('same-tense multiple verb phrases retain their individual counts',()=>{
  const render=app.slice(app.indexOf('function grammarEntryCount('),app.indexOf("$('#tenseFilters').onclick")),nodes=new Map(),get=k=>{if(!nodes.has(k))nodes.set(k,{});return nodes.get(k)};
  const s={id:'s1',text:'I cook and I clean.',start:0},entry={type:'present_simple',forms:[{start:2,end:6}]};
- const ctx={grammarRows:[{s,entry},{s,entry}],segments:[s],grammarProcessed:new Set(['s1']),Map,Set,TYPES:{present_simple:'Hiện tại đơn'},filter:'all',grammarLimit:100,typeOf:r=>r.entry.type,renderCoverage(){},groupGrammarRows:()=>[],esc:String,$:get};
+ const ctx={TENSE_HELP:{},grammarRows:[{s,entry},{s,entry}],segments:[s],grammarProcessed:new Set(['s1']),Map,Set,TYPES:{present_simple:'Hiện tại đơn'},filter:'all',grammarLimit:100,typeOf:r=>r.entry.type,renderCoverage(){},groupGrammarRows:()=>[],esc:String,$:get};
  vm.createContext(ctx);vm.runInContext(render,ctx);ctx.renderGrammar();assert.match(get('#tenseFilters').innerHTML,/Hiện tại đơn <span>2<\/span>/);assert.match(get('#tenseFilters').innerHTML,/Tất cả <span>2<\/span>/);
 });
 test('collapsed audit explicitly refuses to invent an accuracy percentage',()=>{
@@ -51,5 +51,5 @@ test('a sentence with two different tenses exposes both phrases and both labels'
  vm.runInContext(app.slice(app.indexOf('function groupGrammarRows('),app.indexOf('function grammarMarkup(')),ctx);
  vm.runInContext(app.slice(app.indexOf('function grammarEntryCount('),app.indexOf('function renderGrammar(){')),ctx);
  const grouped=ctx.groupGrammarRows(entries.map(entry=>({s:{id:'1',text:source,start:0},entry}))),html=ctx.grammarDetails(grouped[0]);
- assert.match(html,/<strong>was tired<\/strong>/);assert.match(html,/Quá khứ đơn/);assert.match(html,/<strong>have finished<\/strong>/);assert.match(html,/Hiện tại hoàn thành/);
+ assert.match(html,/<strong>was tired<\/strong>/);assert.match(html,/Quá khứ · đã xảy ra/);assert.match(html,/<strong>have finished<\/strong>/);assert.match(html,/Tới nay · đã làm \/ trải nghiệm/);
 });

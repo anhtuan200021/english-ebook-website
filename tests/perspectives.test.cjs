@@ -43,7 +43,7 @@ const app=fs.readFileSync(path.join(root,'youtube/app.js'),'utf8');
 function ui(){
  const nodes=new Map(),workers=[],seeks=[],cues=TB.parse('0:00 Could you help me?\n0:04 I think we should rest because we are tired.\n0:10 Thanks!').cues;
  const get=id=>{if(!nodes.has(id))nodes.set(id,{innerHTML:'',textContent:''});return nodes.get(id);};
- const ctx={renderCoverage(){},TB,TBPerspectives:P,Map,readingGroups:TB.sentences(cues),tab:'perspectives',filter:'past_simple',$:get,esc:s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;'),grammarMarkup:s=>s,seek:s=>seeks.push(s),Worker:class{constructor(){workers.push(this)}terminate(){this.terminated=true}postMessage(m){this.message=m;}}};
+ const ctx={renderCoverage(){},TB,TBPerspectives:P,Map,segments:TB.analysisUnits(cues),tab:'perspectives',filter:'past_simple',$:get,esc:s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;'),grammarMarkup:s=>s,seek:s=>seeks.push(s),Worker:class{constructor(){workers.push(this)}terminate(){this.terminated=true}postMessage(m){this.message=m;}}};
  vm.createContext(ctx);vm.runInContext(app.slice(app.indexOf("let perspectiveAxis="),app.indexOf('function norm(t)')),ctx);
  const deliver=(w=workers.at(-1))=>w.onmessage({data:{job:w.message.job,results:w.message.rows.map(s=>({id:s.id,axes:P.analyze(s.text)})),done:true,count:3,total:3}});
  return {ctx,get,workers,seeks,deliver};
@@ -51,10 +51,10 @@ function ui(){
 test('new filters count unique sentences, switch axes without changing the tense filter, and seek the source cue',()=>{
  const s=ui();s.ctx.startPerspectives();s.deliver();assert.match(s.get('#perspectiveFilters').innerHTML,/Tất cả <span>3<\/span>/);
  s.ctx.setPerspectiveAxis('intentions');s.ctx.renderPerspectives();
- assert.equal(s.ctx.filter,'past_simple');assert.match(s.get('#perspectiveFilters').innerHTML,/Nhờ vả/);
+ assert.equal(s.ctx.filter,'past_simple');assert.match(s.get('#perspectiveFilters').innerHTML,/Nhờ giúp đỡ/);
  s.get('#perspectiveFilters').onclick({target:{closest:()=>({dataset:{perspectiveFilter:'request'}})}});
  assert.match(s.get('#perspectiveList').innerHTML,/Could you help me/);assert.doesNotMatch(s.get('#perspectiveList').innerHTML,/Thanks/);
- const source=s.ctx.readingGroups[0];s.get('#perspectiveList').onclick({target:{closest:selector=>selector==='[data-perspective-seek]'?{dataset:{perspectiveSeek:source.id}}:null}});
+ const source=s.ctx.segments[0];s.get('#perspectiveList').onclick({target:{closest:selector=>selector==='[data-perspective-seek]'?{dataset:{perspectiveSeek:source.id}}:null}});
  assert.equal(s.seeks[0].id,source.sourceCueIds[0]);assert.equal(s.seeks[0].start,source.start);
 });
 test('late worker results from another video cannot populate the current lesson',()=>{
@@ -104,5 +104,5 @@ test('multiple markers in one category cannot double-count a sentence',()=>{
 });
 test('all fallback labels have a precise meaning instead of a generic unmatched bucket',()=>{
  for(const axis of Object.keys(P.axes)){const fallback=P.fallbackType(axis);assert.ok(P.axes[axis].types[fallback]);assert.ok(P.descriptions[fallback]);}
- assert.doesNotMatch(app,/Chưa khớp mẫu/);assert.match(app,/Dạng khác \/ chưa rõ thì/);
+ assert.doesNotMatch(app,/Chưa khớp mẫu/);assert.match(app,/Cách dùng khác \/ chưa rõ thì/);
 });

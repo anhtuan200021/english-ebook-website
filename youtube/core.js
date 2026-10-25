@@ -31,6 +31,21 @@
     }
     return group(fragments).map(g=>({...g,id:'r'+hash(g.cueIds.join('|')),sourceCueIds:[...new Set(g.cueIds.map(id=>source.get(id)))],complete:/[.!?]["'”’)]?$/.test(g.text)}));
   }
+  // Analysis can read across quoted sentences without changing the playback text,
+  // cue IDs or timing. Bound joins so a missing closing quote cannot swallow a lesson.
+  function analysisUnits(cues){
+    const groups=sentences(cues),out=[];let pending=null,open=false;
+    const toggle=text=>{for(const c of text)if(c==='"'||c==='“'||c==='”')open=!open;};
+    const push=()=>{if(pending){out.push(pending);pending=null;}open=false;};
+    for(const g of groups){
+      if(pending&&open&&g.start-pending.end<=3&&g.end-pending.start<=45&&(pending.text.match(/\S+/g)||[]).length<120){
+        pending.text+=' '+g.text;pending.end=g.end;pending.estimated ||= g.estimated;pending.complete=g.complete;
+        pending.sourceCueIds=[...new Set([...pending.sourceCueIds,...g.sourceCueIds])];pending.cueIds.push(...g.cueIds);pending.id='a'+hash(pending.cueIds.join('|'));toggle(g.text);
+      }else{push();pending={...g,cueIds:[...g.cueIds],sourceCueIds:[...g.sourceCueIds]};toggle(g.text);}
+      if(!open)push();
+    }
+    push();return out;
+  }
   function phraseChunks(text){
     text=String(text||'');const cuts=[0],words=s=>(s.match(/[A-Za-z]+(?:['’][A-Za-z]+)?/g)||[]).length;
     const boundaries=/[,;:]\s+|\b(?:and|but|so)\s+(?=(?:I|we|you|he|she|it|they|there|this|that)\b)|\b(?:because|although|while|when|which means|that means)\b/gi;
@@ -70,5 +85,5 @@ function stripCaptionTimeLabel(text,start){
  const seconds=Number(match[1]||0)*3600+Number(match[2]||0)*60+Number(match[3]||0);
  return Math.abs(seconds-start)<.01?normalized.slice(match[0].length):text;
 }
-  const api={stripCaptionTimeLabel,time,stamp,hash,videoURL,parse,active,group,sentences,phraseChunks,cueSpan,readingExcerpt,sentenceWindow,loopRange,playbackAction,validVideo};if(typeof module!=='undefined')module.exports=api;else root.TB=api;
+  const api={stripCaptionTimeLabel,time,stamp,hash,videoURL,parse,active,group,sentences,analysisUnits,phraseChunks,cueSpan,readingExcerpt,sentenceWindow,loopRange,playbackAction,validVideo};if(typeof module!=='undefined')module.exports=api;else root.TB=api;
 })(globalThis);
