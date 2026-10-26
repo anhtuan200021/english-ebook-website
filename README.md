@@ -1,6 +1,6 @@
 # TuanBong
 
-Website tiếng Việt gồm **bốn trang nội dung chính** và các trang phụ Donate, Liên hệ, dùng HTML, CSS và JavaScript thuần. Giữ phong cách xanh lá, nền kem; không có backend, bước build hay thư viện ứng dụng phải cài.
+Website tiếng Việt gồm **bốn trang nội dung chính** và các trang phụ Donate, Liên hệ, dùng HTML, CSS và JavaScript thuần. Giữ phong cách xanh lá, nền kem; Các trang giới thiệu không cần bước build hay thư viện ứng dụng phải cài; riêng Shorts dùng Cloudflare Pages Function để kiểm tra mật khẩu.
 
 | Địa chỉ       | Tệp                    | Nội dung                                                          |
 | ------------- | ---------------------- | ----------------------------------------------------------------- |
@@ -77,3 +77,10 @@ Không cần biến môi trường, dịch vụ trả phí hay thêm script buil
 - Google Forms phải mở đúng URL trong tab mới; không gửi đơn hoặc chuyển tiền chỉ để kiểm tra giao diện.
 - Các liên kết YouTube/Facebook phải đúng địa chỉ được cung cấp; Facebook được ghi là tài khoản cá nhân.
 - Nếu có Node.js, chạy `node --check script.js`; chạy `git diff --check` để phát hiện lỗi khoảng trắng.
+
+
+## Shorts riêng tư trên Cloudflare Pages
+
+`/shorts/` và mọi tài nguyên của Shorts được bảo vệ bằng Pages Function. Đặt `SHORTS_PASSWORD` dưới dạng Secret trong môi trường Production: mật khẩu riêng dài 20–256 ký tự, không ghi vào Git hay gửi qua chat. Sau khi thay Secret, triển khai lại để áp dụng cấu hình mới. Chưa có cấu hình hợp lệ thì route trả 503 và giữ khóa. Các trang giới thiệu và công cụ khác vẫn truy cập công khai.
+
+Mật khẩu mới làm mất hiệu lực các phiên đăng nhập cũ. Không tạo thư mục Shorts tĩnh để tránh bỏ qua lớp kiểm tra trên máy chủ. Dữ liệu bài học cá nhân không nằm trong repository.
