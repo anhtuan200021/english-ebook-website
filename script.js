@@ -102,3 +102,23 @@ document.addEventListener("keydown", event => {
   const open = navGroups.find(group => group.open);
   if (open) { open.open = false; open.querySelector("summary").focus(); }
 });
+
+
+// The Shorts app stays on its owner-private host until public release.
+// A menu link is not an access grant; authentication is enforced by that host.
+const shortsToolMenu = navGroups
+  .find(group => group.querySelector('a[href*="/speak-lab/"]'))
+  ?.querySelector(".nav-submenu");
+if (shortsToolMenu && !shortsToolMenu.querySelector("[data-shorts-private]")) {
+  const shortsLink = document.createElement("a");
+  shortsLink.href = "https://tuanbong-transcript.racingglade2048.chatgpt.site/shorts";
+  shortsLink.target = "_blank";
+  shortsLink.rel = "noopener noreferrer";
+  shortsLink.dataset.shortsPrivate = "true";
+  shortsLink.title = "Học qua video ngắn · Cần đăng nhập bằng tài khoản được cấp quyền";
+  shortsLink.append(document.createTextNode("TuanBong Shorts"));
+  const privateLabel = document.createElement("span");
+  privateLabel.textContent = "🔒 Riêng tư";
+  shortsLink.append(privateLabel);
+  shortsToolMenu.append(shortsLink);
+}
