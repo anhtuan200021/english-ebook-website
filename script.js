@@ -104,7 +104,7 @@ document.addEventListener("keydown", event => {
 });
 
 
-// Same-site Shorts route; Cloudflare Access and the server enforce private access.
+// Same-site Shorts route; the server password gate enforces private access.
 const shortsToolMenu = navGroups
   .find(group => group.querySelector('a[href*="/speak-lab/"]'))
   ?.querySelector(".nav-submenu");
