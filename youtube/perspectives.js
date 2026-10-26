@@ -164,6 +164,7 @@
    out[axis]=[...unique.values()].map(entry=>({...entry,forms:[...new Map(entry.forms.map(f=>[f.start+':'+f.end,f])).values()]}));
   }
   if(root.TBPatterns)out.structures=root.TBPatterns.analyze(text,{...context,grammar:grammatical});
+  if(root.TBSentenceForms)out.forms=root.TBSentenceForms.analyze(text,context).entries;
   return out;
  }
  Object.assign(axes.structures.types,{basic_clause:'Người hoặc vật được nói tới + cụm động từ',be_complement:'Be + phần nói rõ đặc điểm hoặc danh tính',have_noun:'Have + danh từ',have_to:'Have to + V',able_to:'Be able to + V',existential:'There is / are',bare_command:'Động từ · lược người hoặc vật được nói tới',formula:'Công thức giao tiếp',phrase:'Cụm từ / câu rút gọn',nonfinite:'Cụm to + dạng như do/work / dạng như doing/working',review:'Cần phân tích thêm'});
@@ -298,6 +299,7 @@
  axes.structures.types.going_to='Going to / gonna · dự định, dự đoán';
  descriptions.going_to='Am/is/are going to hoặc gonna đi với hành động; có thể nói dự định hoặc dự đoán. Không tự tách phần hành động thành một thì khác.';
  if(root.TBPatterns){axes.structures.label='Mẫu câu';axes.structures.types=root.TBPatterns.types;axes.structures.hint='Khung lớn và mẫu nhỏ có thể cùng xuất hiện. Mỗi bộ lọc đếm vùng nội dung có mẫu đó; không cộng các nhóm để suy ra số câu. Mở chi tiết để xem cụm chữ và mẫu ráp câu.';Object.assign(descriptions,root.TBPatterns.descriptions);}
- const fallbackType=axis=>({structures:'review',forms:'review',intentions:'context',links:'no_marker'})[axis];
+ if(root.TBSentenceForms){axes.forms.label='Loại câu';axes.forms.types=root.TBSentenceForms.types;axes.forms.hint='Tách dạng câu bên ngoài, lời dẫn và dấu phủ định. Tất cả đếm vùng nội dung; các nhóm có thể chồng nhau. Mở chi tiết để xem phạm vi.';Object.assign(descriptions,root.TBSentenceForms.descriptions);}
+ const fallbackType=axis=>({structures:'review',forms:root.TBSentenceForms?'Z':'review',intentions:'context',links:'no_marker'})[axis];
  const api={axes,analyze,descriptions,fallbackType};if(typeof module!=='undefined')module.exports=api;else root.TBPerspectives=api;
 })(globalThis);

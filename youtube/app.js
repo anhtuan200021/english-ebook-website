@@ -268,7 +268,7 @@ function resetPerspectives(){
 function startPerspectives(){
  if(perspectiveStarted||!segments.length)return;
  perspectiveStarted=true;perspectiveFailed=false;const thisJob=perspectiveJob;
- try{perspectiveWorker=new Worker('perspectives-worker.js?v=0.5.3');
+ try{perspectiveWorker=new Worker('perspectives-worker.js?v=0.5.4');
   perspectiveWorker.onmessage=e=>{if(thisJob!==perspectiveJob||e.data.job!==perspectiveJob)return;
    for(const result of e.data.results)perspectiveResults.set(result.id,result.axes);
    perspectiveDone=e.data.done;$('#perspectiveProgress').textContent=perspectiveDone?'Đã đọc xong các góc nhìn.':'Đang đọc '+e.data.count+'/'+e.data.total+' câu/đoạn…';
@@ -286,6 +286,11 @@ function patternDetails(s,entries){
   return '<div class="pattern-detail"><strong>'+esc(label)+'</strong>'+(definition?.frame?'<p class="pattern-frame">'+esc(definition.frame)+'</p>':'')+(forms.length?'<div class="pattern-evidence">'+forms.map(f=>'<span>'+esc(s.text.slice(f.start,f.end))+'</span>').join('')+'</div>':'')+'<p class="pattern-note">'+esc(e.note||TBPerspectives.descriptions[e.type]||'Cần đọc/nghe thêm.')+(e.status==='context'?' · Cần xét ngữ cảnh.':'')+'</p></div>';
  }).join('')+'</details>';
 }
+function sentenceFormDetails(s,entries){
+ if(perspectiveAxis!=='forms')return '';
+ const subtypes=globalThis.TBSentenceForms?.subtypes||{};
+ return '<details class="sentence-form-details"><summary>Xem dạng câu và phạm vi</summary>'+entries.map(e=>'<div class="pattern-detail"><strong>'+esc(TBPerspectives.axes.forms.types[e.type]||e.type)+'</strong><p class="pattern-note">'+esc(e.scope==='quoted'?'Bên trong lời dẫn / lời diễn lại':e.scope==='component'?'Dấu chữ ở từng thành phần':'Lớp lời bên ngoài')+'</p>'+((e.subtypes||[]).length?'<p class="pattern-note">'+esc(e.subtypes.map(t=>subtypes[t]||t).join(' · '))+'</p>':'')+'<div class="pattern-evidence">'+(e.components?e.components.map(n=>'<span>'+esc(s.text.slice(n.start,n.end))+' · '+esc(n.scope==='quoted'?'trong lời dẫn':'bên ngoài')+(n.kind==='response'?' · lời đáp':'')+'</span>'):(e.forms||[]).map(f=>'<span>'+esc(s.text.slice(f.start,f.end))+'</span>')).join('')+'</div><p class="pattern-note">'+esc(e.note||TBPerspectives.descriptions[e.type]||'Cần đọc/nghe thêm.')+'</p></div>').join('')+'<p class="pattern-note">Chưa tự kết luận câu đơn/ghép/phức bằng số cụm động từ.</p></details>';
+}
 function renderPerspectives(){
  renderCoverage('#perspectiveCoverage',segments,s=>perspectiveResults.get(s.id)?.[perspectiveAxis],perspectiveAxis);
  const axes=TBPerspectives.axes,axis=axes[perspectiveAxis],counts={},rows=[];
@@ -296,7 +301,7 @@ function renderPerspectives(){
  const selected=rows.filter(r=>perspectiveFilter==='all'||r.entries.some(e=>e.type===perspectiveFilter));
  const cards=selected.slice(0,perspectiveLimit).map(({s,entries})=>{
   const shown=perspectiveFilter==='all'?entries:entries.filter(e=>e.type===perspectiveFilter),forms=shown.flatMap(e=>e.forms);
-  return '<article class="perspective-card"><button class="time-btn" data-perspective-seek="'+esc(s.id)+'" aria-label="Nghe từ '+TB.stamp(s.start)+'">▶ '+TB.stamp(s.start)+'</button><div><p data-text-cue="'+esc(s.sourceCueIds?.[0]||'')+'">'+grammarMarkup(s.text,forms)+'</p><div class="perspective-labels">'+(shown.length?shown.map(e=>'<span class="'+(e.status==='context'||e.status==='review'||e.status==='not_detected'?'context-label':'')+'" title="'+esc(e.note||TBPerspectives.descriptions[e.type]||'Gợi ý theo cách ráp câu')+'">'+esc(types[e.type])+'</span>').join(''):'<span>Cần đọc / nghe thêm</span>')+'</div>'+patternDetails(s,shown)+'</div></article>';
+  return '<article class="perspective-card"><button class="time-btn" data-perspective-seek="'+esc(s.id)+'" aria-label="Nghe từ '+TB.stamp(s.start)+'">▶ '+TB.stamp(s.start)+'</button><div><p data-text-cue="'+esc(s.sourceCueIds?.[0]||'')+'">'+grammarMarkup(s.text,forms)+'</p><div class="perspective-labels">'+(shown.length?shown.map(e=>'<span class="'+(e.status==='context'||e.status==='review'||e.status==='not_detected'?'context-label':'')+'" title="'+esc(e.note||TBPerspectives.descriptions[e.type]||'Gợi ý theo cách ráp câu')+'">'+esc(types[e.type])+'</span>').join(''):'<span>Cần đọc / nghe thêm</span>')+'</div>'+patternDetails(s,shown)+sentenceFormDetails(s,shown)+'</div></article>';
  }).join('');
  const empty=!segments.length?'<div class="empty"><h3>Nhập phụ đề để khám phá</h3><p>Mỗi góc nhìn giúp bạn quan sát một cách diễn đạt khác nhau.</p></div>':!selected.length?'<div class="empty"><h3>'+(!perspectiveDone&&!perspectiveFailed?'Đang đọc nội dung…':'Chưa có kết quả ở bộ lọc này')+'</h3></div>':'';
  $('#perspectiveList').innerHTML=(perspectiveFailed?'<div class="perspective-error" role="status">Chưa tải được bộ phân loại. Bản chép lời và Theo thì vẫn dùng được. <button class="text-button" data-perspective-retry>Thử lại</button></div>':'')+cards+empty+(selected.length>perspectiveLimit?'<button class="outline full" data-perspective-more>Xem thêm kết quả</button>':'');
@@ -363,7 +368,7 @@ function grammarSnapshot(){
  return {version:'tense-audit-0.5.2',engineVersion:3,complete:grammarProcessed.size===segments.length,processed:grammarProcessed.size,total:segments.length,countRule:'Mỗi form là một vị trí app nhận diện; kết quả không có form được giữ riêng. Không phải số câu hoặc tỷ lệ đúng/sai.',units:segments.map(s=>({id:s.id,text:s.text,start:s.start,sourceCueIds:s.cueIds,processed:grammarProcessed.has(s.id),entries:bySegment.get(s.id)||[],details:s.grammarDetails||[]}))};
 }
 function perspectiveSnapshot(){
- return {version:globalThis.TBPatterns?.version||'legacy',complete:perspectiveDone,failed:perspectiveFailed,processed:perspectiveResults.size,total:segments.length,countRule:'Một họ mẫu trong một vùng nội dung chỉ tính một lần, có thể có nhiều dẫn chứng. Tất cả đếm vùng nội dung; các nhóm có thể chồng nhau.',units:segments.map(s=>({id:s.id,text:s.text,start:s.start,sourceCueIds:s.cueIds,processed:perspectiveResults.has(s.id),axes:perspectiveResults.get(s.id)||null}))};
+ return {version:globalThis.TBPatterns?.version||'legacy',formsVersion:globalThis.TBSentenceForms?.version||'legacy',complete:perspectiveDone,failed:perspectiveFailed,processed:perspectiveResults.size,total:segments.length,countRule:'Một họ mẫu trong một vùng nội dung chỉ tính một lần, có thể có nhiều dẫn chứng. Tất cả đếm vùng nội dung; các nhóm có thể chồng nhau.',units:segments.map(s=>({id:s.id,text:s.text,start:s.start,sourceCueIds:s.cueIds,processed:perspectiveResults.has(s.id),axes:perspectiveResults.get(s.id)||null}))};
 }
 $('#exportLessonBtn').onclick=()=>{
  try{if(!dataReady||!video?.url||!video.cues.length)throw Error('Mở một video có phụ đề trước khi xuất bài học nhé.');captureVideoProgress(true);

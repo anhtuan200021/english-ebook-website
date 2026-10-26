@@ -1,5 +1,5 @@
 'use strict';
-importScripts('vendor/compromise.js','grammar.js?v=0.5.2','patterns.js?v=0.5.3','perspectives.js?v=0.5.3');
+importScripts('vendor/compromise.js','grammar.js?v=0.5.2','patterns.js?v=0.5.3','sentence-forms.js?v=0.5.4','perspectives.js?v=0.5.4');
 let current=0;
 onmessage=e=>{const {job,rows}=e.data;current=job;let i=0;
  const tick=()=>{if(current!==job)return;const results=[];

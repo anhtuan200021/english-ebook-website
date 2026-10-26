@@ -411,3 +411,6 @@ header .lesson-transfer p{font-size:10px;line-height:1.6;color:var(--muted);marg
 .perspective-card .pattern-detail .pattern-note{font-size:12px;line-height:1.6;margin:6px 0 0;color:#617363}
 .pattern-evidence{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}
 .pattern-evidence span{font-size:13px;line-height:1.5;padding:2px 6px;background:#e6f0df;border-radius:5px;color:#214b33;max-width:100%}
+.sentence-form-details{margin-top:10px;border-top:1px solid #e0e9e0;padding-top:8px;font-size:12px;line-height:1.6;color:#456354;min-width:0}
+.sentence-form-details>summary{cursor:pointer;font-weight:500}
+.perspective-card .sentence-form-details>.pattern-note{font-size:12px;line-height:1.6;margin:8px 0;color:#617363}
