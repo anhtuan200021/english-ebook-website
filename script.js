@@ -104,18 +104,15 @@ document.addEventListener("keydown", event => {
 });
 
 
-// The Shorts app stays on its owner-private host until public release.
-// A menu link is not an access grant; authentication is enforced by that host.
+// Same-site Shorts route; Cloudflare Access and the server enforce private access.
 const shortsToolMenu = navGroups
   .find(group => group.querySelector('a[href*="/speak-lab/"]'))
   ?.querySelector(".nav-submenu");
 if (shortsToolMenu && !shortsToolMenu.querySelector("[data-shorts-private]")) {
   const shortsLink = document.createElement("a");
-  shortsLink.href = "https://tuanbong-transcript.racingglade2048.chatgpt.site/shorts";
-  shortsLink.target = "_blank";
-  shortsLink.rel = "noopener noreferrer";
+  shortsLink.href = "/shorts/";
   shortsLink.dataset.shortsPrivate = "true";
-  shortsLink.title = "Học qua video ngắn · Cần đăng nhập bằng tài khoản được cấp quyền";
+  shortsLink.title = "Học qua video ngắn · Cần mật khẩu riêng để mở góc học";
   shortsLink.append(document.createTextNode("TuanBong Shorts"));
   const privateLabel = document.createElement("span");
   privateLabel.textContent = "🔒 Riêng tư";
