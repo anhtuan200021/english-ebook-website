@@ -153,3 +153,12 @@
  #home-showcase .hs-intro .hs-intro-actions{order:3;display:flex;justify-content:flex-start}
  #home-showcase .hs-intro .hs-cta{margin:0;padding:15px 20px;line-height:1.4;font-size:12px}
 }
+
+/* Phone text scaling: keep the action's full height so it cannot collide with the dots. */
+@media(max-width:760px){
+ #home-showcase .hs-slide:not(.hs-intro) .hs-copy>*{flex-shrink:0}
+ #home-showcase .hs-slide:not(.hs-intro) .hs-cta{max-width:100%;white-space:normal}
+}
+
+/* Avoid an internal scroll offset when a focused dot switches to a shorter slide. */
+@supports(overflow:clip){@media(max-width:760px){#home-showcase{overflow:clip}}}
