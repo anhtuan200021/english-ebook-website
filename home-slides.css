@@ -124,3 +124,6 @@
 
 #home-showcase .hs-slide{max-width:none;margin:0;color:var(--ink)}
 #home-showcase button:focus-visible,#home-showcase a:focus-visible{outline:3px solid #aa7529;outline-offset:4px}
+
+/* Keep the original rounded cream frame; hide the baked-in rectangular outer mat. */
+#home-showcase .hs-intro .hs-media img{clip-path:inset(3.8% 11.65% 4.8% 11.65% round 6%)}
