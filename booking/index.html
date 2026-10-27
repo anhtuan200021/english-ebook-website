@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Đặt lịch tư vấn tiếng Anh, kiểm tra trình độ, định hướng cách học hoặc học thử 1:1 cùng TuanBong. Xác nhận lịch qua Zalo trước khi thanh toán."
+    />
+    <meta name="theme-color" content="#174b3e" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Đặt lịch tư vấn &amp; học thử | TuanBong" />
+    <meta property="og:description" content="Tư vấn 30–60 phút hoặc học thử 1:1. Xác nhận lịch qua Zalo trước khi thanh toán." />
+    <title>Đặt lịch tư vấn &amp; học thử | TuanBong</title>
+    <link rel="icon" type="image/png" href="../assets/tuanbong-logo.png" />
+    <link rel="stylesheet" href="../styles.css?v=20261027-contact-1" />
+    <script src="../script.js?v=20261027-contact-1" defer></script>
+  <link rel="stylesheet" href="./booking.css?v=20261027-1">
+<script src="./booking.js?v=20261027-1" defer></script>
+</head>
+  <body data-page="booking">
+    <a class="skip-link" href="#main">Đến nội dung chính</a>
+    <header class="site-header">
+      <div class="container nav">
+        <a class="brand brand-lockup" href="../" aria-label="TuanBong — Trang chủ">
+          <img class="brand-logo" src="../assets/tuanbong-logo.png" width="2000" height="2000" alt="" />
+          <span class="brand-name">TuanBong<span>Một chút mỗi ngày</span></span>
+        </a>
+        <nav class="primary-nav" aria-label="Điều hướng chính">
+          <a href="../">Trang chủ</a>
+          <details class="nav-dropdown"><summary>Sản phẩm <span aria-hidden="true">⌄</span></summary><div class="nav-submenu"><a href="../ebook/">Ebook</a><a href="../courses/">Khóa học</a></div></details>
+          <details class="nav-dropdown"><summary>Tool <span aria-hidden="true">⌄</span></summary><div class="nav-submenu"><a href="../speak-lab/">TuanBong Speak Lab</a><a href="../youtube/">TuanBong YouTube</a></div></details>
+          <details class="nav-dropdown is-current"><summary>Kết nối <span aria-hidden="true">⌄</span></summary><div class="nav-submenu"><a href="../community/">Cộng đồng</a><a href="../contact/">Liên hệ</a><a href="../booking/" aria-current="page">Đặt lịch tư vấn / học thử</a></div></details>
+          <a href="../donate/">Ủng hộ</a>
+        </nav>
+      </div>
+    </header>
+    <main id="main" class="bk-page">
+<section class="container bk-hero" aria-labelledby="booking-title">
+<div><p class="eyebrow">MỘT CUỘC HẸN · MỘT HƯỚNG ĐI RÕ HƠN</p><h1 id="booking-title">Cùng tìm cách học<br><em>phù hợp với bạn.</em></h1><p>Tư vấn tiếng Anh hoặc trải nghiệm một buổi học 1:1 cùng TuanBong. Bạn chọn giờ mong muốn, mình kiểm tra lịch trước khi bạn thanh toán.</p></div>
+<img src="../assets/mascots/connecting.webp" width="360" height="360" alt="" aria-hidden="true">
+</section>
+<div class="container bk-flow" aria-label="Các bước đặt lịch"><div><b>01</b> Chọn buổi &amp; giờ mong muốn</div><div><b>02</b> Nhắn Zalo, xác nhận còn chỗ</div><div><b>03</b> Thanh toán &amp; nhận lịch hẹn</div></div>
+<div class="container bk-layout">
+<div>
+<form id="booking-form" class="bk-card">
+<h2>Buổi hẹn của bạn</h2>
+<fieldset><legend>1. Bạn muốn đặt buổi nào?</legend>
+<div class="bk-options">
+<label class="bk-option"><input type="radio" name="service" value="consult30" checked><span><strong>Tư vấn · 30 phút</strong><small>Kiểm tra trình độ và định hướng cách học.</small></span><b>100.000đ</b></label>
+<label class="bk-option"><input type="radio" name="service" value="consult60"><span><strong>Tư vấn · 60 phút</strong><small>Thêm thời gian trao đổi và định hướng cách học cụ thể.</small></span><b>150.000đ</b></label>
+<label class="bk-option"><input type="radio" name="service" value="trial60"><span><strong>Học thử 1:1 · 60 phút</strong><small>Trải nghiệm buổi học và cách đồng hành cùng TuanBong.</small></span><b>200.000đ</b></label>
+</div></fieldset>
+<fieldset><legend>2. Chọn ngày &amp; giờ mong muốn</legend>
+<div class="bk-fields"><label class="bk-field" for="booking-date">Ngày hẹn<input id="booking-date" name="date" type="date" required aria-describedby="time-note"></label><label class="bk-field" for="booking-time">Giờ bắt đầu<select id="booking-time" name="time" required disabled aria-describedby="time-note"><option value="">Chọn ngày trước nhé</option></select></label></div>
+<p class="bk-note" id="time-note">Giờ Việt Nam (UTC+7). Lịch thực tế được xác nhận qua Zalo.</p>
+</fieldset>
+<fieldset><legend>3. Một chút thông tin về bạn</legend>
+<div class="bk-fields">
+<label class="bk-field" for="booking-name">Họ tên<input id="booking-name" name="fullname" autocomplete="name" maxlength="100" required placeholder="Mình gọi bạn là…"></label>
+<label class="bk-field" for="booking-phone">Số điện thoại Zalo<input id="booking-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="25" pattern="[+0-9() .-]{8,25}" required placeholder="Số để mình liên hệ"></label>
+<label class="bk-field wide" for="booking-platform">Bạn muốn gặp qua đâu?<select id="booking-platform" name="platform"><option>Google Meet (khuyên dùng)</option><option>Zalo</option></select></label>
+<label class="bk-field wide" for="booking-goal">Bạn muốn trao đổi điều gì? <span class="bk-note">Không bắt buộc</span><textarea id="booking-goal" name="goal" rows="3" maxlength="1500" placeholder="Ví dụ: Mình biết nhiều từ nhưng khó nói, muốn tìm cách tự học phù hợp…"></textarea></label>
+</div></fieldset>
+<div class="bk-policy"><strong>Trước khi đặt lịch</strong><p>Vui lòng cân nhắc kỹ. Nếu bạn chủ động hủy sau khi thanh toán, phí đã thanh toán sẽ không được hoàn lại. Nếu TuanBong không thể thực hiện buổi hẹn, bạn được chọn đổi lịch hoặc hoàn tiền.</p><p>Nếu cần đổi giờ, hãy trao đổi và được TuanBong xác nhận trước; website chưa tự đổi lịch.</p></div>
+<label class="bk-check"><input type="checkbox" name="policy" required><span>Mình đã đọc chính sách hủy lịch và hiểu rằng cần được xác nhận còn chỗ trước khi thanh toán.</span></label>
+<div class="bk-total"><span>Phí buổi hẹn</span><strong id="selected-price">100.000đ</strong></div>
+<div class="bk-actions"><button class="button" id="booking-submit" type="submit" disabled>Tạo nội dung đặt lịch <span aria-hidden="true">→</span></button></div>
+<p id="booking-error" class="bk-error" role="alert"></p>
+<p class="bk-privacy">Thông tin bạn điền chỉ dùng để soạn tin nhắn trên trang này, chưa được gửi đi. Bạn chủ động sao chép và gửi qua Zalo. Tải lại trang sẽ xóa phần vừa nhập.</p>
+<noscript><p>Bạn cần bật JavaScript để chọn lịch, hoặc nhắn Zalo <a href="https://zalo.me/0332441322">0332441322</a> để được hỗ trợ đặt lịch.</p></noscript>
+</form>
+<section class="bk-card bk-result" id="booking-result" hidden aria-labelledby="result-title">
+<span class="bk-state">Nội dung đã soạn · Chưa gửi</span><h2 id="result-title" tabindex="-1">Gửi yêu cầu qua Zalo nhé</h2>
+<p>Sao chép nội dung dưới đây, mở Zalo rồi dán và gửi cho TuanBong. Đây là yêu cầu đặt lịch, <strong>chưa giữ chỗ và chưa xác nhận buổi hẹn.</strong></p>
+<label class="bk-field" for="request-text">Nội dung để gửi<textarea id="request-text" readonly spellcheck="false"></textarea></label>
+<div class="bk-actions"><button class="button" type="button" id="copy-request">1. Sao chép nội dung</button><a class="button bk-secondary" href="https://zalo.me/0332441322" target="_blank" rel="noopener noreferrer">2. Mở Zalo ↗</a></div>
+<p class="bk-status" id="request-copy-status" role="status" aria-live="polite"></p>
+<p class="bk-note">Không mở được liên kết? Tìm số 0332441322 trong Zalo. Hãy giữ lại nội dung và mã tham chiếu để đối chiếu sau này.</p>
+<label class="bk-check"><input type="checkbox" id="schedule-confirmed"><span><strong>TuanBong đã xác nhận còn chỗ qua Zalo</strong> cho đúng ngày, giờ và buổi học mình chọn. Mình muốn xem thông tin thanh toán.</span></label>
+<div class="bk-payment" id="booking-payment" hidden>
+<h3>Thanh toán để chốt buổi hẹn</h3><p class="bk-note" id="payment-slot"></p>
+<p>Chỉ chuyển tiền sau khi bạn đã nhận được xác nhận còn chỗ qua Zalo. Ô tích ở trên là xác nhận của bạn, website không tự kiểm tra lịch hoặc giao dịch.</p>
+<div class="bk-bank"><img src="../assets/mb-bank-qr.jpg" width="1080" height="2267" alt="QR chuyển khoản MB Bank, ALANG MINH TUAN, tài khoản 0332441322" loading="lazy"><dl>
+<div><dt>Ngân hàng</dt><dd>MB Bank</dd></div><div><dt>Chủ tài khoản</dt><dd>ALANG MINH TUAN</dd></div><div><dt>Số tài khoản</dt><dd>0332441322</dd></div><div><dt>Số tiền cần chuyển</dt><dd id="payment-amount-booking"></dd></div><div><dt>Nội dung chuyển khoản</dt><dd><code id="payment-code-booking"></code></dd></div>
+</dl></div>
+<div class="bk-actions"><button type="button" id="copy-bank-account" class="button bk-secondary">Sao chép số tài khoản</button><button type="button" id="copy-payment-code" class="button bk-secondary">Sao chép mã chuyển khoản</button></div>
+<p class="bk-status" id="payment-copy-status" role="status" aria-live="polite"></p>
+<p class="bk-note">QR dùng chung tài khoản nhận tiền. Bạn cần nhập đúng số tiền và mã chuyển khoản đang hiển thị; kiểm tra lại thông tin người nhận trước khi xác nhận giao dịch.</p>
+<p><strong>Sau khi chuyển khoản:</strong> gửi ảnh giao dịch cùng mã tham chiếu trong cuộc trò chuyện Zalo. TuanBong kiểm tra tiền vào, chốt lịch và gửi link Google Meet hoặc hướng dẫn gọi Zalo trước buổi hẹn.</p>
+<a class="button" href="https://zalo.me/0332441322" target="_blank" rel="noopener noreferrer">Mở Zalo để gửi giao dịch ↗</a>
+<p class="bk-note">Website không tự gửi yêu cầu, giữ chỗ, xác nhận thanh toán hay tạo link Google Meet.</p>
+</div></section>
+</div>
+<aside class="bk-card" aria-labelledby="schedule-title"><p class="eyebrow">GIỜ VIỆT NAM · UTC+7</p><h2 id="schedule-title">Lịch nhận khách</h2><dl class="bk-schedule"><div><dt>Thứ Hai · Thứ Tư · Thứ Sáu</dt><dd>08:00–11:00<br>14:00–17:00<br>19:00–22:00</dd></div><div><dt>Thứ Bảy</dt><dd>08:00–11:00<br>14:00–17:00</dd></div></dl><p class="bk-note">Các buổi bắt đầu theo mốc 30 phút và kết thúc trong khung giờ trên. Giờ hiển thị chưa phản ánh các lịch đã có người đặt.</p>
+<details class="bk-help" open><summary>Buổi tư vấn dành cho ai?</summary><p>Bạn muốn kiểm tra trình độ hiện tại, tìm hướng tự học cụ thể hoặc trao đổi về khóa học phù hợp với mục tiêu của mình.</p></details>
+<details class="bk-help"><summary>Học qua Google Meet hay Zalo?</summary><p>Google Meet được ưu tiên khi cần chia sẻ màn hình hoặc cùng xem tài liệu. Zalo phù hợp nếu bạn muốn gọi trực tiếp qua ứng dụng quen thuộc. Link và cách tham gia được gửi qua Zalo sau khi chốt lịch.</p></details>
+<details class="bk-help"><summary>Làm sao biết mình đã đặt lịch xong?</summary><p>Buổi hẹn chỉ được chốt khi TuanBong kiểm tra thanh toán và gửi xác nhận qua Zalo. Tạo nội dung trên trang hoặc tích ô xác nhận không tự đặt lịch.</p></details>
+</aside>
+</div></main>
+    <footer class="container footer">
+      <a class="brand footer-brand" href="../" aria-label="TuanBong — Trang chủ">
+        <img class="footer-logo" src="../assets/tuanbong-logo.png" width="2000" height="2000" loading="lazy" alt="Logo TuanBong: chú chó ôm bông hoa và chữ TUANBONG" />
+        <span>Một chút mỗi ngày</span>
+      </a>
+      <nav class="footer-links" aria-label="Điều hướng cuối trang">
+        <a href="../">Trang chủ</a>
+        <a href="../ebook/">Ebook</a>
+        <a href="../courses/">Khóa học</a>
+        <a href="../community/">Cộng đồng</a>
+        <a href="../donate/">Ủng hộ</a>
+        <a href="../contact/">Liên hệ</a>
+      </nav>
+      <p>© <span id="year">2026</span> TuanBong.<br />Học hỏi, kết nối và tiến bộ mỗi ngày.</p>
+    </footer>
+  </body>
+</html>
