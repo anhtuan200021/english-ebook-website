@@ -38,15 +38,14 @@
   const $ = id => document.getElementById(id);
   const date = $('booking-date'), time = $('booking-time'), note = $('time-note');
   const result = $('booking-result'), payment = $('booking-payment');
-  const confirmed = $('schedule-confirmed');
   let current = null;
   const selectedService = () => services[form.elements.service.value];
   function resetResult() {
     current = null;
     result.hidden = true;
     payment.hidden = true;
-    confirmed.checked = false;
     $('request-copy-status').textContent = '';
+    $('payment-copy-status').textContent = '';
   }
   function updateTimes() {
     const previous = time.value;
@@ -57,7 +56,7 @@
     time.disabled = !slots.length;
     if (slots.includes(previous)) time.value = previous;
     note.textContent = !date.value ? 'Chọn ngày để xem giờ có thể nhận lịch.' : slots.length
-      ? 'Đây là giờ nhận lịch theo lịch làm việc, chưa phải chỗ trống đã được xác nhận.'
+      ? 'Chọn giờ trong lịch nhận khách và thanh toán trực tiếp. Website chưa tự khóa giờ đã có người đặt.'
       : 'Ngày này không còn giờ phù hợp hoặc không nhận lịch. Bạn chọn ngày khác nhé.';
     $('selected-price').textContent = money(selectedService().price);
     resetResult();
@@ -91,14 +90,14 @@
     const endTime = `${pad(Math.floor(endMinutes / 60))}:${pad(endMinutes % 60)}`;
     const dayText = date.value.split('-').reverse().join('/');
     const message = [
-      'Chào TuanBong, mình muốn đặt lịch:',
+      'Chào TuanBong, mình gửi thông tin đặt lịch:',
       `Mã tham chiếu: ${code}`,
       `Họ tên: ${name}`, `Số Zalo: ${phone}`,
       `Hình thức: ${service.name} · ${service.minutes} phút · ${money(service.price)}`,
       `Lịch mong muốn: ${dayText}, ${time.value}–${endTime} (giờ Việt Nam)`,
       `Gặp qua: ${form.elements.platform.value}`,
       form.elements.goal.value.trim() ? `Điều muốn trao đổi: ${form.elements.goal.value.trim()}` : '',
-      'Mình đã đọc chính sách hủy lịch. Nhờ bạn kiểm tra còn chỗ trước khi mình thanh toán.'
+      'Mình đã đọc chính sách hủy lịch. Mình sẽ gửi kèm ảnh giao dịch để bạn đối chiếu và gửi link buổi hẹn.'
     ].filter(Boolean).join('\n');
     current = {date: date.value, time: time.value, service, code};
     $('request-text').value = message;
@@ -106,8 +105,7 @@
     $('payment-code-booking').textContent = code;
     $('payment-slot').textContent = `${service.name} · ${service.minutes} phút · ${dayText}, ${time.value}–${endTime}`;
     result.hidden = false;
-    payment.hidden = true;
-    confirmed.checked = false;
+    payment.hidden = false;
     $('booking-error').textContent = '';
     result.scrollIntoView({behavior: 'smooth', block: 'start'});
     $('result-title').focus({preventScroll: true});
@@ -122,10 +120,6 @@
   $('copy-request').addEventListener('click', () => {
     if (!requestIsCurrent()) return;
     copy($('request-text').value, $('request-copy-status'), 'Chưa sao chép được. Hãy chọn và sao chép nội dung trong ô phía trên, rồi dán vào Zalo.');
-  });
-  confirmed.addEventListener('change', () => {
-    if (!requestIsCurrent()) return;
-    payment.hidden = !confirmed.checked;
   });
   $('copy-payment-code').addEventListener('click', () => {
     if (!requestIsCurrent()) return;
