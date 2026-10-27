@@ -127,3 +127,29 @@
 
 /* Keep the original rounded cream frame; hide the baked-in rectangular outer mat. */
 #home-showcase .hs-intro .hs-media img{clip-path:inset(3.8% 11.65% 4.8% 11.65% round 6%)}
+
+/* Only the opening slide changes order on phones: text, original image, ebook action. */
+@media(max-width:760px){
+ #home-showcase .hs-slide.hs-intro{
+  display:flex;flex-direction:column;align-items:stretch;
+  inset:0 0 auto;height:auto;min-height:580px;
+  padding:28px max(26px,calc((100% - 430px)/2)) 66px;gap:17px
+ }
+ #home-showcase .hs-intro .hs-copy{display:contents}
+ #home-showcase .hs-intro .hs-kicker,
+ #home-showcase .hs-intro h1,
+ #home-showcase .hs-intro .hs-lead{order:1;margin:0}
+ #home-showcase .hs-intro h1{font-size:clamp(29px,7.8vw,36px);line-height:1.17}
+ #home-showcase .hs-intro .hs-lead{font-size:14px;line-height:1.75}
+ #home-showcase .hs-intro .hs-media{
+  order:2;width:100%;height:auto;aspect-ratio:1.26;
+  flex:none;overflow:hidden;margin:0;min-height:0
+ }
+ #home-showcase .hs-intro .hs-media img{
+  width:130.38%;max-width:none;height:auto;max-height:none;
+  flex:none;object-fit:contain;transform:translateY(.5%);
+  clip-path:inset(3.8% 11.65% 4.8% 11.65% round 6%)
+ }
+ #home-showcase .hs-intro .hs-intro-actions{order:3;display:flex;justify-content:flex-start}
+ #home-showcase .hs-intro .hs-cta{margin:0;padding:15px 20px;line-height:1.4;font-size:12px}
+}
