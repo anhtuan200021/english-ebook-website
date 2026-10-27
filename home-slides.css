@@ -162,3 +162,8 @@
 
 /* Avoid an internal scroll offset when a focused dot switches to a shorter slide. */
 @supports(overflow:clip){@media(max-width:760px){#home-showcase{overflow:clip}}}
+
+/* Recognition icons on the four offering/channel actions; the intro action stays unchanged. */
+#home-showcase .hs-cta-label{display:inline-flex;align-items:center;gap:9px;min-width:0}
+#home-showcase .hs-cta-icon{display:block;flex:0 0 19px;width:19px;height:19px}
+#home-showcase .hs-cta-label>span{min-width:0}
