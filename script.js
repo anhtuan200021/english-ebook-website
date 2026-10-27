@@ -119,3 +119,22 @@ if (shortsToolMenu && !shortsToolMenu.querySelector("[data-shorts-private]")) {
   shortsLink.append(privateLabel);
   shortsToolMenu.append(shortsLink);
 }
+
+
+// Lightweight contact shortcuts for the public website: no chat widget or tracking.
+if (document.querySelector(".site-header") && !document.querySelector(".tb-contact-dock")) {
+  const dock = document.createElement("nav");
+  dock.className = "tb-contact-dock";
+  dock.setAttribute("aria-label", "Liên hệ nhanh");
+  dock.innerHTML = `
+    <a class="tb-contact-link tb-contact-facebook" href="https://www.facebook.com/tuan.winds.thuybaby/" target="_blank" rel="noopener noreferrer" aria-label="Mở Facebook cá nhân TuanBong" title="Facebook cá nhân TuanBong">
+      <svg viewBox="0 0 24 24" width="25" height="25" aria-hidden="true" focusable="false"><path fill="currentColor" d="M14 22v-9h3l.5-3.5H14V7.3c0-1 .3-1.8 1.8-1.8H18V2.3c-.4-.1-1.7-.3-3.1-.3-3.1 0-5.2 1.9-5.2 5.3v2.2H7V13h2.7v9Z"/></svg>
+      <span class="tb-contact-tooltip" aria-hidden="true">Facebook</span>
+    </a>
+    <a class="tb-contact-link tb-contact-zalo" href="https://zalo.me/0332441322" target="_blank" rel="noopener noreferrer" aria-label="Liên hệ TuanBong qua Zalo" title="Zalo: 0332441322">
+      <svg viewBox="0 0 48 48" width="39" height="39" aria-hidden="true" focusable="false"><path d="M10 9h28a6 6 0 0 1 6 6v20a6 6 0 0 1-6 6H14l-8 4 2-8a6 6 0 0 1-4-6V15a6 6 0 0 1 6-6Z" fill="currentColor" opacity=".1"/><text x="24" y="29" text-anchor="middle" fill="currentColor" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="700" letter-spacing="-.7">Zalo</text></svg>
+      <span class="tb-contact-tooltip" aria-hidden="true">Zalo</span>
+    </a>
+  `;
+  document.body.append(dock);
+}
