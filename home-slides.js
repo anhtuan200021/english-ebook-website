@@ -4,7 +4,7 @@ let fitFrame=0,lastLayoutWidth=window.innerWidth,inView=true;
 function fitOpeningSlide(){
  if(!matchMedia('(max-width:760px)').matches){stage.style.height='';return}
  const px=value=>parseFloat(value)||0;
- let needed=580;
+ let needed=540;
  for(const slide of slides){
   if(slide.classList.contains('hs-intro')){
    needed=Math.max(needed,Math.ceil(slide.getBoundingClientRect().height));

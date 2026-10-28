@@ -199,3 +199,23 @@
  .android-phone #home-showcase .hs-cta-label { gap:9px; }
  .android-phone #home-showcase .hs-cta-icon { width:19px;height:19px;flex-basis:19px; }
 }
+
+/* Compact the shared phone frame instead of adding filler copy. */
+@media (max-width:760px) {
+ #home-showcase .hs-stage { height:540px; }
+ #home-showcase .hs-slide.hs-intro {
+  min-height:540px;gap:12px;padding-top:24px;padding-bottom:58px;
+ }
+ #home-showcase .hs-intro .hs-media { max-width:270px;align-self:center; }
+ #home-showcase .hs-intro .hs-intro-actions {
+  width:100%;align-self:stretch;justify-content:center;
+ }
+ #home-showcase .hs-slide:not(.hs-intro) .hs-copy { padding-top:18px; }
+}
+@media (max-width:700px) {
+ .android-phone #learning-title {
+  font-size:clamp(26px,7vw,30px);line-height:1.25;
+  letter-spacing:-.7px;text-wrap:balance;margin-bottom:20px;
+ }
+ .android-phone #learning-title .learning-language { white-space:nowrap; }
+}
