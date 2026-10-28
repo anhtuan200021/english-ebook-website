@@ -187,3 +187,15 @@
  .android-phone #home-showcase .hs-intro .hs-lead { font-size:13px;line-height:1.7; }
  .android-phone #home-showcase .hs-intro .hs-media { max-width:270px;align-self:center; }
 }
+
+/* Phone actions stay content-sized, with a consistent gap below the information. */
+@media (max-width:760px) {
+ #home-showcase .hs-slide:not(.hs-intro) .hs-features { margin-bottom:0; }
+ #home-showcase .hs-slide:not(.hs-intro) .hs-cta,
+ .android-phone #home-showcase .hs-slide:not(.hs-intro) .hs-cta {
+  width:auto;max-width:100%;align-self:flex-start;
+  margin-top:18px;gap:30px;padding:13px 17px;font-size:11px;line-height:1.4;
+ }
+ .android-phone #home-showcase .hs-cta-label { gap:9px; }
+ .android-phone #home-showcase .hs-cta-icon { width:19px;height:19px;flex-basis:19px; }
+}
