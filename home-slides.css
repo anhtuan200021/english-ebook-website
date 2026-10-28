@@ -167,3 +167,23 @@
 #home-showcase .hs-cta-label{display:inline-flex;align-items:center;gap:9px;min-width:0}
 #home-showcase .hs-cta-icon{display:block;flex:0 0 19px;width:19px;height:19px}
 #home-showcase .hs-cta-label>span{min-width:0}
+
+/* Compact Android carousel: keep related words together and actions close to copy. */
+@media (max-width: 700px) {
+ .android-phone #home-showcase .hs-slide:not(.hs-intro) .hs-copy { padding:18px 20px 25px; }
+ .android-phone #home-showcase h2 { font-size:clamp(22px,7vw,30px);line-height:1.2;letter-spacing:-.7px;margin-bottom:14px; }
+ .android-phone #home-showcase .hs-course-title { white-space:nowrap; }
+ .android-phone #home-showcase .hs-kicker { font-size:9px;letter-spacing:1px;line-height:1.6;margin-bottom:12px; }
+ .android-phone #home-showcase .hs-features { margin-bottom:0;gap:6px; }
+ .android-phone #home-showcase .hs-features li { font-size:10px;line-height:1.4;padding:6px 9px; }
+ .android-phone #home-showcase .hs-slide:not(.hs-intro) .hs-cta {
+  margin-top:18px;width:100%;max-width:100%;gap:12px;padding:13px 16px;
+  font-size:12px;line-height:1.45;
+ }
+ .android-phone #home-showcase .hs-cta-label { gap:8px; }
+ .android-phone #home-showcase .hs-cta-icon { width:17px;height:17px;flex-basis:17px; }
+ .android-phone #home-showcase .hs-intro { gap:12px;padding-top:24px;padding-bottom:58px; }
+ .android-phone #home-showcase .hs-intro h1 { font-size:clamp(27px,7.4vw,32px); }
+ .android-phone #home-showcase .hs-intro .hs-lead { font-size:13px;line-height:1.7; }
+ .android-phone #home-showcase .hs-intro .hs-media { max-width:270px;align-self:center; }
+}
