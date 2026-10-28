@@ -39,6 +39,13 @@
  .community-channels .benefit-card{padding:25px}
 }
 .community-brand-icon{display:grid;place-items:center;width:58px;height:58px;margin-bottom:21px;background:#fffdf8;border:1px solid #e0e5d8;border-radius:16px;flex-shrink:0}.community-brand-icon svg{width:33px;height:33px;display:block}.community-brand-youtube{color:#ff0000}.community-brand-facebook{color:#0866ff}@media(max-width:700px){.community-brand-icon{width:52px;height:52px;margin-bottom:18px;border-radius:14px}.community-brand-icon svg{width:30px;height:30px}}
+@media(max-width:760px){
+ html:not(.android-phone) .gentle-callout .community-message-title{
+  font-size:clamp(27px,7.1vw,32px);line-height:1.25;
+  letter-spacing:-.6px;text-wrap:balance;max-width:22ch;
+ }
+ html:not(.android-phone) .community-message-break{display:none}
+}
 </style></head>
   <body>
     <a class="skip-link" href="#main">Đến nội dung chính</a>
@@ -148,10 +155,10 @@
         </article>
       </section>
       <section class="section container">
-        <div class="gentle-callout">
+        <div class="gentle-callout" id="community-message">
           <div>
             <p class="eyebrow">MỘT CHÚT MỖI NGÀY</p>
-            <h2>Mỗi trải nghiệm đều có thể<br />là một điểm bắt đầu.</h2>
+            <h2 class="community-message-title">Mỗi trải nghiệm đều có thể<br class="community-message-break" /> là một điểm bắt đầu.</h2>
             <p>
               Không cần biết tất cả để bắt đầu chia sẻ. Một câu chuyện nhỏ cũng
               có thể giúp ai đó thấy mình không đơn độc.

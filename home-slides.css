@@ -219,3 +219,16 @@
  }
  .android-phone #learning-title .learning-language { white-space:nowrap; }
 }
+
+/* Restore a left-aligned ebook action with the same phone button proportions. */
+@media (max-width:760px) {
+ #home-showcase .hs-intro .hs-intro-actions { justify-content:flex-start; }
+ #home-showcase .hs-intro .hs-cta {
+  width:250px;max-width:100%;min-height:44px;
+  font-size:11px;line-height:1.4;padding:13px 17px;gap:30px;
+ }
+ html:not(.android-phone) #home-showcase .hs-slide:not(.hs-intro) .hs-media,
+ html:not(.android-phone) #home-showcase .hs-slide:not(.hs-intro) .hs-copy {
+  position:relative;top:12px;
+ }
+}
