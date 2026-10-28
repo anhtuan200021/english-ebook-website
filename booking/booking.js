@@ -1,9 +1,9 @@
 (() => {
   'use strict';
   const services = {
-    consult30: {name: 'Tư vấn & định hướng', minutes: 30, price: 100000},
-    consult60: {name: 'Tư vấn & định hướng', minutes: 60, price: 150000},
-    trial60: {name: 'Học thử 1:1', minutes: 60, price: 200000}
+    consult30: {name: 'Tìm hướng học phù hợp', minutes: 30, price: 100000},
+    consult60: {name: 'Tìm hướng học phù hợp', minutes: 60, price: 150000},
+    trial60: {name: 'Cùng luyện tiếng Anh 1:1', minutes: 60, price: 200000}
   };
   const money = n => n.toLocaleString('vi-VN') + 'đ';
   const pad = n => String(n).padStart(2, '0');
