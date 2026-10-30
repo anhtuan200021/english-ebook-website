@@ -203,6 +203,19 @@ function setPlaybackMode(next){
  $$('[data-mode]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mode===mode)));
  if(mode!=='off')toast('Lặp câu: '+TB.stamp(range.start)+'–'+TB.stamp(range.end));
 }
+// Giữ đáy hai cột bằng nhau: giới hạn khung phải theo chiều cao nội dung trái.
+function syncWorkspaceHeight(){
+ const left=$('.workspace>.watch-pane'),right=$('.workspace>.content-pane');
+ if(!left||!right)return;
+ if(window.innerWidth<=760){right.style.removeProperty('--left-pane-height');return;}
+ right.style.setProperty('--left-pane-height',Math.ceil(left.getBoundingClientRect().height)+'px');
+}
+if(typeof ResizeObserver!=='undefined'){
+ const left=$('.workspace>.watch-pane');
+ if(left)new ResizeObserver(syncWorkspaceHeight).observe(left);
+}
+window.addEventListener('resize',syncWorkspaceHeight);
+requestAnimationFrame(syncWorkspaceHeight);
 function updateABLoopUI(){
  const a=abLoop.start,b=abLoop.end,valid=a!==null&&b!==null&&b>a+.15;
  $('#abStart').textContent=a===null?'Đặt A':'A '+TB.stamp(a);
