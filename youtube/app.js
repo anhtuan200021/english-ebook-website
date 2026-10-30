@@ -2,7 +2,7 @@
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let dataReady=false;
-let state={version:1,videos:[],saved:[],words:[],current:'',settings:{font:18}},video=null,player=null,playerReady=false,playerLoading=false,playerId='',mode='off',range=null,pendingSeek=null,pendingLessonJump=null,closed=false,activeIndex=-1,manualScroll=false,programmaticScroll=false,selectedText='',selectedCue=null,tab='transcript',segments=[],readingGroups=[],readingIndex=-1,spokenCueKey='',grammarRows=[],grammarProcessed=new Set(),worker=null,job=0,filter='all',transcriptLimit=150,grammarLimit=100,saveTimer,toastTimer,tickId;
+let state={version:1,videos:[],saved:[],words:[],current:'',settings:{font:18}},video=null,player=null,playerReady=false,playerLoading=false,playerId='',mode='off',range=null,pendingSeek=null,pendingLessonJump=null,closed=false,activeIndex=-1,manualScroll=false,programmaticScroll=false,selectedText='',selectedCue=null,tab='transcript',segments=[],readingGroups=[],readingIndex=-1,spokenCueKey='',grammarRows=[],grammarProcessed=new Set(),worker=null,job=0,filter='all',transcriptLimit=150,grammarLimit=100,saveTimer,toastTimer,tickId,abLoop={start:null,end:null,enabled:false};
 const TYPES={present_simple:'Hiện tại đơn',present_continuous:'Hiện tại · đang làm',present_perfect:'Tới nay · đã làm / trải nghiệm',present_perfect_continuous:'Tới nay · làm kéo dài',past_simple:'Quá khứ · đã xảy ra',past_continuous:'Quá khứ · đang làm',past_perfect:'Quá khứ · đã làm trước đó',past_perfect_continuous:'Quá khứ · làm kéo dài trước đó',future_will:'Tương lai · will',future_going_to:'Tương lai · going to',future_in_past:'Đã định làm · was going to',future_continuous:'Tương lai · sẽ đang làm',future_perfect:'Tương lai · sẽ xong trước mốc',future_perfect_continuous:'Tương lai · làm kéo dài tới mốc',modal:'Can / could / should…',imperative:'Bảo / mời làm gì',other:'Lời ngắn / chưa thấy động từ',uncertain:'Chưa rõ cách dùng'};
 const TENSE_HELP={present_simple:'Dùng cho trạng thái, việc thường làm hoặc thông tin đang nêu. Xem cả câu để hiểu thời gian thực tế.',present_continuous:'Có am/is/are và từ chỉ hành động dạng như doing, working. Thường nói việc đang diễn ra; đôi khi nói kế hoạch.',present_perfect:'Hiện tại hoàn thành: have/has đi với dạng như done, seen, worked. Nói việc hoặc trải nghiệm liên hệ tới hiện tại.',present_perfect_continuous:'Hiện tại hoàn thành tiếp diễn: have/has been đi với dạng như doing, working. Nói quá trình kéo dài tới hiện tại hoặc gần đây.',past_simple:'Dạng như went, worked, was, did. Có thể kể quá khứ; trong câu giả định cần hiểu theo ý cả câu.',past_continuous:'Was/were đi với dạng như doing, working: việc đang diễn ra ở thời điểm quá khứ.',past_perfect:'Quá khứ hoàn thành: had đi với dạng như done, seen, worked: việc đã xảy ra trước một mốc quá khứ.',past_perfect_continuous:'Quá khứ hoàn thành tiếp diễn: had been đi với dạng như doing, working: quá trình kéo dài trước một mốc quá khứ.',future_will:'Will/shall và động từ theo sau. Có thể là lời hứa, dự đoán, quyết định hoặc cách nói về việc thường gặp.',future_going_to:'Am/is/are going to (hoặc gonna) và động từ: kế hoạch, dự đoán hoặc việc sắp được nhắc tới; không bắt buộc là tương lai gần.',future_in_past:'Was/were going to và động từ: một dự định nhìn từ thời điểm quá khứ.',future_continuous:'Will be và dạng như doing, working: việc đang diễn ra ở một mốc tương lai.',future_perfect:'Tương lai hoàn thành: will have và dạng như done, seen, worked: việc đã xong trước mốc tương lai.',future_perfect_continuous:'Tương lai hoàn thành tiếp diễn: will have been và dạng như doing, working: quá trình kéo dài tới mốc tương lai.',modal:'Can/could/should/must… và phần theo sau. Có thể nói khả năng, cho phép, lời khuyên hoặc giả định; đây không phải một thì riêng.',imperative:'Bảo, mời hoặc nhắc làm việc gì; thường không nói ra người hoặc vật được nói tới you. Không xếp như hiện tại đơn.',other:'Có thể là lời chào, đáp ngắn, phần câu đang nói dở hoặc app chưa tìm thấy động từ. Không có nghĩa lời nói sai.',uncertain:'Có nhiều cách hiểu; cần đọc thêm câu trước/sau hoặc nghe lại.'};
 const DEMO=['I work from home every day.','She is learning English at the moment.','I have a bike.',"I’m tired.",'The door is closed.',"I’m leaving tomorrow.",'We have finished our work.','She has been working here for three years.','I visited my friend yesterday.','I was cooking when he arrived.','They had left before I got there.','He had been waiting for an hour.','I will call you tonight.','We are going to visit our friends.','This time tomorrow, I will be travelling.','By Friday, I will have finished the book.','By June, she will have been studying for a year.','You should take a break.','Please keep going.','A lot of interesting ideas.',"I think it’s a good idea.",'I work and study.','I read the book.','Thank you for your help.'];
@@ -121,7 +121,7 @@ function repairExtensionCaptionLabels(v){
  if(count<3||count/v.cues.length<.8)return false;
  v.cues.forEach((c,i)=>{c.text=fixed[i];});return true;
 }
-function useVideo(v){repairExtensionCaptionLabels(v);captureVideoProgress(true);if(pendingLessonJump?.videoId!==v.id)pendingLessonJump=null;$('#selectionBubble').hidden=true;video=v;v.updated=Date.now();state.current=v.id;activeIndex=-1;range=null;pendingSeek=null;closed=false;manualScroll=false;transcriptLimit=150;$('#returnActive').hidden=true;renderMeta();renderTranscript();analyze();persist();loadPlayer();updateCurrent(-1);}
+function useVideo(v){repairExtensionCaptionLabels(v);captureVideoProgress(true);if(pendingLessonJump?.videoId!==v.id)pendingLessonJump=null;$('#selectionBubble').hidden=true;video=v;v.updated=Date.now();state.current=v.id;activeIndex=-1;range=null;pendingSeek=null;closed=false;resetABLoop();manualScroll=false;transcriptLimit=150;$('#returnActive').hidden=true;renderMeta();renderTranscript();analyze();persist();loadPlayer();updateCurrent(-1);}
 function ensureLesson(){if(video)return video;const v={id:'manual-'+Date.now(),title:'Bài học phụ đề',url:'',cues:[],labels:{},format:'',partial:false,updated:Date.now()};state.videos.push(v);useVideo(v);return v;}
 $('#recentSelect').onchange=e=>{const v=state.videos.find(v=>v.id===e.target.value);if(v)useVideo(v);};
 // Select the complete address for quick replacement with a new video.
@@ -171,6 +171,16 @@ function tick(){
   if(pendingSeek){const arrived=Math.abs(t-pendingSeek.time)<.45||TB.active(video.cues,t)===pendingSeek.index;if(!arrived&&Date.now()<pendingSeek.until)return;pendingSeek=null;}
   captureVideoProgress();
   $('#clock').textContent=TB.stamp(t);
+  if(abLoop.enabled&&abLoop.start!==null&&abLoop.end!==null){
+   const ps=player.getPlayerState();
+   if(ps===1&&(t>=abLoop.end-.07||t<abLoop.start-.4)){
+    pendingSeek={index:TB.active(video.cues,abLoop.start),time:abLoop.start,until:Date.now()+1800};
+    player.seekTo(abLoop.start,true);return;
+   }
+   if(ps===0){player.seekTo(abLoop.start,true);player.playVideo();return;}
+   const i=TB.active(video.cues,t);if(i!==activeIndex)updateCurrent(i,t);
+   return;
+  }
   const playerState=player.getPlayerState(),paused=playerState!==1&&!(playerState===0&&mode==='loop');
   const loopTime=playerState===0&&mode==='loop'&&range?Math.max(t,range.end):t;
   const action=TB.playbackAction({time:loopTime,paused,range,mode,closed});
@@ -188,10 +198,57 @@ function setPlaybackMode(next){
  let c=currentReadingCue();
  if(pendingSeek?.index>=0)c=video.cues[pendingSeek.index];else if(playerReady){const i=TB.active(video?.cues||[],player.getCurrentTime());if(i>=0)c=video.cues[i];}
  if(chosen!=='off'&&(!c||!Number.isFinite(c.start)||c.end<=c.start)){toast('Nhập phụ đề và chọn một câu trước nhé.');return;}
+ if(chosen==='loop'&&abLoop.enabled){abLoop.enabled=false;updateABLoopUI();}
  mode=chosen;closed=false;range=mode!=='off'?TB.loopRange(c,video.cues):null;
  $$('[data-mode]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mode===mode)));
  if(mode!=='off')toast('Lặp câu: '+TB.stamp(range.start)+'–'+TB.stamp(range.end));
 }
+function updateABLoopUI(){
+ const a=abLoop.start,b=abLoop.end,valid=a!==null&&b!==null&&b>a+.15;
+ $('#abStart').textContent=a===null?'Đặt A':'A '+TB.stamp(a);
+ $('#abEnd').textContent=b===null?'Đặt B':'B '+TB.stamp(b);
+ $('#abToggle').disabled=!valid;
+ $('#abToggle').textContent=abLoop.enabled?'■ Dừng lặp đoạn':'↻ Lặp đoạn';
+ $('#abToggle').setAttribute('aria-pressed',String(abLoop.enabled));
+ $('#abReset').disabled=a===null&&b===null;
+ $('#abStatus').textContent=valid?'Đoạn '+TB.stamp(a)+' – '+TB.stamp(b)+(abLoop.enabled?' · đang lặp':' · sẵn sàng'):a!==null?'Đã đặt A. Đưa video đến điểm kết thúc rồi đặt B.':'Chọn A và B ở bất kỳ vị trí nào trong video.';
+}
+function resetABLoop(){abLoop={start:null,end:null,enabled:false};if($('#abStart'))updateABLoopUI();}
+function abCurrentTime(){
+ if(!playerReady||!video?.url){toast('Hãy mở một video YouTube trước nhé.');return null;}
+ const t=Number(player.getCurrentTime()),duration=Number(player.getDuration());
+ if(!Number.isFinite(t)||t<0||!Number.isFinite(duration)||duration<=0){toast('Chưa lấy được thời gian video.');return null;}
+ return Math.min(t,duration);
+}
+$('#abStart').onclick=()=>{
+ const t=abCurrentTime();if(t===null)return;
+ abLoop.start=t;abLoop.enabled=false;
+ if(abLoop.end!==null&&abLoop.end<=t+.15)abLoop.end=null;
+ updateABLoopUI();
+};
+$('#abEnd').onclick=()=>{
+ const t=abCurrentTime();if(t===null)return;
+ if(abLoop.start===null){toast('Hãy đặt điểm A trước nhé.');return;}
+ if(t<=abLoop.start+.15){toast('Điểm B cần nằm sau A.');return;}
+ abLoop.end=t;abLoop.enabled=false;updateABLoopUI();
+};
+$('#abToggle').onclick=()=>{
+ if(abLoop.start===null||abLoop.end===null||abLoop.end<=abLoop.start+.15)return;
+ abLoop.enabled=!abLoop.enabled;
+ if(abLoop.enabled){
+  mode='off';range=null;closed=false;
+  $('[data-mode]').forEach(b=>b.setAttribute('aria-pressed','false'));
+  const t=player.getCurrentTime();
+  if(t<abLoop.start||t>=abLoop.end){
+   pendingSeek={index:TB.active(video.cues,abLoop.start),time:abLoop.start,until:Date.now()+1800};
+   player.seekTo(abLoop.start,true);
+  }
+  player.playVideo();
+ }
+ updateABLoopUI();
+};
+$('#abReset').onclick=resetABLoop;
+updateABLoopUI();
 function seekReading(index){const cues=video?.cues||[];if(cues.length)seek(cues[Math.max(0,Math.min(index,cues.length-1))]);}
 function moveCaption(delta){
  const cues=video?.cues||[];if(!cues.length)return;
