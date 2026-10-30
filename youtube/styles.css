@@ -414,3 +414,24 @@ header .lesson-transfer p{font-size:10px;line-height:1.6;color:var(--muted);marg
 .sentence-form-details{margin-top:10px;border-top:1px solid #e0e9e0;padding-top:8px;font-size:12px;line-height:1.6;color:#456354;min-width:0}
 .sentence-form-details>summary{cursor:pointer;font-weight:500}
 .perspective-card .sentence-form-details>.pattern-note{font-size:12px;line-height:1.6;margin:8px 0;color:#617363}
+
+/* A–B independent looping: chọn đoạn bất kỳ, không theo mốc phụ đề. */
+.lesson-controls .play-options .ab-loop-controls{
+ display:inline-flex;align-items:center;flex-wrap:wrap;gap:5px;
+ padding:3px;background:#edf5ee;border:1px solid #d6e7d9;border-radius:9px
+}
+.lesson-controls .play-options .ab-loop-controls button{
+ height:31px;padding:0 9px;font-size:12px;border-radius:6px;
+ background:#fff;border:1px solid #c6dbc9;color:#21523e;white-space:nowrap
+}
+.lesson-controls .play-options .ab-loop-controls #abToggle[aria-pressed="true"]{
+ background:#174b3e;color:#fff;border-color:#174b3e
+}
+.lesson-controls .play-options .ab-loop-controls button:disabled{
+ opacity:.48;cursor:not-allowed
+}
+.ab-loop-status{flex-basis:100%;font-size:11px;color:#527260;line-height:1.45}
+@media(max-width:420px){
+ .lesson-controls .play-options .ab-loop-controls{width:100%;justify-content:space-between}
+ .lesson-controls .play-options .ab-loop-controls button{flex:1;padding:0 5px}
+}
