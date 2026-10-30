@@ -250,7 +250,7 @@ $('#abStart').onclick=()=>{
  abLoop.start=t;abLoop.enabled=false;
  // Đặt A chuyển khỏi chế độ lặp câu để người học tự tua đến B.
  mode='off';range=null;closed=false;
- $('[data-mode]').forEach(b=>b.setAttribute('aria-pressed','false'));
+ $$('[data-mode]').forEach(b=>b.setAttribute('aria-pressed','false'));
  if(abLoop.end!==null&&abLoop.end<=t+.15)abLoop.end=null;
  updateABLoopUI();
 };
@@ -265,7 +265,7 @@ $('#abToggle').onclick=()=>{
  abLoop.enabled=!abLoop.enabled;
  if(abLoop.enabled){
   mode='off';range=null;closed=false;
-  $('[data-mode]').forEach(b=>b.setAttribute('aria-pressed','false'));
+  $$('[data-mode]').forEach(b=>b.setAttribute('aria-pressed','false'));
   const t=player.getCurrentTime();
   if(t<abLoop.start||t>=abLoop.end){
    pendingSeek={index:TB.active(video.cues,abLoop.start),time:abLoop.start,until:Date.now()+1800};
