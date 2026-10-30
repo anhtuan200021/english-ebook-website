@@ -512,3 +512,53 @@ header .lesson-transfer p{font-size:10px;line-height:1.6;color:var(--muted);marg
 }
 .lesson-controls .control-ab #abStart.is-set::before,
 .lesson-controls .control-ab #abEnd.is-set::before{content:"✓";font-size:12px}
+
+/* Bản chỉnh 30/10: ưu tiên khối phát, giữ A–B gọn và đáy hai cột ngang nhau. */
+.lesson-controls .controls-main-grid{
+ grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);
+ gap:9px;
+}
+.lesson-controls .control-group{padding:10px 12px}
+.lesson-controls .control-ab .ab-loop-controls button{height:34px;font-size:11px;padding:0 5px}
+.lesson-controls .control-playback .transport{gap:8px}
+.lesson-controls .control-playback .transport>button{height:35px}
+.lesson-controls .control-playback .playback-tools{gap:8px;margin-top:10px}
+.lesson-controls .playback-tools label{margin-left:auto}
+.lesson-controls .follow-toggle{margin-top:10px}
+@media(min-width:761px){
+ .workspace{align-items:start}
+ .workspace>.watch-pane{display:block}
+ .workspace>.watch-pane>.lesson-controls{display:flex;flex:none}
+ .workspace>.watch-pane>.lesson-controls>.controls-main-grid{flex:none}
+ .workspace>.watch-pane>.lesson-controls>.controls-bottom{margin-top:0}
+ .workspace>.content-pane{
+  height:var(--left-pane-height,auto);
+  min-height:0;
+  max-height:var(--left-pane-height,none);
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+ }
+ .workspace>.content-pane>.tabbar{flex:none;min-height:0}
+ .workspace>.content-pane>.panel:not([hidden]){
+  flex:1;min-height:0;overflow-y:auto;
+  display:flex;flex-direction:column;
+ }
+ .workspace>.content-pane #panel-transcript .transcript-viewport{
+  flex:1;min-height:0;
+  display:flex;flex-direction:column;
+  overflow:hidden;
+ }
+ .workspace>.content-pane #panel-transcript #transcriptList{
+  flex:1;min-height:0;height:auto!important;
+  overflow-y:auto;
+ }
+}
+@media(min-width:761px) and (max-width:1090px){
+ .lesson-controls .controls-main-grid{grid-template-columns:minmax(0,1.25fr) minmax(0,1fr)}
+ .lesson-controls .control-group{padding:9px}
+}
+@media(max-width:760px){
+ .lesson-controls .controls-main-grid{grid-template-columns:minmax(0,1fr)}
+ .workspace>.content-pane{height:auto;max-height:none}
+}
