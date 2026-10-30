@@ -209,6 +209,8 @@ function updateABLoopUI(){
  $('#abEnd').textContent=b===null?'Đặt B':'B '+TB.stamp(b);
  $('#abStart').classList.toggle('is-set',a!==null);
  $('#abEnd').classList.toggle('is-set',b!==null);
+ $('#abStart').setAttribute('aria-pressed',String(a!==null));
+ $('#abEnd').setAttribute('aria-pressed',String(b!==null));
  $('.control-ab')?.classList.toggle('is-looping',abLoop.enabled);
  $('#abToggle').disabled=!valid;
  $('#abToggle').textContent=abLoop.enabled?'■ Đang lặp':'↻ Lặp đoạn';
@@ -216,7 +218,14 @@ function updateABLoopUI(){
  $('#abReset').disabled=a===null&&b===null;
  $('#abStatus').textContent=valid?'Đoạn '+TB.stamp(a)+' – '+TB.stamp(b)+(abLoop.enabled?' · đang lặp':' · sẵn sàng'):a!==null?'Đã đặt A. Đưa video đến điểm kết thúc rồi đặt B.':'Chọn A và B ở bất kỳ vị trí nào trong video.';
 }
-function resetABLoop(){abLoop={start:null,end:null,enabled:false};if($('#abStart'))updateABLoopUI();}
+function resetABLoop(){
+ const hadPoints=abLoop.start!==null||abLoop.end!==null;
+ abLoop={start:null,end:null,enabled:false};
+ if($('#abStart')){
+  updateABLoopUI();
+  if(hadPoints){$('#abStatus').textContent='Đã xóa A–B. Bạn có thể chọn đoạn mới.';$('#abReset').classList.add('just-reset');setTimeout(()=>$('#abReset')?.classList.remove('just-reset'),750);}
+ }
+}
 function abCurrentTime(){
  if(!playerReady||!video?.url){toast('Hãy mở một video YouTube trước nhé.');return null;}
  const t=Number(player.getCurrentTime()),duration=Number(player.getDuration());
