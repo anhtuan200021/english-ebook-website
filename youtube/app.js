@@ -207,8 +207,11 @@ function updateABLoopUI(){
  const a=abLoop.start,b=abLoop.end,valid=a!==null&&b!==null&&b>a+.15;
  $('#abStart').textContent=a===null?'Đặt A':'A '+TB.stamp(a);
  $('#abEnd').textContent=b===null?'Đặt B':'B '+TB.stamp(b);
+ $('#abStart').classList.toggle('is-set',a!==null);
+ $('#abEnd').classList.toggle('is-set',b!==null);
+ $('.control-ab')?.classList.toggle('is-looping',abLoop.enabled);
  $('#abToggle').disabled=!valid;
- $('#abToggle').textContent=abLoop.enabled?'■ Dừng lặp đoạn':'↻ Lặp đoạn';
+ $('#abToggle').textContent=abLoop.enabled?'■ Đang lặp':'↻ Lặp đoạn';
  $('#abToggle').setAttribute('aria-pressed',String(abLoop.enabled));
  $('#abReset').disabled=a===null&&b===null;
  $('#abStatus').textContent=valid?'Đoạn '+TB.stamp(a)+' – '+TB.stamp(b)+(abLoop.enabled?' · đang lặp':' · sẵn sàng'):a!==null?'Đã đặt A. Đưa video đến điểm kết thúc rồi đặt B.':'Chọn A và B ở bất kỳ vị trí nào trong video.';
