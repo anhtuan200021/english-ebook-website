@@ -14,6 +14,7 @@ $$('[data-close]').forEach(b=>b.onclick=()=>b.closest('dialog').close());
 $$('dialog').forEach(d=>d.addEventListener('click',e=>{if(e.target===d){const r=d.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)d.close();}}));
 function showTab(name,axis){
  if(name==='words')return;
+ $('#tenseFilterPicker').open=false;$('#perspectiveFilterPicker').open=false;
  if(name==='perspectives'&&axis)setPerspectiveAxis(axis);
  tab=name;
  $$('[data-tab]').forEach(b=>{const selected=b.dataset.tab===name&&(name!=='perspectives'||b.dataset.perspectiveAxis===perspectiveAxis);b.setAttribute('aria-selected',String(selected));b.tabIndex=selected?0:-1;});
@@ -347,9 +348,10 @@ function renderGrammar(){const counts={};for(const row of grammarRows){const t=t
  const coverageEntries=new Map();for(const r of grammarRows){if(!coverageEntries.has(r.s.id))coverageEntries.set(r.s.id,[]);coverageEntries.get(r.s.id).push({...r.entry,type:typeOf(r)});}renderCoverage('#grammarCoverage',segments,s=>grammarProcessed.has(s.id)?coverageEntries.get(s.id)||[]:null,'grammar');
  $('#tenseFilters').classList.add('compact-study-filters');
  $('#tenseFilters').innerHTML=compactFilterLayout(options,'data-filter',filter,TENSE_HELP,otherTypes);
+ $('#tensePickerLabel').textContent=(filter==='all'?'Tất cả':TYPES[filter]||filter)+' · '+(filter==='all'?total:counts[filter]||0);
  const kindHints={modal:'Can/could/should/must… có thể nói khả năng, cho phép, lời khuyên hoặc giả định; không phải một thì riêng.',imperative:'Bảo, mời hoặc nhắc làm gì; thường không nói ra you. Không xếp như hiện tại đơn.',other:'Có thể là lời chào, đáp ngắn hoặc phần câu đang nói dở. App cũng có thể chưa nhận ra động từ; không có nghĩa lời nói sai.',uncertain:'Có nhiều cách hiểu. Đọc thêm câu trước/sau hoặc nghe lại.',future_in_past:'Was/were going to và hành động: đã có dự định từ một thời điểm quá khứ.'};
  $('#tenseCategoryHint').textContent=kindHints[filter]||TENSE_HELP[filter]||'';$('#tenseCategoryHint').hidden=!(kindHints[filter]||TENSE_HELP[filter]);const rows=grammarRows.filter(r=>filter==='all'||typeOf(r)===filter);const groups=groupGrammarRows(rows);$('#grammarList').innerHTML=groups.slice(0,grammarLimit).map(r=>'<article class="grammar-card"><button class="time-btn" data-grammar-seek="'+esc(r.s.id)+'" aria-label="Nghe từ '+TB.stamp(r.s.start)+'">▶ '+TB.stamp(r.s.start)+'</button><p data-text-cue="'+esc(r.s.cueIds?.[0]||'')+'">'+grammarMarkup(r.s.text,r.forms)+'</p>'+grammarDetails(r)+'</article>').join('')+(groups.length>grammarLimit?'<button class="outline full" data-grammar-more>Xem thêm kết quả</button>':'')+(!rows.length?'<div class="empty"><h3>'+(segments.length?'Chưa có kết quả ở bộ lọc này':'Chờ nội dung đầu tiên')+'</h3><p>'+(segments.length?'Đổi bộ lọc hoặc chờ phân loại hoàn tất.':'Nhập phụ đề hoặc thử bài mẫu để xem cách dùng động từ.')+'</p></div>':'');}
-$('#tenseFilters').onclick=e=>{const b=e.target.closest('[data-filter]');if(b){filter=b.dataset.filter;grammarLimit=100;renderGrammar();}};
+$('#tenseFilters').onclick=e=>{const b=e.target.closest('[data-filter]');if(b){filter=b.dataset.filter;grammarLimit=100;renderGrammar();closeFilterPicker('#tenseFilterPicker');}};
 $('#grammarList').onclick=e=>{let b=e.target.closest('[data-grammar-seek]');if(b){const s=segments.find(x=>x.id===b.dataset.grammarSeek);return seek({...s,id:s.cueIds[0]});}if(e.target.closest('[data-grammar-more]')){grammarLimit+=100;renderGrammar();}};
 let perspectiveAxis='structures',perspectiveFilter='all',perspectiveLimit=80,perspectiveJob=0,perspectiveWorker=null,perspectiveStarted=false,perspectiveDone=false,perspectiveFailed=false;
 let perspectiveResults=new Map();
@@ -400,6 +402,7 @@ function renderSentenceFrames(){
  $('#perspectiveFilters').classList.add('sentence-frame-filters');
  const button=(id,label,n)=>'<button data-perspective-filter="'+id+'" class="'+(perspectiveFilter===id?'selected':'')+'" aria-pressed="'+(perspectiveFilter===id)+'"><span class="frame-filter-name">'+esc(label)+'</span><span class="frame-filter-count">'+n+'</span></button>';
  $('#perspectiveFilters').innerHTML='<div class="frame-status-row">'+button('all','Khung đã nhận diện',known)+button('review','Cần xem thêm',counts.review)+'</div><div class="frame-core-grid">'+['B','I','O','D','C','E'].map(id=>button(id,TBFrames.types[id],counts[id])).join('')+'</div>';
+ $('#perspectivePickerLabel').textContent=(perspectiveFilter==='all'?'Khung đã nhận diện':TBFrames.types[perspectiveFilter]||perspectiveFilter)+' · '+(perspectiveFilter==='all'?known:counts[perspectiveFilter]||0);
  const selected=rows.filter(r=>perspectiveFilter==='all'?r.entry.type!=='review':r.entry.type===perspectiveFilter);
  const cards=selected.slice(0,perspectiveLimit).map(({s,entry})=>{
   const review=entry.type==='review';
@@ -422,6 +425,7 @@ function renderPerspectives(){
  const types=axis.types;
  const filterOptions=[['all','Tất cả',segments.length],...Object.entries(types).filter(([id])=>counts[id]).map(([id,name])=>[id,name,counts[id]]).sort((a,b)=>b[2]-a[2])];
  $('#perspectiveFilters').innerHTML=compactFilterLayout(filterOptions,'data-perspective-filter',perspectiveFilter,TBPerspectives.descriptions);
+ $('#perspectivePickerLabel').textContent=(perspectiveFilter==='all'?'Tất cả':types[perspectiveFilter]||perspectiveFilter)+' · '+(perspectiveFilter==='all'?segments.length:counts[perspectiveFilter]||0);
  const selected=rows.filter(r=>perspectiveFilter==='all'||r.entries.some(e=>e.type===perspectiveFilter));
  const cards=selected.slice(0,perspectiveLimit).map(({s,entries})=>{
   const shown=perspectiveFilter==='all'?entries:entries.filter(e=>e.type===perspectiveFilter),forms=shown.flatMap(e=>e.forms);
@@ -431,7 +435,9 @@ function renderPerspectives(){
  $('#perspectiveList').innerHTML=(perspectiveFailed?'<div class="perspective-error" role="status">Chưa tải được bộ phân loại. Bản chép lời và Theo thì vẫn dùng được. <button class="text-button" data-perspective-retry>Thử lại</button></div>':'')+cards+empty+(selected.length>perspectiveLimit?'<button class="outline full" data-perspective-more>Xem thêm kết quả</button>':'');
 }
 function setPerspectiveAxis(axis){if(TBPerspectives.axes[axis]&&axis!==perspectiveAxis){perspectiveAxis=axis;perspectiveFilter='all';perspectiveLimit=80;}}
-$('#perspectiveFilters').onclick=e=>{const b=e.target.closest('[data-perspective-filter]');if(b){perspectiveFilter=b.dataset.perspectiveFilter;perspectiveLimit=80;renderPerspectives();}};
+function closeFilterPicker(selector){const picker=$(selector);picker.open=false;picker.querySelector('summary').focus({preventScroll:true});}
+$$('.filter-picker').forEach(picker=>picker.addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();closeFilterPicker('#'+picker.id);}}));
+$('#perspectiveFilters').onclick=e=>{const b=e.target.closest('[data-perspective-filter]');if(b){perspectiveFilter=b.dataset.perspectiveFilter;perspectiveLimit=80;renderPerspectives();closeFilterPicker('#perspectiveFilterPicker');}};
 $('#perspectiveList').onclick=e=>{
  const b=e.target.closest('[data-perspective-seek]');if(b){const s=segments.find(s=>s.id===b.dataset.perspectiveSeek);if(s)seek({...s,id:s.sourceCueIds[0]});return;}
  if(e.target.closest('[data-perspective-more]')){perspectiveLimit+=80;renderPerspectives();}
