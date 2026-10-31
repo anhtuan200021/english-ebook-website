@@ -390,8 +390,8 @@ function renderSentenceFrames(){
  const known=processed-counts.review;
  $('#perspectiveHint').textContent=perspectiveFilter==='all'?'6 khung nền · '+known+' đoạn có khung · '+counts.review+' cần xem thêm'+(perspectiveDone?'':' · Đang đọc '+processed+'/'+total+' đoạn…'):TBFrames.descriptions[perspectiveFilter]||TBPerspectives.axes.structures.hint;
  $('#perspectiveFilters').classList.add('sentence-frame-filters');
- const button=(id,label,n)=>'<button data-perspective-filter="'+id+'" class="'+(perspectiveFilter===id?'selected':'')+'" aria-pressed="'+(perspectiveFilter===id)+'">'+esc(label)+' <span>'+n+'</span></button>';
- $('#perspectiveFilters').innerHTML=button('all','Khung đã nhận diện',known)+['B','I','O','D','C','E'].map(id=>button(id,TBFrames.types[id],counts[id])).join('')+'<span class="frame-review-filter">'+button('review','Cần xem thêm',counts.review)+'</span>';
+ const button=(id,label,n)=>'<button data-perspective-filter="'+id+'" class="'+(perspectiveFilter===id?'selected':'')+'" aria-pressed="'+(perspectiveFilter===id)+'"><span class="frame-filter-name">'+esc(label)+'</span><span class="frame-filter-count">'+n+'</span></button>';
+ $('#perspectiveFilters').innerHTML='<div class="frame-status-row">'+button('all','Khung đã nhận diện',known)+button('review','Cần xem thêm',counts.review)+'</div><div class="frame-core-grid">'+['B','I','O','D','C','E'].map(id=>button(id,TBFrames.types[id],counts[id])).join('')+'</div>';
  const selected=rows.filter(r=>perspectiveFilter==='all'?r.entry.type!=='review':r.entry.type===perspectiveFilter);
  const cards=selected.slice(0,perspectiveLimit).map(({s,entry})=>{
   const review=entry.type==='review';
