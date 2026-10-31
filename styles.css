@@ -1322,6 +1322,12 @@ details[open] .toggle:before {
 }
 
 /* Nội dung câu chuyện và bốn nguyên tắc chỉ có trên Trang chủ. */
+.personal-story > .container {
+  max-width: 760px;
+}
+.personal-story .story-block p {
+  max-width: none;
+}
 .personal-story .story-layout {
   max-width: 760px;
   margin-top: 32px;
