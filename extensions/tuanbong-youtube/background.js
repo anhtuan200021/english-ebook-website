@@ -1,5 +1,5 @@
 'use strict';
-const APP='https://english-ebook-website.pages.dev/youtube/';
+const APP='https://tuanbong.pages.dev/youtube/';
 function youtubeVideo(url){
  const u=new URL(url);if(u.protocol!=='https:'||!['www.youtube.com','youtube.com','m.youtube.com'].includes(u.hostname)||u.pathname!=='/watch'||!/^[\w-]{11}$/.test(u.searchParams.get('v')||''))throw Error('Hãy mở một video YouTube trước.');return u.searchParams.get('v');
 }

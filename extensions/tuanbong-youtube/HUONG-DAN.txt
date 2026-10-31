@@ -1,4 +1,4 @@
-TuanBong Chrome — bản 0.4.3
+TuanBong Chrome — bản 0.4.4
 
 CÀI ĐẶT / CẬP NHẬT (Google Chrome trên máy tính)
 1. Giải nén ZIP vào thư mục cố định tuanbong-chrome.
@@ -7,13 +7,13 @@ CÀI ĐẶT / CẬP NHẬT (Google Chrome trên máy tính)
 4. Nếu cập nhật: bấm Reload / Tải lại trên thẻ TuanBong. Nếu Chrome yêu cầu, đồng ý quyền chạy trên YouTube và trang TuanBong. Nếu cài lần đầu: Load unpacked / Tải tiện ích đã giải nén → chọn thư mục chứa manifest.json.
 5. Tải lại tab YouTube đang mở để nút mới xuất hiện. Nếu có hai bản TuanBong, chỉ giữ bật bản mới.
 
-KẾT NỐI WEBSITE 0.4.3
+KẾT NỐI WEBSITE 0.4.4
 - Trang học tự kiểm tra tiện ích và chỉ mở công cụ khi nhận diện được kết nối.
 - Chưa cài hoặc chưa kết nối: hiện hướng dẫn và nút tải.
 - Cài / cập nhật xong: tải lại trang học và tab YouTube. Có thể bấm Tôi đã cài — Kiểm tra lại.
 - Không thêm quyền truy cập website nào; vẫn chỉ YouTube và trang học TuanBong.
 
-TỐI ƯU 0.4.3
+TỐI ƯU 0.4.4
 - Nhận diện tiêu đề phân cảnh trong bản chép lời mới của YouTube, tránh cuộn toàn bộ khi phụ đề đã tải đủ.
 - Cuộn lấy phụ đề dài theo nhịp 25ms khi YouTube đã hiển thị vùng tiếp theo, thay cho chờ cố định 100ms.
 - Chỉ cuộn tiếp trong phạm vi phụ đề đã đọc, chờ khi YouTube dựng dòng chậm để tránh bỏ sót.
@@ -73,3 +73,10 @@ GIỚI HẠN
 
 BẢN CŨ
 Mở bản ChatGPT cũ → Cài đặt → Xuất bản sao lưu. Mở https://english-ebook-website.pages.dev/youtube/ → Cài đặt → Khôi phục. Không xóa bản cũ trước khi kiểm tra dữ liệu đã chuyển đủ.
+
+
+CHUYỂN ĐỊA CHỈ WEBSITE · 0.4.4
+Tiện ích mở bài học tại https://tuanbong.pages.dev/youtube/ và vẫn hỗ trợ kết nối trang cũ.
+Trước khi cập nhật: ở trang cũ → Cài đặt → Xuất bản sao lưu.
+Sau cập nhật: ở trang mới → Cài đặt → Khôi phục → chọn tệp vừa xuất.
+Kiểm tra đủ video, câu và từ đã lưu. Dữ liệu không tự đồng bộ giữa hai địa chỉ.

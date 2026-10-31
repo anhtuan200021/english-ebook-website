@@ -62,7 +62,7 @@ test('the bridge ignores foreign pages, invalid challenges and invalidated exten
 test('the page hides all study content initially and does not directly include the app script',()=>{
  const html=fs.readFileSync(path.join(root,'youtube/index.html'),'utf8');assert.match(html,/id="studyApp"[^>]*hidden inert/);assert.doesNotMatch(html,/<script[^>]+src="app\.js/);
  for(const id of ['extensionGate','extensionCheck','extensionCheckStatus','copyExtensionsAddress'])assert.equal((html.match(new RegExp('id="'+id+'"','g'))||[]).length,1);
- assert.match(html,/downloads\/tuanbong-chrome\.zip\?v=0\.4\.3/);
+ assert.match(html,/downloads\/tuanbong-chrome\.zip\?v=0\.4\.4/);
 });
 test('gate and bridge connect end to end through their real message protocol on a normal visit',async()=>{
  const s=setup(),listeners=[s.events.message];

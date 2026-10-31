@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "TuanBong · Học ngay trên YouTube",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "description": "Thêm nút Học cùng TuanBong trên YouTube, tự mở bản chép lời và chuyển sang bài học. Không API trả phí.",
   "permissions": [
     "activeTab",
@@ -9,6 +9,7 @@
     "storage"
   ],
   "host_permissions": [
+    "https://tuanbong.pages.dev/youtube/*",
     "https://english-ebook-website.pages.dev/youtube/*",
     "https://www.youtube.com/*",
     "https://youtube.com/*",
@@ -21,7 +22,8 @@
   "content_scripts": [
     {
       "matches": [
-        "https://english-ebook-website.pages.dev/youtube/*"
+        "https://english-ebook-website.pages.dev/youtube/*",
+        "https://tuanbong.pages.dev/youtube/*"
       ],
       "js": [
         "bridge.js"

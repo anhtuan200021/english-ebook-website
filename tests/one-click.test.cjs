@@ -1,7 +1,7 @@
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
 const root=path.join(__dirname,'..'),ext=path.join(root,'extensions/tuanbong-youtube'),app=path.join(root,'youtube');
 global.TB=require(path.join(app,'core.js'));const TB=global.TB,Transfer=require(path.join(app,'transfer.js'));
-const ID='5SzO5zxzQLs',OTHER='M_ONGazIFsg',UUID='12345678-1234-1234-1234-123456789abc',origin='https://english-ebook-website.pages.dev';
+const ID='5SzO5zxzQLs',OTHER='M_ONGazIFsg',UUID='12345678-1234-1234-1234-123456789abc',origin='https://tuanbong.pages.dev';
 const payload=(extra={})=>({version:1,transferId:UUID,createdAt:Date.now(),url:'https://www.youtube.com/watch?v='+ID,title:'A video',transcript:'0:00 Hello.\n0:04 I work every day.',count:2,...extra});
 function extractor({open=false,expand=false,virtual=false,mounted=false,append=false,navigate=false,noTranscript=false,english=false}={}){
  let now=0,current=ID,expanded=false,opens=0,expands=0,englishSelected=false;
@@ -83,7 +83,7 @@ test('bridge delivers only its own transfer and never deletes a different launch
 });
 test('manual fallback opens the requested video and preserves all other lessons',()=>{const i=importing();i.ctx.location.href=origin+'/youtube/?video='+OTHER;const v=i.ctx.launchVideoFromURL();assert.equal(v.id,OTHER);assert.equal(v.cues.length,0);assert.equal(i.ctx.state.videos[0],i.lesson);assert.equal(i.ctx.state.videos.length,2);});
 test('invalid fallback IDs cannot create a lesson',()=>{const i=importing();i.ctx.location.href=origin+'/youtube/?video=javascript:evil';assert.equal(i.ctx.launchVideoFromURL(),null);assert.equal(i.ctx.state.videos.length,1);});
-test('extension access is restricted to YouTube and the TuanBong learning path',()=>{const m=JSON.parse(fs.readFileSync(path.join(ext,'manifest.json')));assert.equal(m.version,'0.4.3');assert.deepEqual(m.permissions,['activeTab','scripting','storage']);assert.deepEqual(m.host_permissions,[origin+'/youtube/*','https://www.youtube.com/*','https://youtube.com/*','https://m.youtube.com/*']);assert.equal(m.background.service_worker,'background.js');for(const script of ['extract.js','youtube.js','background.js','popup.js','bridge.js'])assert.doesNotMatch(fs.readFileSync(path.join(ext,script),'utf8'),/fetch\s*\(|XMLHttpRequest|eval\s*\(/);});
+test('extension access is restricted to YouTube and the TuanBong learning path',()=>{const m=JSON.parse(fs.readFileSync(path.join(ext,'manifest.json')));assert.equal(m.version,'0.4.4');assert.deepEqual(m.permissions,['activeTab','scripting','storage']);assert.deepEqual(m.host_permissions,[origin+'/youtube/*','https://english-ebook-website.pages.dev/youtube/*','https://www.youtube.com/*','https://youtube.com/*','https://m.youtube.com/*']);assert.equal(m.background.service_worker,'background.js');for(const script of ['extract.js','youtube.js','background.js','popup.js','bridge.js'])assert.doesNotMatch(fs.readFileSync(path.join(ext,script),'utf8'),/fetch\s*\(|XMLHttpRequest|eval\s*\(/);});
 
 test('chapter headers in the combined transcript do not trigger unnecessary full-list scrolling',async()=>{
  const e=extractor({open:true,mounted:true}),panel=e.ctx.document.querySelector('ytd-transcript-renderer'),read=panel.querySelectorAll;

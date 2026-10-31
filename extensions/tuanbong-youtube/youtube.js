@@ -1,7 +1,7 @@
 'use strict';
 (()=>{
  if(globalThis.__tuanbongYoutubeInstalled)return;globalThis.__tuanbongYoutubeInstalled=true;
- const APP='https://english-ebook-website.pages.dev/youtube/';let busy=false,scheduled=false,operation=null,lastError='';
+ const APP='https://tuanbong.pages.dev/youtube/';let busy=false,scheduled=false,operation=null,lastError='';
  const videoId=()=>{const url=new URL(location.href);return url.pathname==='/watch'&&/^[\w-]{11}$/.test(url.searchParams.get('v')||'')?url.searchParams.get('v'):null;};
  let host=document.createElement('div');host.id='tuanbong-youtube-launcher';
  const shadow=host.attachShadow({mode:'closed'});
