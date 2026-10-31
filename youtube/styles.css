@@ -599,3 +599,14 @@ main>.note-box{margin:12px 0 0;padding:10px 0}
  .lesson-controls .control-playback .transport>button:first-child,
  .lesson-controls .control-playback .transport>button:nth-child(3){width:30px}
 }
+
+
+/* Balanced desktop margins; preserve the existing 16px top inset. */
+@media(min-width:1101px){
+ main{width:auto;max-width:none;margin-left:188px;margin-right:12px;padding-top:16px}
+ .workspace{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px}
+ .watch-pane>.current-card{height:136px;min-height:136px;max-height:136px}
+ main>.note-box{margin-top:8px;padding:6px 0;align-items:center}
+ main>.note-box .tb-mascot{width:40px;height:40px;flex-basis:40px}
+ main>footer{margin-top:6px;padding:8px 0}
+}
