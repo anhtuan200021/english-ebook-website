@@ -336,10 +336,17 @@ function grammarSupplement(s){
  const names={nonfinite:'Động từ chưa có thì riêng',dependent_ing:'Dạng -ing cần đọc ngữ cảnh',restart:'Lượt mở đầu nói lại',sound_note:'Chú thích âm thanh'};
  return '<details class="verb-supplement"><summary>Dạng động từ và dấu vết nói lại · '+details.length+'</summary><p class="category-hint">Phần bổ sung; không cộng vào số cụm chia thì ở bộ lọc.</p><div class="verb-details">'+details.map(d=>'<span class="verb-detail" title="'+esc(d.reason)+'"><strong>'+esc(s.text.slice(d.start,d.end))+'</strong><span> · </span>'+esc(names[d.type]||d.type)+'</span>').join('')+'</div></details>';
 }
-function renderGrammar(){const counts={};for(const row of grammarRows){const t=typeOf(row);counts[t]=(counts[t]||0)+grammarEntryCount(row.entry);}const total=grammarRows.reduce((n,r)=>n+grammarEntryCount(r.entry),0),verbCount=grammarRows.reduce((n,r)=>n+r.entry.forms.length,0);const otherTypes=new Set(['modal','imperative','other','uncertain']);const options=[['all','Tất cả',total],...Object.entries(TYPES).filter(([t])=>counts[t]).map(([t,n])=>[t,n,counts[t]]).sort((a,b)=>Number(otherTypes.has(a[0]))-Number(otherTypes.has(b[0]))||b[2]-a[2])];let otherHeading=false;
+function compactFilterLayout(options,attribute,selected,hints={},otherTypes=null){
+ const button=([id,label,count])=>'<button '+attribute+'="'+esc(id)+'" class="'+(selected===id?'selected':'')+'" aria-pressed="'+(selected===id)+'" title="'+esc(hints[id]||label)+'"><span class="filter-option-name">'+esc(label)+'</span><span class="filter-option-count">'+count+'</span></button>';
+ const all=options.filter(([id])=>id==='all'),normal=options.filter(([id])=>id!=='all'&&!otherTypes?.has(id)),other=options.filter(([id])=>id!=='all'&&otherTypes?.has(id));
+ return '<div class="compact-filter-top">'+all.map(button).join('')+'</div><div class="compact-filter-grid">'+normal.map(button).join('')+'</div>'+(other.length?'<div class="compact-filter-heading">Cách dùng khác / chưa rõ thì</div><div class="compact-filter-grid">'+other.map(button).join('')+'</div>':'');
+}
+
+function renderGrammar(){const counts={};for(const row of grammarRows){const t=typeOf(row);counts[t]=(counts[t]||0)+grammarEntryCount(row.entry);}const total=grammarRows.reduce((n,r)=>n+grammarEntryCount(r.entry),0),verbCount=grammarRows.reduce((n,r)=>n+r.entry.forms.length,0);const otherTypes=new Set(['modal','imperative','other','uncertain']);const options=[['all','Tất cả',total],...Object.entries(TYPES).filter(([t])=>counts[t]).map(([t,n])=>[t,n,counts[t]]).sort((a,b)=>Number(otherTypes.has(a[0]))-Number(otherTypes.has(b[0]))||b[2]-a[2])];
  $('#grammarCounts').textContent=segments.length+' câu/đoạn · '+verbCount+' cụm động từ đã nhận diện'+(total>verbCount?' · '+(total-verbCount)+' kết quả chưa xác định cụm':'');
  const coverageEntries=new Map();for(const r of grammarRows){if(!coverageEntries.has(r.s.id))coverageEntries.set(r.s.id,[]);coverageEntries.get(r.s.id).push({...r.entry,type:typeOf(r)});}renderCoverage('#grammarCoverage',segments,s=>grammarProcessed.has(s.id)?coverageEntries.get(s.id)||[]:null,'grammar');
- $('#tenseFilters').innerHTML=options.map(([t,n,c])=>{let heading='';if(['modal','imperative','other','uncertain'].includes(t)&&!otherHeading){heading='<span class="filter-kind-label">Cách dùng khác / chưa rõ thì</span>';otherHeading=true;}return heading+'<button data-filter="'+t+'" class="'+(filter===t?'selected':'')+'" aria-pressed="'+(filter===t)+'" title="'+esc(TENSE_HELP[t]||'Xem mọi kết quả đã nhận diện')+'">'+esc(n)+' <span>'+c+'</span></button>';}).join('');
+ $('#tenseFilters').classList.add('compact-study-filters');
+ $('#tenseFilters').innerHTML=compactFilterLayout(options,'data-filter',filter,TENSE_HELP,otherTypes);
  const kindHints={modal:'Can/could/should/must… có thể nói khả năng, cho phép, lời khuyên hoặc giả định; không phải một thì riêng.',imperative:'Bảo, mời hoặc nhắc làm gì; thường không nói ra you. Không xếp như hiện tại đơn.',other:'Có thể là lời chào, đáp ngắn hoặc phần câu đang nói dở. App cũng có thể chưa nhận ra động từ; không có nghĩa lời nói sai.',uncertain:'Có nhiều cách hiểu. Đọc thêm câu trước/sau hoặc nghe lại.',future_in_past:'Was/were going to và hành động: đã có dự định từ một thời điểm quá khứ.'};
  $('#tenseCategoryHint').textContent=kindHints[filter]||TENSE_HELP[filter]||'';$('#tenseCategoryHint').hidden=!(kindHints[filter]||TENSE_HELP[filter]);const rows=grammarRows.filter(r=>filter==='all'||typeOf(r)===filter);const groups=groupGrammarRows(rows);$('#grammarList').innerHTML=groups.slice(0,grammarLimit).map(r=>'<article class="grammar-card"><button class="time-btn" data-grammar-seek="'+esc(r.s.id)+'" aria-label="Nghe từ '+TB.stamp(r.s.start)+'">▶ '+TB.stamp(r.s.start)+'</button><p data-text-cue="'+esc(r.s.cueIds?.[0]||'')+'">'+grammarMarkup(r.s.text,r.forms)+'</p>'+grammarDetails(r)+'</article>').join('')+(groups.length>grammarLimit?'<button class="outline full" data-grammar-more>Xem thêm kết quả</button>':'')+(!rows.length?'<div class="empty"><h3>'+(segments.length?'Chưa có kết quả ở bộ lọc này':'Chờ nội dung đầu tiên')+'</h3><p>'+(segments.length?'Đổi bộ lọc hoặc chờ phân loại hoàn tất.':'Nhập phụ đề hoặc thử bài mẫu để xem cách dùng động từ.')+'</p></div>':'');}
 $('#tenseFilters').onclick=e=>{const b=e.target.closest('[data-filter]');if(b){filter=b.dataset.filter;grammarLimit=100;renderGrammar();}};
@@ -389,6 +396,7 @@ function renderSentenceFrames(){
  const processed=rows.length,total=segments.length;
  const known=processed-counts.review;
  $('#perspectiveHint').textContent=perspectiveFilter==='all'?'6 khung nền · '+known+' đoạn có khung · '+counts.review+' cần xem thêm'+(perspectiveDone?'':' · Đang đọc '+processed+'/'+total+' đoạn…'):TBFrames.descriptions[perspectiveFilter]||TBPerspectives.axes.structures.hint;
+ $('#perspectiveFilters').classList.remove('compact-study-filters');
  $('#perspectiveFilters').classList.add('sentence-frame-filters');
  const button=(id,label,n)=>'<button data-perspective-filter="'+id+'" class="'+(perspectiveFilter===id?'selected':'')+'" aria-pressed="'+(perspectiveFilter===id)+'"><span class="frame-filter-name">'+esc(label)+'</span><span class="frame-filter-count">'+n+'</span></button>';
  $('#perspectiveFilters').innerHTML='<div class="frame-status-row">'+button('all','Khung đã nhận diện',known)+button('review','Cần xem thêm',counts.review)+'</div><div class="frame-core-grid">'+['B','I','O','D','C','E'].map(id=>button(id,TBFrames.types[id],counts[id])).join('')+'</div>';
@@ -405,13 +413,15 @@ function renderSentenceFrames(){
 function renderPerspectives(){
  if(perspectiveAxis==='structures'&&globalThis.TBFrames){renderSentenceFrames();return;}
  $('#perspectiveFilters').classList.remove('sentence-frame-filters');
+ $('#perspectiveFilters').classList.add('compact-study-filters');
  $('#panel-perspectives .panel-foot').textContent='Gợi ý theo cách nói, cần nghe cả đoạn · Đếm theo câu/đoạn, một câu có thể thuộc nhiều nhóm.';
  renderCoverage('#perspectiveCoverage',segments,s=>perspectiveResults.get(s.id)?.[perspectiveAxis],perspectiveAxis);
  const axes=TBPerspectives.axes,axis=axes[perspectiveAxis],counts={},rows=[];
  for(const s of segments){let entries=perspectiveResults.get(s.id)?.[perspectiveAxis];if(!entries)continue;if(!entries.length)entries=[{type:TBPerspectives.fallbackType(perspectiveAxis),forms:[],status:'review'}];rows.push({s,entries});for(const entry of entries)counts[entry.type]=(counts[entry.type]||0)+1;}
  $('#perspectiveHint').textContent=perspectiveFilter==='all'?axis.hint:(TBPerspectives.descriptions[perspectiveFilter]||axis.hint);
  const types=axis.types;
- $('#perspectiveFilters').innerHTML=[['all','Tất cả',segments.length],...Object.entries(types).filter(([id])=>counts[id]).map(([id,name])=>[id,name,counts[id]]).sort((a,b)=>b[2]-a[2])].map(([id,name,count])=>'<button data-perspective-filter="'+id+'" class="'+(perspectiveFilter===id?'selected':'')+'" aria-pressed="'+(perspectiveFilter===id)+'" title="'+esc(TBPerspectives.descriptions[id]||axis.hint)+'">'+esc(name)+' <span>'+count+'</span></button>').join('');
+ const filterOptions=[['all','Tất cả',segments.length],...Object.entries(types).filter(([id])=>counts[id]).map(([id,name])=>[id,name,counts[id]]).sort((a,b)=>b[2]-a[2])];
+ $('#perspectiveFilters').innerHTML=compactFilterLayout(filterOptions,'data-perspective-filter',perspectiveFilter,TBPerspectives.descriptions);
  const selected=rows.filter(r=>perspectiveFilter==='all'||r.entries.some(e=>e.type===perspectiveFilter));
  const cards=selected.slice(0,perspectiveLimit).map(({s,entries})=>{
   const shown=perspectiveFilter==='all'?entries:entries.filter(e=>e.type===perspectiveFilter),forms=shown.flatMap(e=>e.forms);

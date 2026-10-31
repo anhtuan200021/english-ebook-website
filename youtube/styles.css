@@ -640,3 +640,24 @@ main>.note-box{margin:12px 0 0;padding:10px 0}
 .frame-extras p{font-size:14px;margin:3px 0 8px;color:#365d42}
 @media(max-width:760px){#perspectiveFilters.sentence-frame-filters .frame-core-grid>button{font-size:11px}.sentence-frame-details .frame-evidence{grid-template-columns:minmax(0,1fr);gap:3px}}
 
+
+/* Consistent filter grids inside the existing study-panel dimensions. */
+#tenseFilters.compact-study-filters,
+#perspectiveFilters.compact-study-filters{display:flex;flex-direction:column;flex-wrap:nowrap;gap:7px;container-type:inline-size;min-width:0;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;overscroll-behavior:contain;flex:none;padding-bottom:10px}
+#tenseFilters.compact-study-filters{max-height:185px}
+#perspectiveFilters.compact-study-filters{max-height:160px}
+.compact-study-filters .compact-filter-top{position:sticky;top:0;z-index:1;display:flex;gap:6px;align-items:center;background:#fff;padding:0 0 5px}
+.compact-study-filters .compact-filter-grid{flex:none;width:100%;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;min-width:0}
+#tenseFilters.compact-study-filters button,
+#perspectiveFilters.compact-study-filters button{min-width:0;min-height:34px;display:flex;justify-content:space-between;align-items:center;gap:7px;padding:6px 9px;line-height:1.4;font-size:12px;text-align:left;white-space:normal}
+.compact-study-filters .compact-filter-grid>button{width:100%;height:100%;margin:0}
+#tenseFilters.compact-study-filters .filter-option-name,
+#perspectiveFilters.compact-study-filters .filter-option-name{min-width:0;font:inherit;color:inherit;opacity:1;white-space:normal;overflow-wrap:normal}
+#tenseFilters.compact-study-filters .filter-option-count,
+#perspectiveFilters.compact-study-filters .filter-option-count{flex:none;min-width:22px;padding:1px 4px;border-radius:4px;background:#e6eee5;color:#56705a;font-size:10px;line-height:1.5;font-variant-numeric:tabular-nums;text-align:center}
+#tenseFilters.compact-study-filters button.selected .filter-option-count,
+#perspectiveFilters.compact-study-filters button.selected .filter-option-count{background:#cfe4d2;color:#245937}
+.compact-study-filters .compact-filter-heading{font-size:11px;color:#587461;margin:3px 0 0;padding-top:7px;border-top:1px solid var(--line)}
+@container(max-width:540px){.compact-study-filters .compact-filter-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){#tenseFilters.compact-study-filters button,#perspectiveFilters.compact-study-filters button{font-size:11px}}
+
