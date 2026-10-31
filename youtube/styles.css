@@ -646,7 +646,7 @@ main>.note-box{margin:12px 0 0;padding:10px 0}
 #perspectiveFilters.compact-study-filters{display:flex;flex-direction:column;flex-wrap:nowrap;gap:7px;container-type:inline-size;min-width:0;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;overscroll-behavior:contain;flex:none;padding-bottom:10px}
 #tenseFilters.compact-study-filters{max-height:185px}
 #perspectiveFilters.compact-study-filters{max-height:160px}
-.compact-study-filters .compact-filter-top{position:sticky;top:0;z-index:1;display:flex;gap:6px;align-items:center;background:#fff;padding:0 0 5px}
+.compact-study-filters .compact-filter-top{position:static;top:auto;z-index:auto;flex:none;display:flex;gap:6px;align-items:center;background:#fff;padding:0 0 5px}
 .compact-study-filters .compact-filter-grid{flex:none;width:100%;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;min-width:0}
 #tenseFilters.compact-study-filters button,
 #perspectiveFilters.compact-study-filters button{min-width:0;min-height:34px;display:flex;justify-content:space-between;align-items:center;gap:7px;padding:6px 9px;line-height:1.4;font-size:12px;text-align:left;white-space:normal}
@@ -674,8 +674,12 @@ main>.note-box{margin:12px 0 0;padding:10px 0}
 .filter-picker[open] .picker-arrow{transform:rotate(180deg)}
 #tenseFilterPicker #tenseFilters,
 #perspectiveFilterPicker #perspectiveFilters{margin:0;padding:8px;border:0;border-top:1px solid #dfe9df;overflow-y:auto;overflow-x:hidden}
-#tenseFilterPicker #tenseFilters{max-height:185px}
-#perspectiveFilterPicker #perspectiveFilters{max-height:160px}
+#tenseFilterPicker #tenseFilters{max-height:132px}
+#perspectiveFilterPicker #perspectiveFilters{max-height:132px}
 .filter-picker #grammarCounts,.filter-picker #perspectiveHint{margin:8px 10px;font-size:11px;line-height:1.6;color:#587461}
 #tenseFilterPicker #tenseCategoryHint{margin:8px 10px;padding:7px 9px;border-radius:6px;background:#f0f5ed;color:#486752;font-size:11px;line-height:1.6}
 
+
+/* The entire option list scrolls together, without an overlapping sticky row. */
+#perspectiveFilterPicker #perspectiveFilters.sentence-frame-filters{flex-wrap:nowrap}
+.filter-picker .frame-core-grid,.filter-picker .frame-status-row{flex:none;width:100%}
