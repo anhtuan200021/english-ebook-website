@@ -1322,8 +1322,39 @@ details[open] .toggle:before {
 }
 
 /* Nội dung câu chuyện và bốn nguyên tắc chỉ có trên Trang chủ. */
-.personal-story > .container {
-  max-width: 760px;
+.personal-story > .story-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 760px) minmax(0, 1fr);
+  gap: 56px;
+  align-items: start;
+  padding-block: 64px;
+}
+.story-copy { min-width: 0; }
+.story-illustration {
+  position: sticky;
+  top: 140px;
+  margin-top: 116px;
+  display: flex;
+  justify-content: center;
+}
+.story-mascot {
+  display: block;
+  width: min(100%, 224px);
+  height: auto;
+  object-fit: contain;
+}
+@media (max-width: 900px) {
+  .personal-story > .story-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+    padding-block: 48px;
+  }
+  .story-illustration {
+    position: static;
+    margin-top: 0;
+    justify-content: flex-end;
+  }
+  .story-mascot { width: 88px; }
 }
 .personal-story .story-block p {
   max-width: none;
