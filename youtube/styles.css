@@ -562,3 +562,36 @@ header .lesson-transfer p{font-size:10px;line-height:1.6;color:var(--muted);marg
  .lesson-controls .controls-main-grid{grid-template-columns:minmax(0,1fr)}
  .workspace>.content-pane{height:auto;max-height:none}
 }
+
+
+/* Playback layout: aligned rows with a separate, quiet follow option. */
+.lesson-controls .control-playback{display:flex;flex-direction:column;gap:10px}
+.lesson-controls .control-playback .control-group-title{margin:0}
+.lesson-controls .control-playback .transport{display:grid;grid-template-columns:34px max-content 34px minmax(0,1fr);gap:7px}
+.lesson-controls .control-playback .transport #clock{justify-self:end;margin:0;padding:5px 8px;background:#eaf2ec;border-radius:6px;font-size:12px;font-weight:650;color:#315b49}
+.lesson-controls .control-playback .playback-tools{display:grid;grid-template-columns:minmax(0,1fr) auto 70px;align-items:center;gap:8px;margin:0}
+.lesson-controls .control-playback .playback-tools>[data-mode]{justify-self:start}
+.lesson-controls .control-playback .playback-tools label{margin:0}
+.lesson-controls .control-playback .follow-toggle{margin:0;padding-top:9px;border-top:1px solid #e1ebe3;font-size:11px;font-weight:500}
+.lesson-controls .control-ab{display:flex;flex-direction:column}
+.lesson-controls .control-ab .control-group-title{margin-bottom:10px}
+.lesson-controls .control-ab .ab-loop-status{margin-top:10px;font-size:10px}
+@media(min-width:761px){
+ /* Size containment makes the left column determine the grid row height.
+    Stretch then gives the right column exactly the same top and bottom,
+    without waiting for JavaScript, image loading, or cached app scripts. */
+ .workspace{align-items:stretch}
+ .workspace>.content-pane{contain:size;align-self:stretch;height:auto;max-height:none;min-height:0}
+ .workspace>.content-pane>.panel:not([hidden]){height:auto;max-height:none;flex:1 1 0;min-height:0}
+ .workspace>.content-pane #panel-transcript .transcript-viewport{height:auto;flex:1 1 0;min-height:0}
+ .workspace>.content-pane #panel-transcript .transcript-toolbar{flex:none}
+}
+@media(min-width:761px) and (max-width:1090px){
+ .lesson-controls .controls-main-grid{grid-template-columns:minmax(0,1fr)}
+}
+@media(max-width:360px){
+ .lesson-controls .control-playback .transport{grid-template-columns:30px max-content 30px minmax(0,1fr);gap:5px}
+ .lesson-controls .control-playback .transport>button:first-child,
+ .lesson-controls .control-playback .transport>button:nth-child(3){width:30px}
+ .lesson-controls .control-playback .transport #clock{padding-inline:4px}
+}
