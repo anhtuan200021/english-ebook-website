@@ -163,7 +163,8 @@
    const unique=new Map();for(const entry of out[axis]){if(!unique.has(entry.type))unique.set(entry.type,{...entry,forms:[]});unique.get(entry.type).forms.push(...entry.forms);}
    out[axis]=[...unique.values()].map(entry=>({...entry,forms:[...new Map(entry.forms.map(f=>[f.start+':'+f.end,f])).values()]}));
   }
-  if(root.TBPatterns)out.structures=root.TBPatterns.analyze(text,{...context,grammar:grammatical});
+  if(root.TBFrames)out.structures=root.TBFrames.analyze(text,{...context,grammar:grammatical});
+  else if(root.TBPatterns)out.structures=root.TBPatterns.analyze(text,{...context,grammar:grammatical});
   if(root.TBSentenceForms)out.forms=root.TBSentenceForms.analyze(text,context).entries;
   return out;
  }
@@ -300,6 +301,8 @@
  descriptions.going_to='Am/is/are going to hoặc gonna đi với hành động; có thể nói dự định hoặc dự đoán. Không tự tách phần hành động thành một thì khác.';
  if(root.TBPatterns){axes.structures.label='Mẫu câu';axes.structures.types=root.TBPatterns.types;axes.structures.hint='Khung lớn và mẫu nhỏ có thể cùng xuất hiện. Mỗi bộ lọc đếm vùng nội dung có mẫu đó; không cộng các nhóm để suy ra số câu. Mở chi tiết để xem cụm chữ và mẫu ráp câu.';Object.assign(descriptions,root.TBPatterns.descriptions);}
  if(root.TBSentenceForms){axes.forms.label='Loại câu';axes.forms.types=root.TBSentenceForms.types;axes.forms.hint='Tách dạng câu bên ngoài, lời dẫn và dấu phủ định. Tất cả đếm vùng nội dung; các nhóm có thể chồng nhau. Mở chi tiết để xem phạm vi.';Object.assign(descriptions,root.TBSentenceForms.descriptions);}
+ if(root.TBFrames){axes.structures.types=root.TBFrames.types;axes.structures.hint='6 khung nền để quan sát cách ráp câu. Mỗi đoạn thuộc một nhóm; các mẫu nhỏ nằm trong phần mở rộng.';}
  const fallbackType=axis=>({structures:'review',forms:root.TBSentenceForms?'Z':'review',intentions:'context',links:'no_marker'})[axis];
  const api={axes,analyze,descriptions,fallbackType};if(typeof module!=='undefined')module.exports=api;else root.TBPerspectives=api;
 })(globalThis);
+

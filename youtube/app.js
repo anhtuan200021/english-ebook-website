@@ -353,7 +353,7 @@ function resetPerspectives(){
 function startPerspectives(){
  if(perspectiveStarted||!segments.length)return;
  perspectiveStarted=true;perspectiveFailed=false;const thisJob=perspectiveJob;
- try{perspectiveWorker=new Worker('perspectives-worker.js?v=0.5.4');
+ try{perspectiveWorker=new Worker('perspectives-worker.js?v=0.5.8');
   perspectiveWorker.onmessage=e=>{if(thisJob!==perspectiveJob||e.data.job!==perspectiveJob)return;
    for(const result of e.data.results)perspectiveResults.set(result.id,result.axes);
    perspectiveDone=e.data.done;$('#perspectiveProgress').textContent=perspectiveDone?'Đã đọc xong các góc nhìn.':'Đang đọc '+e.data.count+'/'+e.data.total+' câu/đoạn…';
@@ -376,7 +376,36 @@ function sentenceFormDetails(s,entries){
  const subtypes=globalThis.TBSentenceForms?.subtypes||{};
  return '<details class="sentence-form-details"><summary>Xem dạng câu và phạm vi</summary>'+entries.map(e=>'<div class="pattern-detail"><strong>'+esc(TBPerspectives.axes.forms.types[e.type]||e.type)+'</strong><p class="pattern-note">'+esc(e.scope==='quoted'?'Bên trong lời dẫn / lời diễn lại':e.scope==='component'?'Dấu chữ ở từng thành phần':'Lớp lời bên ngoài')+'</p>'+((e.subtypes||[]).length?'<p class="pattern-note">'+esc(e.subtypes.map(t=>subtypes[t]||t).join(' · '))+'</p>':'')+'<div class="pattern-evidence">'+(e.components?e.components.map(n=>'<span>'+esc(s.text.slice(n.start,n.end))+' · '+esc(n.scope==='quoted'?'trong lời dẫn':'bên ngoài')+(n.kind==='response'?' · lời đáp':'')+'</span>'):(e.forms||[]).map(f=>'<span>'+esc(s.text.slice(f.start,f.end))+'</span>')).join('')+'</div><p class="pattern-note">'+esc(e.note||TBPerspectives.descriptions[e.type]||'Cần đọc/nghe thêm.')+'</p></div>').join('')+'<p class="pattern-note">Chưa tự kết luận câu đơn/ghép/phức bằng số cụm động từ.</p></details>';
 }
+function sentenceFrameDetails(s,entry){
+ const def=TBFrames.definitions[entry.type]||TBFrames.definitions.review;
+ const parts=(entry.parts||[]).filter(p=>p.start>=0&&p.end<=s.text.length&&p.end>p.start);
+ const extras=entry.extras||[];
+ const evidence=(entry.forms||[]).map(f=>s.text.slice(f.start,f.end)).join(' · ');
+ return '<details class="sentence-frame-details"><summary>Xem cách ráp câu'+(extras.length?' · '+extras.length+' mẫu nhỏ':'')+'</summary><p>'+esc(def.explanation)+'</p>'+(evidence?'<div class="frame-evidence"><span>Cụm đang quan sát</span><strong>'+esc(evidence)+'</strong></div>':'')+parts.map(p=>'<div class="frame-evidence"><span>'+esc(p.label)+'</span><strong>'+esc(s.text.slice(p.start,p.end))+'</strong></div>').join('')+(entry.type!=='review'?'<p class="frame-scope">Khung áp dụng cho phần tô màu. Đoạn có thể còn ý khác; nghe cả đoạn để hiểu.</p>':'')+(extras.length?'<div class="frame-extras"><h3>Mẫu nhỏ trong câu</h3>'+extras.map(e=>{const d=globalThis.TBPatterns?.definitions?.[e.type];return '<div><strong>'+esc(d?.label||e.type)+'</strong><p>'+esc((e.forms||[]).map(f=>s.text.slice(f.start,f.end)).join(' · '))+'</p></div>';}).join('')+'</div>':'')+'</details>';
+}
+function renderSentenceFrames(){
+ const counts=Object.fromEntries(Object.keys(TBFrames.types).map(k=>[k,0])),rows=[];
+ for(const s of segments){const results=perspectiveResults.get(s.id)?.structures;if(!results)continue;const entry=results[0]||{type:'review',forms:[],parts:[],extras:[]};const type=Object.hasOwn(TBFrames.types,entry.type)?entry.type:'review';counts[type]++;rows.push({s,entry:{...entry,type}});}
+ const processed=rows.length,total=segments.length;
+ const known=processed-counts.review;
+ $('#perspectiveHint').textContent=perspectiveFilter==='all'?'6 khung nền · '+known+' đoạn có khung · '+counts.review+' cần xem thêm'+(perspectiveDone?'':' · Đang đọc '+processed+'/'+total+' đoạn…'):TBFrames.descriptions[perspectiveFilter]||TBPerspectives.axes.structures.hint;
+ $('#perspectiveFilters').classList.add('sentence-frame-filters');
+ const button=(id,label,n)=>'<button data-perspective-filter="'+id+'" class="'+(perspectiveFilter===id?'selected':'')+'" aria-pressed="'+(perspectiveFilter===id)+'">'+esc(label)+' <span>'+n+'</span></button>';
+ $('#perspectiveFilters').innerHTML=button('all','Khung đã nhận diện',known)+['B','I','O','D','C','E'].map(id=>button(id,TBFrames.types[id],counts[id])).join('')+'<span class="frame-review-filter">'+button('review','Cần xem thêm',counts.review)+'</span>';
+ const selected=rows.filter(r=>perspectiveFilter==='all'?r.entry.type!=='review':r.entry.type===perspectiveFilter);
+ const cards=selected.slice(0,perspectiveLimit).map(({s,entry})=>{
+  const review=entry.type==='review';
+  return '<article class="perspective-card sentence-frame-card'+(review?' frame-needs-review':'')+'"><button class="time-btn" data-perspective-seek="'+esc(s.id)+'" aria-label="Nghe từ '+TB.stamp(s.start)+'">▶ '+TB.stamp(s.start)+'</button><div><p data-text-cue="'+esc(s.sourceCueIds?.[0]||s.cueIds?.[0]||'')+'">'+grammarMarkup(s.text,entry.forms||[])+'</p><div class="frame-summary"><span class="frame-label">'+esc(TBFrames.types[entry.type])+'</span>'+(review?'':'<span class="frame-formula">'+esc(TBFrames.definitions[entry.type].frame)+'</span>')+'</div>'+sentenceFrameDetails(s,entry)+'</div></article>';
+ }).join('');
+ const empty=!total?'Nhập phụ đề để xem cách ráp câu.':!perspectiveDone?'Đang đọc nội dung…':'Chưa có đoạn ở nhóm này. Bạn có thể mở Cần xem thêm để đọc các đoạn chưa chốt khung.';
+ $('#perspectiveList').innerHTML=(perspectiveFailed?'<div class="perspective-error" role="status">Chưa tải được bộ nhận diện. <button class="text-button" data-perspective-retry>Thử lại</button></div>':'')+cards+(!selected.length?'<div class="empty"><p>'+empty+'</p></div>':'')+(selected.length>perspectiveLimit?'<button class="outline full" data-perspective-more>Xem thêm đoạn</button>':'');
+ $('#panel-perspectives .panel-foot').textContent='Bản thử · Chỉ chốt khung khi có dẫn chứng rõ. Cần xem thêm không có nghĩa câu sai.';
+ renderCoverage('#perspectiveCoverage',segments,s=>perspectiveResults.get(s.id)?.structures,'structures');
+}
 function renderPerspectives(){
+ if(perspectiveAxis==='structures'&&globalThis.TBFrames){renderSentenceFrames();return;}
+ $('#perspectiveFilters').classList.remove('sentence-frame-filters');
+ $('#panel-perspectives .panel-foot').textContent='Gợi ý theo cách nói, cần nghe cả đoạn · Đếm theo câu/đoạn, một câu có thể thuộc nhiều nhóm.';
  renderCoverage('#perspectiveCoverage',segments,s=>perspectiveResults.get(s.id)?.[perspectiveAxis],perspectiveAxis);
  const axes=TBPerspectives.axes,axis=axes[perspectiveAxis],counts={},rows=[];
  for(const s of segments){let entries=perspectiveResults.get(s.id)?.[perspectiveAxis];if(!entries)continue;if(!entries.length)entries=[{type:TBPerspectives.fallbackType(perspectiveAxis),forms:[],status:'review'}];rows.push({s,entries});for(const entry of entries)counts[entry.type]=(counts[entry.type]||0)+1;}
@@ -453,7 +482,7 @@ function grammarSnapshot(){
  return {version:'tense-audit-0.5.2',engineVersion:3,complete:grammarProcessed.size===segments.length,processed:grammarProcessed.size,total:segments.length,countRule:'Mỗi form là một vị trí app nhận diện; kết quả không có form được giữ riêng. Không phải số câu hoặc tỷ lệ đúng/sai.',units:segments.map(s=>({id:s.id,text:s.text,start:s.start,sourceCueIds:s.cueIds,processed:grammarProcessed.has(s.id),entries:bySegment.get(s.id)||[],details:s.grammarDetails||[]}))};
 }
 function perspectiveSnapshot(){
- return {version:globalThis.TBPatterns?.version||'legacy',formsVersion:globalThis.TBSentenceForms?.version||'legacy',complete:perspectiveDone,failed:perspectiveFailed,processed:perspectiveResults.size,total:segments.length,countRule:'Một họ mẫu trong một vùng nội dung chỉ tính một lần, có thể có nhiều dẫn chứng. Tất cả đếm vùng nội dung; các nhóm có thể chồng nhau.',units:segments.map(s=>({id:s.id,text:s.text,start:s.start,sourceCueIds:s.cueIds,processed:perspectiveResults.has(s.id),axes:perspectiveResults.get(s.id)||null}))};
+ return {version:globalThis.TBFrames?.version||globalThis.TBPatterns?.version||'legacy',patternsVersion:globalThis.TBPatterns?.version||'legacy',formsVersion:globalThis.TBSentenceForms?.version||'legacy',complete:perspectiveDone,failed:perspectiveFailed,processed:perspectiveResults.size,total:segments.length,countRule:'Mẫu câu: mỗi đoạn thuộc một nhóm khung nền. Các góc nhìn khác có thể có nhiều nhãn trên cùng đoạn.',structuresCountRule:globalThis.TBFrames?.countRule||'',units:segments.map(s=>({id:s.id,text:s.text,start:s.start,sourceCueIds:s.cueIds,processed:perspectiveResults.has(s.id),axes:perspectiveResults.get(s.id)||null}))};
 }
 $('#exportLessonBtn').onclick=()=>{
  try{if(!dataReady||!video?.url||!video.cues.length)throw Error('Mở một video có phụ đề trước khi xuất bài học nhé.');captureVideoProgress(true);
@@ -563,4 +592,5 @@ function launchVideoFromURL(){
 }
 async function init(){try{const data=await TBStore.get();if(data)state=TBData.validate(data);}catch(e){toast(e.message+' Bạn có thể dùng tạm và xuất bản sao lưu.');}dataReady=true;$('#importLessonBtn').disabled=false;document.documentElement.style.setProperty('--reading',state.settings.font+'px');$('#fontSize').value=state.settings.font;const transferring=/^[a-f0-9-]{36}$/.test(new URL(location.href).searchParams.get('transfer')||'');const v=launchVideoFromURL()||(!transferring&&(state.videos.find(v=>v.id===state.current)||state.videos[0]));if(v)useVideo(v);else{renderRecent();renderGrammar();}updateSaved();lookup('');showTab('transcript');tick();if(transferring)setTimeout(()=>{if(new URL(location.href).searchParams.has('transfer')&&!incomingTransfer)toast('Chưa nhận được phụ đề từ tiện ích. Tải lại tab YouTube và bấm học lại, hoặc dùng Nhập phụ đề.');},15000);}
 init();
+
 

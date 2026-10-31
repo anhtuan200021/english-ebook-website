@@ -610,3 +610,28 @@ main>.note-box{margin:12px 0 0;padding:10px 0}
  main>.note-box .tb-mascot{width:40px;height:40px;flex-basis:40px}
  main>footer{margin-top:6px;padding:8px 0}
 }
+
+
+/* A small, stable set of sentence frames, with details below the sentence. */
+#perspectiveFilters.sentence-frame-filters{display:flex;flex-wrap:wrap;max-height:none;overflow:visible;gap:7px;padding-bottom:12px}
+.sentence-frame-filters>button{flex:0 1 auto;font-size:12px;min-height:34px;text-align:left}
+.sentence-frame-filters .frame-review-filter{flex-basis:100%;padding-top:6px;border-top:1px solid var(--line)}
+.sentence-frame-filters .frame-review-filter button{font-size:11px;background:#f5f6f2;color:#5e6f60}
+.sentence-frame-card .frame-summary{display:flex;flex-direction:column;align-items:flex-start;gap:5px;margin:10px 0}
+.frame-label{display:inline-flex;align-items:center;background:#eaf2e9;color:#2f6046;border:1px solid #d2e2d4;border-radius:6px;padding:3px 8px;font-size:11px;font-weight:600}
+.frame-formula{font-size:12px;color:#597361;line-height:1.6}
+.frame-needs-review .frame-label{background:#f5f6f2;color:#697666;border-color:#e0e4da}
+.sentence-frame-details{border-top:1px solid #e1e9e2;margin-top:10px;padding-top:9px;font-size:12px;color:#4e6a58}
+.sentence-frame-details summary{cursor:pointer;font-size:11px;font-weight:500;color:#396b4f}
+.sentence-frame-details>p{font-size:12px;line-height:1.7;margin:9px 0}
+.sentence-frame-details .frame-evidence{display:grid;grid-template-columns:minmax(100px,.7fr) minmax(0,1.3fr);gap:12px;padding:8px 0;border-bottom:1px solid #e5ece5}
+.frame-evidence span{font-size:11px;color:#637866}
+.frame-evidence strong{font-size:14px;font-weight:500;color:#254f38;overflow-wrap:anywhere}
+.sentence-frame-details .frame-scope{font-size:11px}
+.frame-extras{margin-top:12px;padding:12px;border-radius:8px;background:#f5f8f2;border:1px solid #e0e9dc}
+.frame-extras h3{font-size:12px;margin:0 0 10px}
+.frame-extras>div+div{border-top:1px solid #dfe8db;padding-top:8px}
+.frame-extras strong{font-size:12px;font-weight:500}
+.frame-extras p{font-size:14px;margin:3px 0 8px;color:#365d42}
+@media(max-width:760px){.sentence-frame-filters>button{font-size:11px}.sentence-frame-details .frame-evidence{grid-template-columns:minmax(0,1fr);gap:3px}}
+
