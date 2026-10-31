@@ -2236,13 +2236,14 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 }
 .tb-contact-link{
  position:relative;display:flex;align-items:center;justify-content:center;
- width:52px;height:52px;flex:none;border:3px solid #fff;border-radius:50%;
+ width:52px;height:52px;flex:none;border:1px solid #e5e9df;border-radius:15px;background:#fff;
  box-shadow:0 3px 16px #173d3226;text-decoration:none;
  transition:box-shadow .15s,transform .15s
 }
-.tb-contact-facebook{background:#1877f2;color:#fff}
+.tb-contact-facebook{color:#0866ff}
 .tb-contact-zalo{background:#fff;color:#0068ff}
-.tb-contact-link>svg{display:block;flex:none}
+.tb-contact-link>svg{display:block;flex:none;width:30px;height:30px}
+.tb-contact-zalo>svg{width:40px;height:40px}
 .tb-contact-link:hover{transform:translateY(-2px);box-shadow:0 5px 20px #173d3233}
 .tb-contact-link:focus-visible{outline:3px solid #aa7529;outline-offset:4px}
 .tb-contact-tooltip{
@@ -2260,9 +2261,9 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
   width:44px;right:10px;bottom:16px;
   bottom:calc(14px + env(safe-area-inset-bottom,0px));gap:9px
  }
- .tb-contact-link{width:44px;height:44px;border-width:2px;box-shadow:0 2px 10px #173d3221}
- .tb-contact-facebook>svg{width:22px;height:22px}
- .tb-contact-zalo>svg{width:35px;height:35px}
+ .tb-contact-link{width:44px;height:44px;border-radius:13px;box-shadow:0 2px 10px #173d3221}
+ .tb-contact-facebook>svg{width:26px;height:26px}
+ .tb-contact-zalo>svg{width:34px;height:34px}
  .tb-contact-tooltip{display:none}
 }
 @media(prefers-reduced-motion:reduce){.tb-contact-link{transition:none}}
