@@ -1324,51 +1324,44 @@ details[open] .toggle:before {
 /* Nội dung câu chuyện và bốn nguyên tắc chỉ có trên Trang chủ. */
 .personal-story > .story-grid {
   display: grid;
-  grid-template-columns: minmax(0, 320px) minmax(0, 1fr);
-  gap: 64px;
+  grid-template-columns: minmax(0, 760px) minmax(0, 1fr);
+  gap: 56px;
   align-items: start;
   padding-block: 64px;
 }
-.story-heading {
+.story-copy { min-width: 0; }
+.story-illustration {
   position: sticky;
-  top: 130px;
-}
-.story-heading .eyebrow { margin-bottom: 22px; }
-.story-heading h2 {
-  margin: 0;
-  font-size: clamp(36px, 3.2vw, 44px);
-  line-height: 1.2;
-  letter-spacing: -1.4px;
+  top: 140px;
+  margin-top: 116px;
+  display: flex;
+  justify-content: center;
 }
 .story-mascot {
   display: block;
-  width: 152px;
-  height: 152px;
+  width: min(100%, 224px);
+  height: auto;
   object-fit: contain;
-  margin-top: 28px;
 }
 @media (max-width: 900px) {
   .personal-story > .story-grid {
     grid-template-columns: minmax(0, 1fr);
-    gap: 30px;
+    gap: 20px;
     padding-block: 48px;
   }
-  .story-heading { position: relative; top: auto; padding-right: 108px; }
-  .story-heading .eyebrow { margin-bottom: 16px; }
-  .story-heading h2 { font-size: clamp(30px, 5vw, 40px); letter-spacing: -1px; }
-  .story-mascot { position: absolute; right: 0; bottom: 0; width: 88px; height: 88px; margin: 0; }
-}
-@media (max-width: 380px) {
-  .story-heading { padding-right: 84px; }
-  .story-mascot { width: 68px; height: 68px; }
+  .story-illustration {
+    position: static;
+    margin-top: 0;
+    justify-content: flex-end;
+  }
+  .story-mascot { width: 88px; }
 }
 .personal-story .story-block p {
   max-width: none;
 }
 .personal-story .story-layout {
-  min-width: 0;
-  max-width: none;
-  margin-top: 0;
+  max-width: 760px;
+  margin-top: 32px;
 }
 .personal-story .story-block:first-child {
   border-top: 0;
